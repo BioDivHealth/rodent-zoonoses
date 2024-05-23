@@ -22,15 +22,14 @@ rodent.pathogen.data <- readRDS(here("data", "wide_pathogen.rds")) %>%  # wide f
   as.data.frame() %>% 
   sf::st_as_sf() #to avoid error: Column `geometry` is a `sfc_POINT/sfc` object
 
-# 3. Generate a rodent phylogeny ----
-
-# https://data.vertlife.org -> mammaltree -> Completed_5911sp_topoCons_FBDasZhouEtAl.zip
-
+# Load mammal phylogeny: https://data.vertlife.org -> mammaltree -> Completed_5911sp_topoCons_FBDasZhouEtAl.zip
 # I'm using one tree of 1,000 bootstrap replicates; can extend this once workflow established
 mammal.tree <- read.tree(here("data", "MamPhy_BDvr_Completed_5911sp_topoCons_FBDasZhouEtAl_v2_tree0000.tre"))
 
 # Summarise the tree
 str(mammal.tree)
+
+# 3. Generate rodent phylogeny ----
 
 # Format rodent data to get host names in same format as tree's
 rodent.species <- rodent.pathogen.data %>%
@@ -114,7 +113,7 @@ rodentia.clade <- extract.clade(mammal.tree, rodentia.node)
 # Summarise the extracted clade
 print(rodentia.clade)
 
-# 4. Plot the phylogeny ----
+# 4. Plot phylogeny ----
 
 # Create variable to colour tips if species present in the data
 rodentia.clade$in.data <- ifelse(rodentia.clade$tip.label %in% rodent.species.corrected$tree.names, 
@@ -128,3 +127,42 @@ rodentia.clade %>%
   geom_treescale(x = 0, y = 45, col = "midnightblue") + 
   # Add points for species in the dataset (NB: doesnt work without data$column syntax)
   geom_tippoint(color = rodentia.clade$in.data)
+
+# 5. Calculate phylogenetic distances ----
+
+# Derive a pairwise distance matrix with ape::cophenetic.phylo()
+dm <- cophenetic.phylo(rodentia.clade)
+
+# Transform distance matrix to a relative distance matrix with max value of 1
+rdm <- dm / max(dm)
+
+# Histograms of phylogenetic distances
+hist(dm)   # Absolute distance
+hist(rdm)  # Relative distance
+
+# Define function to calculate distance between any two species 
+get.phy.dist <- function(distance.matrix, sp1, sp2) {
+  
+  # Error handling: check if species name present in distance matrix
+  species.names <- colnames(distance.matrix)
+  
+  if (all(sp1 %in% species.names == FALSE)) {
+    stop("Species 1 not named in the input distance matrix")
+  }
+  
+  if (all(sp2 %in% species.names == FALSE)) {
+    stop("Species 2 not named in the input distance matrix")
+  }  
+  
+  # Extract & return pairwise phylogenetic distance
+  phy.dist <- distance.matrix[sp1, sp2]
+  return(phy.dist)
+  
+}
+
+# Test phylogenetic distance function
+sp1 <- "Mastomys_natalensis"
+sp2 <- "Gerbilliscus_guineae"
+
+get.phy.dist(rdm, sp1, sp1)  # rel dist == 0 for conspecifics
+get.phy.dist(rdm, sp1, sp2)  # 1 < rel dist > 0 for all spp except most distantly related
