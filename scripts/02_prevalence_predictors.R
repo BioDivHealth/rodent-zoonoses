@@ -9,9 +9,7 @@
 # Data citation: Simons et al., 2023. PLoS NTD 17(1): https://doi.org/10.1371/journal.pntd.0010772
 
 # 1. Load packages ----
-pacman::p_load(dplyr, ggplot2, sf, here, stringr, lubridate,
-               spData  #worldwide country-level polygons
-)
+pacman::p_load(dplyr, ggplot2, sf, here, stringr, lubridate, ape)
 
 # 2. Load data ----
 
@@ -130,6 +128,32 @@ path.data.clean <- path.data.clean %>%
   left_join(., harmonised.sp.names %>% select(classification, tree.names)) %>% 
   # Remove any rows with no match to species in phylogeny
   filter(!is.na(tree.names))
+
+# Derive a pairwise distance matrix with ape::cophenetic.phylo()
+dm <- cophenetic.phylo(rodent.phylogeny)
+
+# Transform distance matrix to a relative distance matrix with max value of 1
+rdm <- dm / max(dm)
+
+# Define function to calculate distance between any two species 
+get.phy.dist <- function(distance.matrix, sp1, sp2) {
+  
+  # Error handling: check if species name present in distance matrix
+  species.names <- colnames(distance.matrix)
+  
+  if (all(sp1 %in% species.names == FALSE)) {
+    stop("Species 1 not named in the input distance matrix")
+  }
+  
+  if (all(sp2 %in% species.names == FALSE)) {
+    stop("Species 2 not named in the input distance matrix")
+  }  
+  
+  # Extract & return pairwise phylogenetic distance
+  phy.dist <- distance.matrix[sp1, sp2]
+  return(phy.dist)
+  
+}
 
 # Get phylogenetic distances between target species & others in dataset
 reservoir.host <- "Mastomys_natalensis"
