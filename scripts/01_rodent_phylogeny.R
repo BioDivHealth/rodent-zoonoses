@@ -103,6 +103,8 @@ rodent.species.corrected$in.tree <- ifelse(rodent.species.corrected$tree.names %
 
 sum(rodent.species.corrected$in.tree == FALSE)  # now 0 missing from tree
 
+# Save rodent species tree names for use in other scripts
+saveRDS(rodent.species.corrected, here("data", "harmonised.rodent.sp.names.rds"))
 
 # Find the node number for the clade containing all species in the dataset
 rodentia.node <- getMRCA(mammal.tree, tip = rodent.species.corrected$tree.names)
@@ -112,6 +114,9 @@ rodentia.clade <- extract.clade(mammal.tree, rodentia.node)
 
 # Summarise the extracted clade
 print(rodentia.clade)
+
+# Save the rodent phylogeny
+write.tree(rodentia.clade, here("data", "rodentia.mrca.tre"))
 
 # 4. Plot phylogeny ----
 
