@@ -3,14 +3,16 @@
 #------------------------------------------------------------------------------#
 
 # 0. Session details ----
-# R version 4.3.1 (2023-06-16)
+# R version 4.4.0 (2024-04-24)
 # Running under: Windows 11 x64 (build 22631)
 
 # 1. Load packages ----
 pacman::p_load(here,
                stringr,
                dplyr,
-               ape)  # for phylogenetic analyes
+               ape,    # for phylogenetic analyes
+               ggtree, # for plotting trees
+               ggplot2)  
 
 # 2. Load data ----
 
@@ -29,7 +31,6 @@ mammal.tree <- read.tree(here("data", "MamPhy_BDvr_Completed_5911sp_topoCons_FBD
 
 # Summarise the tree
 str(mammal.tree)
-# plot.phylo(mammal.tree, cex = 0.2)  #NB: runs slowly
 
 # Format rodent data to get host names in same format as tree's
 rodent.species <- rodent.pathogen.data %>%
@@ -73,10 +74,11 @@ for(i in 1:length(missing.species)){
 }
 
 # Correct names in the rodent data after manual comparison with tree names
-# ** TO DO: search for the 2 remaining missing species **
 rodent.species.corrected <- rodent.species %>% 
   mutate(
     tree.names = case_when(
+      # Acomys_chudeaui = Acomys chudeaui, proposed to be a junior synonym for Acomys airensis: https://academic.oup.com/biolinnean/article/98/1/29/2235991
+      tree.names == "Acomys_chudeaui" ~ "Acomys_airensis",
       # theresae was misspelt
       tree.names == "Crocidura_thereseae" ~ "Crocidura_theresae", 
       # Dipodillus is sometimes classified as a subgenus of Gerbillus
@@ -84,26 +86,45 @@ rodent.species.corrected <- rodent.species %>%
       # guineae was misspelt 
       tree.names == "Gerbilliscus_guinea" ~ "Gerbilliscus_guineae",
       # kempi was misspelt
-      tree.names == "Gerbilliscus_kempii" ~ "Gerbilliscus_kempi", 
+      tree.names == "Gerbilliscus_kempii" ~ "Gerbilliscus_kempi",
+      # Hylomyscus_simus: not found anywhere online, so set name to NA
+      tree.names == "Hylomyscus_simus" ~ NA,
       # Keep all other names the same
       TRUE ~ tree.names
-    )
-  )
+    ),
+  ) %>% 
+  # Drop species with NA tree names
+  filter(!is.na(tree.names)) %>% 
+  # Keep only unique species names according to their names in the tree
+  filter(duplicated(tree.names) == FALSE)
 
-# How many non-matching species after correcting names?
-num.missing <- ifelse(rodent.species.corrected$tree.names %in% mammal.tree$tip.label,
-                      TRUE, FALSE)
-sum(num.missing == FALSE)
+# Ensure all species are now in the tree
+rodent.species.corrected$in.tree <- ifelse(rodent.species.corrected$tree.names %in% mammal.tree$tip.label,
+                                           TRUE, FALSE)
+
+sum(rodent.species.corrected$in.tree == FALSE)  # now 0 missing from tree
+
 
 # Find the node number for the clade containing all species in the dataset
-# NB: node of MRCA for all rodents = 2392; from https://vertlife.org/data/mammals/
-rodentia.node <- getMRCA(mammal.tree, 
-                         # ** to do: ensure all species are matched to the tree then change the below **
-                         tip = rodent.species.corrected$tree.names[rodent.species.corrected$in.tree])
+rodentia.node <- getMRCA(mammal.tree, tip = rodent.species.corrected$tree.names)
 
 # Extract the clade using the node number 
 rodentia.clade <- extract.clade(mammal.tree, rodentia.node)
 
 # Summarise the extracted clade
 print(rodentia.clade)
-plot(rodentia.clade, cex = 0.2)  # NB: runs slowly
+
+# 4. Plot the phylogeny ----
+
+# Create variable to colour tips if species present in the data
+rodentia.clade$in.data <- ifelse(rodentia.clade$tip.label %in% rodent.species.corrected$tree.names, 
+       "purple", NA)
+rodentia.clade$in.data <- as.factor(rodentia.clade$in.data)
+
+# Plot the tree using the ggtree package
+rodentia.clade %>% 
+  ggtree() + 
+  # Add an evolutionary distance scale bar
+  geom_treescale(x = 0, y = 45, col = "midnightblue") + 
+  # Add points for species in the dataset (NB: doesnt work without data$column syntax)
+  geom_tippoint(color = rodentia.clade$in.data)
