@@ -17,7 +17,8 @@ pacman::p_load(here,
 # Rodent-pathogen data (for testing phylogenetic workflow)
 # https://github.com/DidDrog11/scoping_review/tree/main/data_clean
 rodent.pathogen.data <- readRDS(here("data", "wide_pathogen.rds")) %>%  # wide format
-  as.data.frame()
+  as.data.frame() %>% 
+  sf::st_as_sf() #to avoid error: Column `geometry` is a `sfc_POINT/sfc` object
 
 # 3. Generate a rodent phylogeny ----
 
@@ -31,7 +32,9 @@ str(mammal.tree)
 # plot.phylo(mammal.tree, cex = 0.2)  #NB: runs slowly
 
 # Format rodent data to get host names in same format as tree's
-rodent.species <- rodent.pathogen.data %>%  
+rodent.species <- rodent.pathogen.data %>%
+  # Temporarily drop the 'geometry' column
+  sf::st_drop_geometry() %>%
   # Separate host classification into genus and species
   tidyr::separate(col = classification, into = c("genus", "species"), sep = " ", remove = F) %>% 
   mutate(
