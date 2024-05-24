@@ -1,10 +1,18 @@
-#------------------------------------------------------------------------------#
-# Loading & formatting a rodent phylogeny & calculating phylogenetic distances #
-#------------------------------------------------------------------------------#
+#-----------------------------------------#
+# Loading & formatting a rodent phylogeny #
+#-----------------------------------------#
 
 # 0. Session details ----
 # R version 4.4.0 (2024-04-24)
 # Running under: Windows 11 x64 (build 22631)
+
+# Script contents:
+# • Load mammal phylogeny, prune to get most recent common ancestor & save as 
+#   .tre file for subsequent analyses
+# • Harmonise rodent species names between rodent-pathogen data and tree & save
+#   as .rds file
+# • Plot mammal phylogeny & show position of rodent species in the data, save
+#   as figure
 
 # 1. Load packages ----
 pacman::p_load(here,
@@ -132,42 +140,3 @@ rodentia.clade %>%
   geom_treescale(x = 0, y = 45, col = "midnightblue") + 
   # Add points for species in the dataset (NB: doesnt work without data$column syntax)
   geom_tippoint(color = rodentia.clade$in.data)
-
-# 5. Calculate phylogenetic distances ----
-
-# Derive a pairwise distance matrix with ape::cophenetic.phylo()
-dm <- cophenetic.phylo(rodentia.clade)
-
-# Transform distance matrix to a relative distance matrix with max value of 1
-rdm <- dm / max(dm)
-
-# Histograms of phylogenetic distances
-hist(dm)   # Absolute distance
-hist(rdm)  # Relative distance
-
-# Define function to calculate distance between any two species 
-get.phy.dist <- function(distance.matrix, sp1, sp2) {
-  
-  # Error handling: check if species name present in distance matrix
-  species.names <- colnames(distance.matrix)
-  
-  if (all(sp1 %in% species.names == FALSE)) {
-    stop("Species 1 not named in the input distance matrix")
-  }
-  
-  if (all(sp2 %in% species.names == FALSE)) {
-    stop("Species 2 not named in the input distance matrix")
-  }  
-  
-  # Extract & return pairwise phylogenetic distance
-  phy.dist <- distance.matrix[sp1, sp2]
-  return(phy.dist)
-  
-}
-
-# Test phylogenetic distance function
-sp1 <- "Mastomys_natalensis"
-sp2 <- "Gerbilliscus_guineae"
-
-get.phy.dist(rdm, sp1, sp1)  # rel dist == 0 for conspecifics
-get.phy.dist(rdm, sp1, sp2)  # 1 < rel dist > 0 for all spp except most distantly related
