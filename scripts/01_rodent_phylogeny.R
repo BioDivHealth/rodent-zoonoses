@@ -34,6 +34,9 @@ rodent.pathogen.data <- readRDS(here("data", "wide_pathogen.rds")) %>%  # wide f
 # I'm using one tree of 1,000 bootstrap replicates; can extend this once workflow established
 mammal.tree <- read.tree(here("data", "MamPhy_BDvr_Completed_5911sp_topoCons_FBDasZhouEtAl_v2_tree0000.tre"))
 
+# Load species taxonomical rankings (https://github.com/n8upham/MamPhy_v1/blob/master/_DATA/taxonomy_mamPhy_5911species_toPublish.csv)
+taxa <- read.csv(here("data", "taxonomy_mamPhy_5911species_toPublish.csv")) 
+
 # Summarise the tree
 str(mammal.tree)
 
@@ -121,7 +124,7 @@ rodentia.node <- getMRCA(mammal.tree, tip = rodent.species.corrected$tree.names)
 rodentia.clade <- extract.clade(mammal.tree, rodentia.node)
 
 # Summarise the extracted clade
-print(rodentia.clade)
+str(rodentia.clade)
 
 # Save the rodent phylogeny
 write.tree(rodentia.clade, here("data", "rodentia.mrca.tre"))
@@ -133,10 +136,46 @@ rodentia.clade$in.data <- ifelse(rodentia.clade$tip.label %in% rodent.species.co
        "purple", NA)
 rodentia.clade$in.data <- as.factor(rodentia.clade$in.data)
 
-# Plot the tree using the ggtree package
-rodentia.clade %>% 
-  ggtree() + 
-  # Add an evolutionary distance scale bar
+# Prepare your data
+tmp <- data.frame(Species_Name = rodentia.clade$tip.label)
+tmp2 <- tmp %>%
+  left_join(taxa %>% select(Species_Name, fam, ord, clade), by = "Species_Name")
+
+# Add this data frame as an attribute to the phylo object
+attr(rodentia.clade, "tax.order") <- tmp2$ord
+
+# Create a mapping data frame
+order_mapping <- data.frame(label = rodentia.clade$tip.label, order = tmp2$ord)
+
+# Create the ggtree object
+p <- ggtree(rodentia.clade)
+
+# Add the mapping to the ggtree object
+p <- p %<+% order_mapping
+
+# Extract the plot data
+plot_data <- p$data
+
+# Merge plot data with order mapping
+plot_data <- plot_data %>%
+  left_join(order_mapping)
+
+# Calculate y positions for each order
+order_positions <- plot_data %>%
+  filter(!is.na(order)) %>%
+  group_by(order) %>%
+  summarize(ymin = min(y), ymax = max(y), y = (min(y) + max(y)) / 2)
+
+# Add vertical lines and plot
+p <- p +
   geom_treescale(x = 0, y = 45, col = "midnightblue") + 
+  geom_segment(data = order_positions, aes(x = max(plot_data$x) + 1, xend = max(plot_data$x) + 1, y = ymin, yend = ymax, color = order), 
+               linewidth = 2, linetype = "solid") +
+  scale_color_brewer(palette = "Set3") + 
   # Add points for species in the dataset (NB: doesnt work without data$column syntax)
-  geom_tippoint(color = rodentia.clade$in.data)
+  geom_tippoint(color = rodentia.clade$in.data) +
+  labs(col = "Order")
+
+# Print the plot
+print(p)
+
