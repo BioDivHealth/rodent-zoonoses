@@ -6,12 +6,20 @@
 # R version 4.4.0 (2024-04-24)
 # Running under: Windows 11 x64 (build 22631)
 
-# Data citation: Simons et al., 2023. PLoS NTD 17(1): https://doi.org/10.1371/journal.pntd.0010772
+# Script contents:
+# • Load rodent phylogeny, rodent-pathogen & harmonised species names data
+# • Filter rodent-pathogen data for pathogen of choice & structure for plotting
+# • Calculate phylogenetic distances to reservoir host
+# • Plot relative community abundance & phylogenetic distance as prevalence 
+#   predictors & save figure
 
 # 1. Load packages ----
 pacman::p_load(dplyr, ggplot2, sf, here, stringr, lubridate, ape)
 
-# 2. Load data ----
+# 2. Load useful custom functions ----
+source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
+
+# 3. Load data ----
 
 # Rodent-pathogen data, from: 
 # https://github.com/DidDrog11/scoping_review/tree/main/data_clean
@@ -25,7 +33,7 @@ rodent.phylogeny <- read.tree(here("data", "rodentia.mrca.tre"))
 # Harmonised rodent species names (matched to names in above phylogeny), generated in 'scripts/01_rodent_phylogeny.R'
 harmonised.sp.names <- readRDS(here("data", "harmonised.rodent.sp.names.rds"))
 
-# 3. Format data ----
+# 4. Format data ----
 
 # Function to filter data by pathogen of choice
 select.pathogen <- function(data, pathogen, pathogen.col) {
@@ -129,40 +137,18 @@ path.data.clean <- path.data.clean %>%
   # Remove any rows with no match to species in phylogeny
   filter(!is.na(tree.names))
 
-# Derive a pairwise distance matrix with ape::cophenetic.phylo()
-dm <- cophenetic.phylo(rodent.phylogeny)
+# Get a pairwise (relative) distance matrix
+dm <- myfuncs$get.phydist.mat(phylogeny = rodent.phylogeny, rel.dist = TRUE)
 
-# Transform distance matrix to a relative distance matrix with max value of 1
-rdm <- dm / max(dm)
-
-# Define function to calculate distance between any two species 
-get.phy.dist <- function(distance.matrix, sp1, sp2) {
-  
-  # Error handling: check if species name present in distance matrix
-  species.names <- colnames(distance.matrix)
-  
-  if (all(sp1 %in% species.names == FALSE)) {
-    stop("Species 1 not named in the input distance matrix")
-  }
-  
-  if (all(sp2 %in% species.names == FALSE)) {
-    stop("Species 2 not named in the input distance matrix")
-  }  
-  
-  # Extract & return pairwise phylogenetic distance
-  phy.dist <- distance.matrix[sp1, sp2]
-  return(phy.dist)
-  
-}
-
-# Get phylogenetic distances between target species & others in dataset
+# Estimate phylogenetic distances from each species to the reservoir host
 reservoir.host <- "Mastomys_natalensis"
 
 path.data.clean <- path.data.clean %>% 
-  # Calculate phylogenetic distance from each species to the reservoir host
-  mutate(phy.dist.reservoir = get.phy.dist(rdm, sp1 = "Mastomys_natalensis", sp2 = tree.names))
+  mutate(phy.dist.reservoir = myfuncs$get.phydist(distance.matrix = dm, 
+                                                   sp1 = reservoir.host, 
+                                                   sp2 = tree.names))
 
-# 4. Plot community abundance vs. lassa prevalence ----
+# 5. Plot community abundance vs. lassa prevalence ----
 path.data.clean %>% 
   # Put data in long format & make use of all prevalence data (via all assays)
   tidyr::pivot_longer(cols = c(prevalence.pcr, prevalence.cult, prevalence.abag), 
