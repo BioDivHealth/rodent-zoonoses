@@ -42,9 +42,9 @@ str(mammal.tree)
 
 # 3. Generate rodent phylogeny ----
 
-# Format rodent data to get host names in same format as tree's
+# Format data to get host names in same format as tree's
 rodent.species <- rodent.pathogen.data %>%
-  # Temporarily drop the 'geometry' column
+  # Temporarily drop the 'geometry' column for subsequent piping
   sf::st_drop_geometry() %>%
   # Separate host classification into genus and species
   tidyr::separate(col = classification, into = c("genus", "species"), sep = " ", remove = F) %>% 
@@ -56,11 +56,11 @@ rodent.species <- rodent.pathogen.data %>%
   ) %>% 
   # Remove NA species
   filter(!is.na(species)) %>% 
-  # Create classification that matches tree tip labels
+  # Create classification that matches tree tip labels in format Genus_species
   mutate(tree.names = paste(genus, species, sep = "_")) %>% 
   # Return select columns
   select(classification, tree.names, genus, species) %>% 
-  # Only unique species names
+  # Keep only unique species names
   distinct() %>% 
   # Order alphabetically
   arrange(classification)
@@ -115,10 +115,34 @@ rodent.species.corrected$in.tree <- ifelse(rodent.species.corrected$tree.names %
 sum(rodent.species.corrected$in.tree == FALSE)  # now 0 missing from tree
 
 # Save rodent species tree names for use in other scripts
-saveRDS(rodent.species.corrected, here("data", "harmonised.rodent.sp.names.rds"))
+if (!(file.exists(here("data", "harmonised.rodent.sp.names.rds")))) {
+  saveRDS(rodent.species.corrected, here("data", "harmonised.rodent.sp.names.rds"))
+}
 
 # Find the node number for the clade containing all species in the dataset
-rodentia.node <- getMRCA(mammal.tree, tip = rodent.species.corrected$tree.names)
+node.in.data <- getMRCA(mammal.tree, tip = rodent.species.corrected$tree.names)
+
+# Extract the clade using the node number
+pruned.mammal.tree <- extract.clade(mammal.tree, node.in.data)
+
+# Remove species in the data that are not within Rodentia
+
+# Get species name from tree
+rodentia.spp <- data.frame(Species_Name = pruned.mammal.tree$tip.label) %>% 
+  # Join to taxonomic family & order data
+  left_join(taxa %>% select(Species_Name, fam, ord), by = "Species_Name") %>%
+  # Get only species in the order Rodentia
+  filter(ord == "RODENTIA")
+
+# Filter host species in the data to include only those in Rodentia
+pruned.host.spp <- rodent.species.corrected %>% 
+  filter(tree.names %in% rodentia.spp$Species_Name)
+
+# nrow(rodent.species.corrected)  #before pruning (include non-rodents)
+# nrow(pruned.host.spp)           #after pruning (only rodents)
+
+# Find the node number for the clade containing all RODENT species in the dataset
+rodentia.node <- getMRCA(mammal.tree, tip = pruned.host.spp$tree.names)
 
 # Extract the clade using the node number 
 rodentia.clade <- extract.clade(mammal.tree, rodentia.node)
@@ -127,55 +151,25 @@ rodentia.clade <- extract.clade(mammal.tree, rodentia.node)
 str(rodentia.clade)
 
 # Save the rodent phylogeny
-write.tree(rodentia.clade, here("data", "rodentia.mrca.tre"))
+if (!(file.exists(here("data", "rodentia.mrca.tre")))) {
+  write.tree(rodentia.clade, here("data", "rodentia.mrca.tre"))
+}
+
+# Remove large objects from the environment
+rm(mammal.tree, pruned.mammal.tree)
 
 # 4. Plot phylogeny ----
 
 # Create variable to colour tips if species present in the data
-rodentia.clade$in.data <- ifelse(rodentia.clade$tip.label %in% rodent.species.corrected$tree.names, 
+rodentia.clade$in.data <- ifelse(rodentia.clade$tip.label %in% pruned.host.spp$tree.names, 
        "purple", NA)
 rodentia.clade$in.data <- as.factor(rodentia.clade$in.data)
 
-# Prepare your data
-tmp <- data.frame(Species_Name = rodentia.clade$tip.label)
-tmp2 <- tmp %>%
-  left_join(taxa %>% select(Species_Name, fam, ord, clade), by = "Species_Name")
+# Plot the phylogeny
+ggtree(rodentia.clade, size = 0.05) + 
+  geom_tippoint(color = rodentia.clade$in.data, size = 0.6) + 
+  geom_treescale(x = 0, y = 2200, col = "midnightblue")
 
-# Add this data frame as an attribute to the phylo object
-attr(rodentia.clade, "tax.order") <- tmp2$ord
-
-# Create a mapping data frame
-order_mapping <- data.frame(label = rodentia.clade$tip.label, order = tmp2$ord)
-
-# Create the ggtree object
-p <- ggtree(rodentia.clade)
-
-# Add the mapping to the ggtree object
-p <- p %<+% order_mapping
-
-# Extract the plot data
-plot_data <- p$data
-
-# Merge plot data with order mapping
-plot_data <- plot_data %>%
-  left_join(order_mapping)
-
-# Calculate y positions for each order
-order_positions <- plot_data %>%
-  filter(!is.na(order)) %>%
-  group_by(order) %>%
-  summarize(ymin = min(y), ymax = max(y), y = (min(y) + max(y)) / 2)
-
-# Add vertical lines and plot
-p <- p +
-  geom_treescale(x = 0, y = 45, col = "midnightblue") + 
-  geom_segment(data = order_positions, aes(x = max(plot_data$x) + 1, xend = max(plot_data$x) + 1, y = ymin, yend = ymax, color = order), 
-               linewidth = 2, linetype = "solid") +
-  scale_color_brewer(palette = "Set3") + 
-  # Add points for species in the dataset (NB: doesnt work without data$column syntax)
-  geom_tippoint(color = rodentia.clade$in.data) +
-  labs(col = "Order")
-
-# Print the plot
-print(p)
-
+# Save the phylogeny
+ggsave(here("figures", "rodent.phylogeny.pdf"), width = 6, height = 6, units = "in")
+  
