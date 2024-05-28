@@ -135,7 +135,12 @@ path.data.clean <- format.hierachy(data = path.data)
 path.data.clean <- path.data.clean %>% 
   left_join(., harmonised.sp.names %>% select(classification, tree.names)) %>% 
   # Remove any rows with no match to species in phylogeny
-  filter(!is.na(tree.names))
+  filter(!is.na(tree.names)) %>%
+  # Remove species not present in the rodent tree
+  filter(tree.names %in% rodent.phylogeny$tip.label)
+
+# Are all rodent species present in the phylogeny?
+# all(path.data.clean$tree.names %in% rodent.phylogeny$tip.label)
 
 # Get a pairwise (relative) distance matrix
 dm <- myfuncs$get.phydist.mat(phylogeny = rodent.phylogeny, rel.dist = TRUE)
