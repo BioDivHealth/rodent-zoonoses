@@ -1,0 +1,33 @@
+---
+title: "01_Community_Modelling"
+author: "David Redding, Greg Milne, Ana Martinez-Checa, Harry Gordon"
+date: "07/06/2024"
+bibliography: 01_references.bib
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+This is the working manuscript for a study on disease modelling in rodent communities by the Infectious Disease Systems Ecology group at the British Natural History Museum.
+
+David Simons' paper: @simons2023.
+
+Paper on causal inference: @dee2023.
+
+## Methods
+
+These are the methods.
+
+## Results
+
+These are the results.
+
+## Discussion
+
+This is the discussion.
+
+## References
