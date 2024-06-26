@@ -4,7 +4,10 @@ if (!require("pacman")) install.packages("pacman")
 pkgs <- c(
   "here",
   "tidyverse",
-  "lubridate"
+  "lubridate",
+  "ggplot2",
+  "maps",
+  "mapdata"
 )
 
 
@@ -51,5 +54,13 @@ host_monthly$period[is.na(host_monthly$period)] <- 0
 ## filter for less than 1 month trapping time
 host <- host_monthly %>% filter(period <= 31)
 
+## output file for analysis
+combined_data <- list(studies = studies,
+                      host = host,
+                      pathogen = pathogen)
+
+write_rds(combined_data, file="combined_data.rds")
 
 
+
+    
