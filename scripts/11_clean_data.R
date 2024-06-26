@@ -30,13 +30,26 @@ host <- host %>%
 host_monthly <- host %>%
   filter(str_detect(start_date, "^\\d{4}-\\d{2}") | str_detect(start_date, "^\\d{4}-\\d{2}-\\d{2}"))
 
+# Add "-01" to strings in "yyyy-mm" format
+host_monthly$start_date <- ifelse(grepl("^\\d{4}-\\d{2}$", host_monthly$start_date), 
+                            paste0(host_monthly$start_date, "-01"), 
+                            host_monthly$start_date)
+
+host_monthly$end_date <- ifelse(grepl("^\\d{4}-\\d{2}$", host_monthly$end_date), 
+                                  paste0(host_monthly$end_date, "-01"), 
+                                  host_monthly$end_date)
+
 ## convert all dates to yyyy-mm-dd and convert to date object
 
+host_monthly$start_date <- as.Date(host_monthly$start_date)
+host_monthly$end_date <- as.Date(host_monthly$end_date)
 
+## Calculate duration of trapping
+host_monthly$period <- host_monthly$end_date - host_monthly$start_date
+host_monthly$period[is.na(host_monthly$period)] <- 0
 
-
-
-
+## filter for less than 1 month trapping time
+host <- host_monthly %>% filter(period <= 31)
 
 
 
