@@ -1,4 +1,6 @@
 setwd("../data")
+
+## Load packages
 if (!require("pacman")) install.packages("pacman")
 
 pkgs <- c(
@@ -13,10 +15,28 @@ pkgs <- c(
 
 pacman::p_load(pkgs, character.only = T)
 
-studies = read.csv("studies.csv")
-host = read.csv("host.csv")
-pathogen = read.csv("pathogen.csv")
+## if multiple in put sheets, load and merge sheets
+##harry
+studies_h = read.csv("./aren_hant_data/studies_h.csv")
+host_h = read.csv("./aren_hant_data/host_h.csv")
+pathogen_h = read.csv("./aren_hant_data/pathogen_h.csv")
 
+##david
+studies_d = read.csv("./aren_hant_data/studies_d.csv")
+host_d = read.csv("./aren_hant_data/host_d.csv")
+pathogen_d = read.csv("./aren_hant_data/pathogen_d.csv")
+pathogen_d = select(pathogen_d, -X, -X.1, -X.2, -X.3)
+
+##ana
+#studies_a = read.csv("./aren_hant_data/studies_a.csv")
+#host_a = read.csv("./aren_hant_data/host_a.csv")
+#host_a = select(host_a, -trapping.notes)
+#pathogen_a = read.csv("./aren_hant_data/pathogen_a.csv")
+
+
+studies <-  rbind(studies_h, studies_d)
+host <-  rbind(host_h, host_d)
+pathogen <-  rbind(pathogen_h, pathogen_d)
 
 combined_data <- list(studies = studies,
                          host = host,
