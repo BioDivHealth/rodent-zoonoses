@@ -30,13 +30,13 @@ library(ggplot2)
 library(maps)
 library(mapdata)
 
-# Example data frame with longitude and latitude
+# Load data frame
 combined_data <- readRDS("../data/combined_data.rds")
 attach(combined_data)
 # Get the world map data
 world <- map_data("world")
 
-# Plot the points onto the world map without country lines
+# Plot the points onto the world map 
 ggplot() +
   geom_polygon(data = world, aes(x = long, y = lat, group = group), fill = "lightgray", color = "darkgray") +
   geom_point(data = host, aes(x = decimalLongitude, y = decimalLatitude), color = "red", size = 2) +
