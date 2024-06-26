@@ -38,7 +38,7 @@ world <- map_data("world")
 
 # Plot the points onto the world map without country lines
 ggplot() +
-  geom_polygon(data = world, aes(x = long, y = lat, group = group), fill = "lightgray", color = "gray") +
+  geom_polygon(data = world, aes(x = long, y = lat, group = group), fill = "lightgray", color = "darkgray") +
   geom_point(data = host, aes(x = decimalLongitude, y = decimalLatitude), color = "red", size = 2) +
   theme_minimal() +
   coord_fixed(1.3) +
