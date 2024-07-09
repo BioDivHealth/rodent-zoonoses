@@ -49,6 +49,26 @@ ggplot() +
 
 ```
 
+Here is a timeline of the samples used in this analysis:
+
+```{r plot_timeline, echo=FALSE, fig.height = 2}
+# Load necessary libraries
+library(ggplot2)
+
+# plot the study dates on a timeline
+ggplot(host, aes(x = start_date, y = 1)) +
+  geom_segment(aes(x = start_date, xend = start_date, y = 0.9, yend = 1.1), color = "red") +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  scale_y_continuous(limits = c(0.5, 1.5)) +
+  labs(title = "Timeline of Samples", x = "Date", y = "") +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank())
+
+```
+
 ## Results
 
 These are the results.
