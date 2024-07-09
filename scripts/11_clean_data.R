@@ -9,7 +9,8 @@ pkgs <- c(
   "lubridate",
   "ggplot2",
   "maps",
-  "mapdata"
+  "mapdata",
+  "dplyr"
 )
 
 
@@ -74,12 +75,21 @@ host_monthly$period[is.na(host_monthly$period)] <- 0
 ## filter for less than 1 month trapping time
 host <- host_monthly %>% filter(period <= 31)
 
+## filter for multiple species
+host <- host %>%
+  group_by(study_id) %>%
+  filter(n_distinct(scientificName) > 1) %>%
+  ungroup()
+
+
 ## output file for analysis
 combined_data <- list(studies = studies,
                       host = host,
                       pathogen = pathogen)
 
 write_rds(combined_data, file="combined_data.rds")
+
+
 
 
 
