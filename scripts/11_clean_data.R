@@ -43,8 +43,16 @@ combined_data <- list(studies = studies,
                          host = host,
                          pathogen = pathogen)
 
-write_rds(combined_data, file="combined_data.rds")
+write_rds(combined_data, file="combined_data_all.rds")
 attach(combined_data)
+
+## Filter for site resolution
+
+studies <- subset(studies, data_resolution == "site-session")
+
+# keep only host data with matching study ID from this subset
+
+host <- host[host$study_id %in% studies$study_id, ]
 
 ## translate date into start/end columns
 
@@ -81,13 +89,27 @@ host <- host %>%
   filter(n_distinct(scientificName) > 1) %>%
   ungroup()
 
+## Filter pathogen dataset for presence of rodent_id in host dataset
+
+pathogen <- pathogen[pathogen$associated_rodent_record_id %in% host$rodent_record_id, ]
+
+## check for multiple pathogen entries for each rodent_id and take max positives
+
+pathogen <- pathogen %>%
+  group_by(associated_rodent_record_id) %>%
+  slice(which.max(positive)) %>%
+  ungroup()
+
+## impute negatives
+
+
 
 ## output file for analysis
 combined_data <- list(studies = studies,
                       host = host,
                       pathogen = pathogen)
 
-write_rds(combined_data, file="combined_data.rds")
+write_rds(combined_data, file="combined_data_highres.rds")
 
 
 
