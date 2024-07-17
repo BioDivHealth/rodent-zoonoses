@@ -7,9 +7,6 @@ pkgs <- c(
   "here",
   "tidyverse",
   "lubridate",
-  "ggplot2",
-  "maps",
-  "mapdata",
   "dplyr"
 )
 
@@ -99,6 +96,11 @@ pathogen <- pathogen %>%
   group_by(associated_rodent_record_id) %>%
   slice(which.max(positive)) %>%
   ungroup()
+
+## translate species name into genus/species names
+
+host <- host %>%
+  separate(scientificName, into = c("genus", "species", "other"), sep = " ")
 
 ## impute negatives
 

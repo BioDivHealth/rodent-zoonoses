@@ -31,7 +31,7 @@ library(maps)
 library(mapdata)
 
 # Load data frame
-combined_data <- readRDS("../data/combined_data.rds")
+combined_data <- readRDS("../data/combined_data_highres.rds")
 attach(combined_data)
 # Get the world map data
 world <- map_data("world")
