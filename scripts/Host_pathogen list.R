@@ -6,8 +6,8 @@ install.packages("readxl")
 library(readxl)
 
 # Create list from Dave cleaned data (data_for_ana) of all host and pathogens conserving uniq_ids
-# Create aggregated list of host and pathogens without uniq_ids and summing ttested and positve for rows with same virus and species
-# Read the CSV file (assuming your file is in the current working directory)
+# Create aggregated list of host and pathogens without uniq_ids and summing tested and positives for rows with same virus and species
+# Read the CSV file (assuming your file is in the current working directory) 
 file_path <- "~/Desktop/pathogen_host list.xlsx"
 
 # Read the Excel file, specifying the sheet name if needed
