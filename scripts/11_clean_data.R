@@ -102,7 +102,7 @@ pathogen <- pathogen %>%
 host <- host %>%
   separate(scientificName, into = c("genus", "species", "other"), sep = " ")
 
-## impute negatives
+## impute negative pathogen
 
 
 
