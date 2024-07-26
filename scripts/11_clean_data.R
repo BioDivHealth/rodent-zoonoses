@@ -106,6 +106,18 @@ host <- host %>%
 
 
 
+## Merge pathogen and host 
+pathogen <- pathogen %>% 
+  rename(
+    rodent_record_id = associated_rodent_record_id
+  )
+
+host_path_wide <- merge(host,pathogen,by="rodent_record_id")
+
+# save to rds for phylogeny
+
+write_rds(host_path_wide, file="host_path_wide.rds")
+
 ## output file for analysis
 combined_data <- list(studies = studies,
                       host = host,
