@@ -22,13 +22,15 @@ pacman::p_load(here,
                ggtree, # for plotting trees
                ggplot2)  
 
+# 1.5. Load useful custom functions ----
+source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
+
 # 2. Load data ----
 
 # Rodent-pathogen data (for testing phylogenetic workflow)
 # https://github.com/DidDrog11/scoping_review/tree/main/data_clean
-rodent.pathogen.data <- readRDS(here("data", "wide_pathogen.rds")) %>%  # wide format
-  as.data.frame() %>% 
-  sf::st_as_sf() #to avoid error: Column `geometry` is a `sfc_POINT/sfc` object
+rodent.pathogen.data <- readRDS(here("data", "host_path_wide.rds")) %>%  # wide format
+  as.data.frame()
 
 # Load mammal phylogeny: https://data.vertlife.org -> mammaltree -> Completed_5911sp_topoCons_FBDasZhouEtAl.zip
 # I'm using one tree of 1,000 bootstrap replicates; can extend this once workflow established
@@ -44,13 +46,10 @@ str(mammal.tree)
 
 # Format data to get host names in same format as tree's
 rodent.species <- rodent.pathogen.data %>%
-  # Temporarily drop the 'geometry' column for subsequent piping
-  sf::st_drop_geometry() %>%
-  # Separate host classification into genus and species
-  tidyr::separate(col = classification, into = c("genus", "species"), sep = " ", remove = F) %>% 
   mutate(
     # Set species as NA if abbreviated as sp.  
     species = ifelse(species == "sp.", NA, species),
+    species = ifelse(species == "spp.", NA, species),
     # Capitalise first letter of genus
     genus = paste0(toupper(substr(genus, 1, 1)), substr(genus, 2, nchar(genus)))
   ) %>% 
@@ -59,11 +58,11 @@ rodent.species <- rodent.pathogen.data %>%
   # Create classification that matches tree tip labels in format Genus_species
   mutate(tree.names = paste(genus, species, sep = "_")) %>% 
   # Return select columns
-  select(classification, tree.names, genus, species) %>% 
+  select(associatedTaxa,tree.names, genus, species) %>% 
   # Keep only unique species names
   distinct() %>% 
   # Order alphabetically
-  arrange(classification)
+  arrange(associatedTaxa)
 
 # Which of our rodent species are in the tree?
 rodent.species$in.tree <- ifelse(rodent.species$tree.names %in% mammal.tree$tip.label,
@@ -87,18 +86,12 @@ for(i in 1:length(missing.species)){
 rodent.species.corrected <- rodent.species %>% 
   mutate(
     tree.names = case_when(
-      # Acomys_chudeaui = Acomys chudeaui, proposed to be a junior synonym for Acomys airensis: https://academic.oup.com/biolinnean/article/98/1/29/2235991
-      tree.names == "Acomys_chudeaui" ~ "Acomys_airensis",
-      # theresae was misspelt
-      tree.names == "Crocidura_thereseae" ~ "Crocidura_theresae", 
-      # Dipodillus is sometimes classified as a subgenus of Gerbillus
-      tree.names == "Dipodillus_campestris" ~ "Gerbillus_campestris",
-      # guineae was misspelt 
-      tree.names == "Gerbilliscus_guinea" ~ "Gerbilliscus_guineae",
-      # kempi was misspelt
-      tree.names == "Gerbilliscus_kempii" ~ "Gerbilliscus_kempi",
-      # Hylomyscus_simus: not found anywhere online, so set name to NA
-      tree.names == "Hylomyscus_simus" ~ NA,
+      # azarae was misspelt
+      tree.names == "Akodon_azare" ~ "Akodon_azarae",
+      # Clethrionomys was misspelt and blank vole is also referred to as myodes
+      tree.names == "Clethryonomys_glareolus" ~ "Myodes_glareolus", 
+      # Icttidomys mexicanus is sometimes classed as Spermophilus
+      tree.names == "Spermophilus_mexicanus" ~ "Ictidomys_mexicanus",
       # Keep all other names the same
       TRUE ~ tree.names
     ),
@@ -156,7 +149,7 @@ if (!(file.exists(here("data", "rodentia.mrca.tre")))) {
 }
 
 # Remove large objects from the environment
-rm(mammal.tree, pruned.mammal.tree)
+rm(mammal.tree)
 
 # 4. Plot phylogeny ----
 
@@ -172,4 +165,22 @@ ggtree(rodentia.clade, size = 0.05) +
 
 # Save the phylogeny
 ggsave(here("figures", "rodent.phylogeny.pdf"), width = 6, height = 6, units = "in")
-  
+
+### get distance matrix
+
+# Get a pairwise (relative) distance matrix
+dm <- myfuncs$get.phydist.mat(phylogeny = pruned.mammal.tree, rel.dist = TRUE)
+
+species <- rodent.species.corrected$tree.names
+
+## check all the names are present in the matrix
+missing_names <- setdiff(species, rownames(dm))
+if(length(missing_names) > 0) {
+  warning("The following names are not in the distance matrix and will be ignored: ", paste(missing_names, collapse = ", "))
+}
+
+# only keep our species of interest
+filtered.dm <- dm[species, species]
+
+# save final matrix
+write_rds(filtered.dm, file="phylo_dist_matrix.rds")
