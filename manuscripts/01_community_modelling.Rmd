@@ -69,6 +69,32 @@ ggplot(host, aes(x = start_date, y = 1)) +
 
 ```
 
+### Rodent phylogeny
+Here is the mammal tree with our host species higlighted
+
+```{r plot_phylogeny, echo=FALSE, message=FALSE, warning=FALSE}
+# load necessary libraries
+library(ggtree)
+library(ggplot2)
+library(here)
+
+# load data
+host.clade <- read.tree(here("data", "./phylogenetics/host.mrca.tree"))
+pruned.host.spp <- readRDS(here("data", "./phylogenetics/harmonised.host.sp.names.rds")) %>%
+  as.data.frame()
+
+# find our species of interest
+host.clade$in.data <- ifelse(host.clade$tip.label %in% pruned.host.spp$tree.names, 
+       "purple", NA)
+host.clade$in.data <- as.factor(host.clade$in.data)
+
+# Plot the phylogeny
+ggtree(host.clade, size = 0.05) + 
+  geom_tippoint(color = host.clade$in.data, size = 3) + 
+  geom_treescale(x = 0, y = 2200, col = "midnightblue")
+
+```
+
 ## Results
 
 These are the results.
