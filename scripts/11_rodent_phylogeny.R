@@ -29,23 +29,23 @@ source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
 
 # Rodent-pathogen data (for testing phylogenetic workflow)
 # https://github.com/DidDrog11/scoping_review/tree/main/data_clean
-rodent.pathogen.data <- readRDS(here("data", "host_path_wide.rds")) %>%  # wide format
+host.pathogen.data <- readRDS(here("data", "host_path_wide.rds")) %>%  # wide format
   as.data.frame()
 
 # Load mammal phylogeny: https://data.vertlife.org -> mammaltree -> Completed_5911sp_topoCons_FBDasZhouEtAl.zip
 # I'm using one tree of 1,000 bootstrap replicates; can extend this once workflow established
-mammal.tree <- read.tree(here("data", "MamPhy_BDvr_Completed_5911sp_topoCons_FBDasZhouEtAl_v2_tree0000.tre"))
+mammal.tree <- read.tree(here("data", "./phylogenetics/MamPhy_BDvr_Completed_5911sp_topoCons_FBDasZhouEtAl_v2_tree0000.tre"))
 
 # Load species taxonomical rankings (https://github.com/n8upham/MamPhy_v1/blob/master/_DATA/taxonomy_mamPhy_5911species_toPublish.csv)
-taxa <- read.csv(here("data", "taxonomy_mamPhy_5911species_toPublish.csv")) 
+taxa <- read.csv(here("data", "./phylogenetics/taxonomy_mamPhy_5911species_toPublish.csv")) 
 
 # Summarise the tree
 str(mammal.tree)
 
 # 3. Generate rodent phylogeny ----
 
-# Format data to get host names in same format as tree's
-rodent.species <- rodent.pathogen.data %>%
+# Format data to get host names in same format as trees
+host.species <- host.pathogen.data %>%
   mutate(
     # Set species as NA if abbreviated as sp.  
     species = ifelse(species == "sp.", NA, species),
@@ -65,13 +65,13 @@ rodent.species <- rodent.pathogen.data %>%
   arrange(associatedTaxa)
 
 # Which of our rodent species are in the tree?
-rodent.species$in.tree <- ifelse(rodent.species$tree.names %in% mammal.tree$tip.label,
+host.species$in.tree <- ifelse(host.species$tree.names %in% mammal.tree$tip.label,
                                  TRUE, FALSE)
 
-sum(rodent.species$in.tree == FALSE)  #6 missing from tree
+sum(host.species$in.tree == FALSE)  #3 missing from tree
 
 # For those missing from the tree, which same-genus species does the tree contain?
-missing.species <- rodent.species %>% 
+missing.species <- host.species %>% 
   filter(in.tree == FALSE)
 
 for(i in 1:length(missing.species)){
@@ -83,7 +83,7 @@ for(i in 1:length(missing.species)){
 }
 
 # Correct names in the rodent data after manual comparison with tree names
-rodent.species.corrected <- rodent.species %>% 
+host.species.corrected <- host.species %>% 
   mutate(
     tree.names = case_when(
       # azarae was misspelt
@@ -102,50 +102,49 @@ rodent.species.corrected <- rodent.species %>%
   filter(duplicated(tree.names) == FALSE)
 
 # Ensure all species are now in the tree
-rodent.species.corrected$in.tree <- ifelse(rodent.species.corrected$tree.names %in% mammal.tree$tip.label,
+host.species.corrected$in.tree <- ifelse(host.species.corrected$tree.names %in% mammal.tree$tip.label,
                                            TRUE, FALSE)
 
-sum(rodent.species.corrected$in.tree == FALSE)  # now 0 missing from tree
+sum(host.species.corrected$in.tree == FALSE)  # now 0 missing from tree
 
 # Save rodent species tree names for use in other scripts
-if (!(file.exists(here("data", "harmonised.rodent.sp.names.rds")))) {
-  saveRDS(rodent.species.corrected, here("data", "harmonised.rodent.sp.names.rds"))
+if (!(file.exists(here("data", "./phylogenetics/harmonised.host.sp.names.rds")))) {
+  saveRDS(host.species.corrected, here("data", "./phylogenetics/harmonised.host.sp.names.rds"))
 }
 
 # Find the node number for the clade containing all species in the dataset
-node.in.data <- getMRCA(mammal.tree, tip = rodent.species.corrected$tree.names)
+node.in.data <- getMRCA(mammal.tree, tip = host.species.corrected$tree.names)
 
 # Extract the clade using the node number
 pruned.mammal.tree <- extract.clade(mammal.tree, node.in.data)
 
-# Remove species in the data that are not within Rodentia
+# Remove species in the data that are not within our clade of interest
 
 # Get species name from tree
-rodentia.spp <- data.frame(Species_Name = pruned.mammal.tree$tip.label) %>% 
+mammal.spp <- data.frame(Species_Name = pruned.mammal.tree$tip.label) %>% 
   # Join to taxonomic family & order data
-  left_join(taxa %>% select(Species_Name, fam, ord), by = "Species_Name") %>%
+  left_join(taxa %>% select(Species_Name, fam, ord), by = "Species_Name")
   # Get only species in the order Rodentia
-  filter(ord == "RODENTIA")
 
-# Filter host species in the data to include only those in Rodentia
-pruned.host.spp <- rodent.species.corrected %>% 
-  filter(tree.names %in% rodentia.spp$Species_Name)
+# Filter host species in the data to include only those in our dataset's clade
+pruned.host.spp <- host.species.corrected %>% 
+  filter(tree.names %in% mammal.spp$Species_Name)
 
 # nrow(rodent.species.corrected)  #before pruning (include non-rodents)
 # nrow(pruned.host.spp)           #after pruning (only rodents)
 
-# Find the node number for the clade containing all RODENT species in the dataset
-rodentia.node <- getMRCA(mammal.tree, tip = pruned.host.spp$tree.names)
+# Find the node number for the clade containing all our host species in the dataset
+host.node <- getMRCA(mammal.tree, tip = pruned.host.spp$tree.names)
 
 # Extract the clade using the node number 
-rodentia.clade <- extract.clade(mammal.tree, rodentia.node)
+host.clade <- extract.clade(mammal.tree, host.node)
 
 # Summarise the extracted clade
-str(rodentia.clade)
+str(host.clade)
 
 # Save the rodent phylogeny
-if (!(file.exists(here("data", "rodentia.mrca.tre")))) {
-  write.tree(rodentia.clade, here("data", "rodentia.mrca.tre"))
+if (!(file.exists(here("data", "./phylogenetics/host.mrca.tree")))) {
+  write.tree(host.clade, here("data", "./phylogenetics/host.mrca.tree"))
 }
 
 # Remove large objects from the environment
@@ -154,24 +153,24 @@ rm(mammal.tree)
 # 4. Plot phylogeny ----
 
 # Create variable to colour tips if species present in the data
-rodentia.clade$in.data <- ifelse(rodentia.clade$tip.label %in% pruned.host.spp$tree.names, 
+host.clade$in.data <- ifelse(host.clade$tip.label %in% pruned.host.spp$tree.names, 
        "purple", NA)
-rodentia.clade$in.data <- as.factor(rodentia.clade$in.data)
+host.clade$in.data <- as.factor(host.clade$in.data)
 
 # Plot the phylogeny
-ggtree(rodentia.clade, size = 0.05) + 
-  geom_tippoint(color = rodentia.clade$in.data, size = 0.6) + 
+ggtree(host.clade, size = 0.05) + 
+  geom_tippoint(color = host.clade$in.data, size = 3) + 
   geom_treescale(x = 0, y = 2200, col = "midnightblue")
 
 # Save the phylogeny
-ggsave(here("figures", "rodent.phylogeny.pdf"), width = 6, height = 6, units = "in")
+ggsave(here("figures", "host.phylogeny.pdf"), width = 6, height = 6, units = "in")
 
 ### get distance matrix
 
 # Get a pairwise (relative) distance matrix
 dm <- myfuncs$get.phydist.mat(phylogeny = pruned.mammal.tree, rel.dist = TRUE)
 
-species <- rodent.species.corrected$tree.names
+species <- host.species.corrected$tree.names
 
 ## check all the names are present in the matrix
 missing_names <- setdiff(species, rownames(dm))
@@ -183,4 +182,4 @@ if(length(missing_names) > 0) {
 filtered.dm <- dm[species, species]
 
 # save final matrix
-write_rds(filtered.dm, file="phylo_dist_matrix.rds")
+write_rds(filtered.dm, file="./phylogenetics/phylo_dist_matrix.rds")
