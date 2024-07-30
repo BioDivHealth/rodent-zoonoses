@@ -1,4 +1,4 @@
-setwd("../data")
+setwd("./data")
 
 ## Load packages
 if (!require("pacman")) install.packages("pacman")
@@ -16,9 +16,11 @@ pacman::p_load(pkgs, character.only = T)
 ## if multiple in put sheets, load and merge sheets
 ##harry
 studies_h = read.csv("./aren_hant_data/studies_h.csv")
+studies_h = studies_h[0:8]
 host_h = read.csv("./aren_hant_data/host_h.csv")
+host_h = host_h[0:13]
 pathogen_h = read.csv("./aren_hant_data/pathogen_h.csv")
-
+pathogen_h = pathogen_h[0:12]
 ##david
 studies_d = read.csv("./aren_hant_data/studies_d.csv")
 host_d = read.csv("./aren_hant_data/host_d.csv")
@@ -113,6 +115,7 @@ pathogen <- pathogen %>%
   )
 
 host_path_wide <- merge(host,pathogen,by="rodent_record_id")
+
 
 # save to rds for phylogeny
 
