@@ -23,7 +23,7 @@ pathogen_h = read.csv("./aren_hant_data/pathogen_h.csv")
 studies_d = read.csv("./aren_hant_data/studies_d.csv")
 host_d = read.csv("./aren_hant_data/host_d.csv")
 pathogen_d = read.csv("./aren_hant_data/pathogen_d.csv")
-pathogen_d = select(pathogen_d, -X, -X.1, -X.2, -X.3)
+pathogen_d = pathogen_d[0:12]
 
 ##ana
 #studies_a = read.csv("./aren_hant_data/studies_a.csv")
@@ -125,7 +125,9 @@ combined_data <- list(studies = studies,
 
 write_rds(combined_data, file="combined_data_highres.rds")
 
+### how many communities do we have?
 
+unique(host[c('start_date','locality')])
 
 
 
