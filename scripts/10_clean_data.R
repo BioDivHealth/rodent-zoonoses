@@ -28,15 +28,17 @@ pathogen_d = read.csv("./aren_hant_data/pathogen_d.csv")
 pathogen_d = pathogen_d[0:12]
 
 ##ana
-#studies_a = read.csv("./aren_hant_data/studies_a.csv")
-#host_a = read.csv("./aren_hant_data/host_a.csv")
-#host_a = select(host_a, -trapping.notes)
-#pathogen_a = read.csv("./aren_hant_data/pathogen_a.csv")
+studies_a = read.csv("./aren_hant_data/studies_a.csv")
+studies_a = studies_a[0:8]
+host_a = read.csv("./aren_hant_data/host_a.csv")
+host_a = host_a[0:13]
+# host_a = select(host_a, -trapping.notes)
+pathogen_a = read.csv("./aren_hant_data/pathogen_a.csv")
 
 
-studies <-  rbind(studies_h, studies_d)
-host <-  rbind(host_h, host_d)
-pathogen <-  rbind(pathogen_h, pathogen_d)
+studies <-  rbind(studies_h, studies_d, studies_a)
+host <-  rbind(host_h, host_d, host_a)
+pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a)
 
 combined_data <- list(studies = studies,
                          host = host,
