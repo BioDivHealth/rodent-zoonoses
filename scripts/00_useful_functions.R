@@ -52,35 +52,11 @@ myfuncs <- list(
     
   },
   
-
-
-  glc.files <- function(data, column) {
-    # This function returns the glc files you need for your coordinate data
-    # Check if the specified column exists in the dataset
-    if (!column %in% colnames(data)) {
-      stop("Specified column does not exist in the dataset")
-    }
-    
-    # Extract the values from the specified column
-    values <- data[[column]]
-    
-    # Create a sequence of bin floors from -180 to 175 (since 180 would start a new bin)
-    bins <- seq(-180, 175, by = 5)
-    
-    # Find the bin floor for each value
-    bin_floors <- sapply(values, function(x) {
-      bin <- max(bins[bins <= x])
-      return(as.character(bin))
-    })
-    
-    # Remove duplicate bins, sort them, and return as a list of strings
-    unique_bin_floors <- unique(bin_floors)
-    sorted_bin_floors <- sort(as.numeric(unique_bin_floors))
-    
-    # Convert sorted bin floors back to character strings
-    sorted_bin_floors_strings <- as.character(sorted_bin_floors)
-    
-    return(sorted_bin_floors_strings)
+  
+  get_dec_box <- function(lon, lat) {
+    upper_left_lat <- ceiling(lat / 5) * 5
+    upper_left_lon <- floor(lon / 5) * 5
+    return(c(upper_left_lat, upper_left_lon))
   }
 
 )
