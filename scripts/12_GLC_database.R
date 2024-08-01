@@ -19,7 +19,7 @@ df <- host_path %>%
   rowwise() %>%
   mutate(Upper_Left_Corner = list(get_dec_box(decimalLongitude, decimalLatitude))) %>%
   unnest_wider(Upper_Left_Corner, names_sep = "_") %>%
-  rename(Upper_Left_Lat = Upper_Left_Corner_1, Upper_Left_Lon = Upper_Left_Corner_2)%>%
+  rename(Upper_Left_Lat = Upper_Left_Corner_1, Upper_Left_Lon = Upper_Left_Corner_2) %>%
   dplyr::select(decimalLatitude, decimalLongitude, Upper_Left_Lat, Upper_Left_Lon)
 
 # find unique boxes
@@ -27,7 +27,7 @@ df <- host_path %>%
 files <- unique(df[,c('Upper_Left_Lat','Upper_Left_Lon')])
 
 # 3. Plot example raster from our GLC data
-str_name<-'./data/GLC/19852000_E15N45.tif' 
+str_name <-'./data/example_raster/19852000_E15N45.tif' 
 eg_raster=raster(str_name)
 
 eg_raster <- setMinMax(eg_raster)
