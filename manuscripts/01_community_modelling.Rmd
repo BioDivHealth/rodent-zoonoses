@@ -95,6 +95,22 @@ ggtree(host.clade, size = 0.05) +
 
 ```
 
+### GLC database
+Here is an example of a raster from the GLC database, the X and Y are Longitude and Latitude respectively.
+
+```{r plot_raster, echo=FALSE, message=FALSE, warning=FALSE}
+# Load necessary libraries
+library(raster)
+library(tiff)
+
+str_name <-'../data/example_raster/19852000_E15N45.tif' 
+eg_raster=raster(str_name)
+
+eg_raster <- setMinMax(eg_raster)
+
+plot(eg_raster, main="example of GLC_FCS raster")
+```
+
 ## Results
 
 These are the results.
