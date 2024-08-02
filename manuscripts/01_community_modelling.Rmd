@@ -3,14 +3,9 @@ title: "Modelling Zoonoses in Rodent Communities"
 author: "David Redding, Greg Milne, Ana Martinez-Checa, Harry Gordon"
 date: "07/06/2024"
 output:
-  pdf_document: default
-  html_document: default
-  word_document: default
+  html_document:
+    df_print: paged
 bibliography: 01_references.bib
-<<<<<<< HEAD
-=======
-output: pdf_document
->>>>>>> e6973407a16d2d4f80cb5afab02c95e65a8dbbe3
 ---
 
 ```{r setup, include=FALSE}
@@ -77,7 +72,7 @@ ggplot(host_path, aes(x = start_date, y = 1)) +
 ```
 Here is the infectivity rates of our sampled rodents:
 
-```{r plot_world_map, echo=FALSE}
+```{r plot_infection, echo=FALSE}
 pacman::p_load(here,
                stringr,
                dplyr,
