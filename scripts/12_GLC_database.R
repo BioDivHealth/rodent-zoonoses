@@ -5,7 +5,9 @@ pacman::p_load(here,
                ggplot2,
                raster,
                tiff,
-               tidyr)  
+               tidyr,
+               sp,
+               rgdal)  
 
 source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
 
@@ -27,9 +29,15 @@ df <- host_path %>%
 files <- unique(df[,c('Upper_Left_Lat','Upper_Left_Lon')])
 
 # 3. Plot example raster from our GLC data
+
+
+### make raster stack
 str_name <-'./data/example_raster/19852000_E15N45.tif' 
-eg_raster=raster(str_name)
+raster_stack <- stack(str_name)
 
-eg_raster <- setMinMax(eg_raster)
+croat_1990 <- raster_stack[[2]]
 
-plot(eg_raster, main="example of GLC_FCS raster")
+plot(croat_1990, main="Land cover for Croatia in 1990")
+
+### make raster stack
+
