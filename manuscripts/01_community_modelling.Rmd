@@ -2,8 +2,11 @@
 title: "Modelling Zoonoses in Rodent Communities"
 author: "David Redding, Greg Milne, Ana Martinez-Checa, Harry Gordon"
 date: "07/06/2024"
+output:
+  pdf_document: default
+  html_document: default
+  word_document: default
 bibliography: 01_references.bib
-output: html_document
 ---
 
 ```{r setup, include=FALSE}
@@ -68,8 +71,90 @@ ggplot(host, aes(x = start_date, y = 1)) +
         panel.grid.minor.y = element_blank())
 
 ```
+Here is the infectivity rates of our sampled rodents:
 
+```{r plot_world_map, echo=FALSE}
+pacman::p_load(here,
+               stringr,
+               dplyr,
+               ape,    # for phylogenetic analyes
+               ggtree, # for plotting trees
+               ggplot2,
+               tidyr)
+host.pathogen.data <- readRDS(here("data", "host_path_wide.rds"))
+
+#look at it
+glimpse(host.pathogen.data)
+str(host.pathogen.data)
+
+# Correct species names (if needed, this step can be skipped)
+mutated.host.pathogen.data <- host.pathogen.data %>%
+  mutate(associatedTaxa = case_when(
+    associatedTaxa == "Akodon azare" ~ "Akodon azarae",
+    associatedTaxa == "brush mice" ~ "Peromyscus boylii",
+    associatedTaxa == "Clethrionomys glareolus" ~ "Myodes glareolus",
+    associatedTaxa == "Clethryonomys glareolus" ~ "Myodes glareolus",
+    associatedTaxa == "Oligoryzomys favescens" ~ "Oligoryzomys flavescens",
+    associatedTaxa == "P. californicus" ~ "Peromyscus californicus",
+    associatedTaxa == "dusky-footed" ~ "Neotoma fuscipes",
+    TRUE ~ associatedTaxa  # Retain original name if no match
+  ))
+
+# Ensure 'positives' and 'negatives' are numeric
+plot.positives.negatives <- mutated.host.pathogen.data %>%
+mutate(positive = as.numeric(positive),
+       negative = as.numeric(negative))
+
+str(plot.positives.negatives)
+
+# Aggregate the data by associatedTaxa
+plot_aggregated <- plot.positives.negatives %>%
+  group_by(associatedTaxa) %>%
+  summarize(
+    positives = sum(positive),
+    negatives = sum(negative)
+  ) %>%
+  ungroup()
+
+# Divide data into two halves
+infectivity.1 <- plot_aggregated %>%
+  slice(1:ceiling(n() / 2))
+infectivity.2 <- plot_aggregated %>%
+  slice((ceiling(n() / 2) + 1):n())
+
+# Reshape the data for plotting
+plot.infectivity.1 <- infectivity.1 %>%
+  pivot_longer(cols = c("positives", "negatives"), 
+               names_to = "Result", 
+               values_to = "Count")
+plot.infectivity.2 <- infectivity.2 %>%
+  pivot_longer(cols = c("positives", "negatives"), 
+               names_to = "Result", 
+               values_to = "Count")
+
+# Plot the first half
+plot1 <- ggplot(plot.infectivity.1, aes(x = associatedTaxa, y = Count, fill = Result)) +
+  geom_col(position = "stack", width = 0.7) +
+  scale_fill_manual(values = c("positives" = "orange", "negatives" = "olivedrab3")) +
+  labs(x = "Associated Taxa (Part 1)", y = "tested", fill = "Test Result") +
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+# Plot the second half
+plot2 <- ggplot(plot.infectivity.2, aes(x = associatedTaxa, y = Count, fill = Result)) +
+  geom_col(position = "stack", width = 0.7) +
+  scale_fill_manual(values = c("positives" = "orange", "negatives" = "olivedrab3")) +
+  labs(x = "Associated Taxa (Part 2)", y = "tested", fill = "Test Result") +
+  theme_bw()+
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+infectivity.combined.plot <- plot1 + plot2
+
+infectivity.combined.plot
+
+```
 ### Rodent phylogeny
+
 Here is the mammal tree with our host species higlighted
 
 ```{r plot_phylogeny, echo=FALSE, message=FALSE, warning=FALSE}
@@ -96,6 +181,7 @@ ggtree(host.clade, size = 0.05) +
 ```
 
 ### GLC database
+
 Here is an example of a raster from the GLC database, the X and Y are Longitude and Latitude respectively.
 
 ```{r plot_raster, echo=FALSE, message=FALSE, warning=FALSE}
