@@ -3,7 +3,7 @@ title: "Modelling Zoonoses in Rodent Communities"
 author: "David Redding, Greg Milne, Ana Martinez-Checa, Harry Gordon"
 date: "07/06/2024"
 bibliography: 01_references.bib
-output: html_document
+output: pdf_document
 ---
 
 ```{r setup, include=FALSE}
