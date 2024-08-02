@@ -33,3 +33,4 @@ Large data files not present in the [data folder](https://github.com/BioDivHealt
 - Continue with extraction
 - Find literature for rodent home ranges
 - Find literature for rodent community turnover
+- Find literature on species habitat preference
