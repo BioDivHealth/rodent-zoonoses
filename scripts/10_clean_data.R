@@ -1,5 +1,3 @@
-setwd("./data")
-
 ## Load packages
 if (!require("pacman")) install.packages("pacman")
 
@@ -15,37 +13,31 @@ pacman::p_load(pkgs, character.only = T)
 
 ## if multiple in put sheets, load and merge sheets
 ##harry
-studies_h = read.csv("./aren_hant_data/studies_h.csv")
+studies_h = read.csv("./data/aren_hant_data/studies_h.csv")
 studies_h = studies_h[0:8]
-host_h = read.csv("./aren_hant_data/host_h.csv")
+host_h = read.csv("./data/aren_hant_data/host_h.csv")
 host_h = host_h[0:13]
-pathogen_h = read.csv("./aren_hant_data/pathogen_h.csv")
+pathogen_h = read.csv("./data/aren_hant_data/pathogen_h.csv")
 pathogen_h = pathogen_h[0:12]
 ##david
-studies_d = read.csv("./aren_hant_data/studies_d.csv")
-host_d = read.csv("./aren_hant_data/host_d.csv")
-pathogen_d = read.csv("./aren_hant_data/pathogen_d.csv")
+studies_d = read.csv("./data/aren_hant_data/studies_d.csv")
+host_d = read.csv("./data/aren_hant_data/host_d.csv")
+pathogen_d = read.csv("./data/aren_hant_data/pathogen_d.csv")
 pathogen_d = pathogen_d[0:12]
 
 ##ana
-studies_a = read.csv("./aren_hant_data/studies_a.csv")
+studies_a = read.csv("./data/aren_hant_data/studies_a.csv")
 studies_a = studies_a[0:8]
-host_a = read.csv("./aren_hant_data/host_a.csv")
+host_a = read.csv("./data/aren_hant_data/host_a.csv")
 host_a = host_a[0:13]
 # host_a = select(host_a, -trapping.notes)
-pathogen_a = read.csv("./aren_hant_data/pathogen_a.csv")
+pathogen_a = read.csv("./data/aren_hant_data/pathogen_a.csv")
 
 
 studies <-  rbind(studies_h, studies_d, studies_a)
 host <-  rbind(host_h, host_d, host_a)
 pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a)
 
-combined_data <- list(studies = studies,
-                         host = host,
-                         pathogen = pathogen)
-
-write_rds(combined_data, file="combined_data_all.rds")
-attach(combined_data)
 
 ## Filter for site resolution
 
@@ -106,6 +98,11 @@ pathogen <- pathogen %>%
 host <- host %>%
   separate(scientificName, into = c("genus", "species", "other"), sep = " ")
 
+## convert Ana's coordinates to numeric
+
+host$decimalLatitude <- as.numeric(host$decimalLatitude)
+host$decimalLongitude <- as.numeric(host$decimalLongitude)
+
 ## impute negative pathogen
 
 
@@ -121,14 +118,14 @@ host_path_wide <- merge(host,pathogen,by="rodent_record_id")
 
 # save to rds for phylogeny
 
-write_rds(host_path_wide, file="host_path_wide.rds")
+write_rds(host_path_wide, file="./data/host_path_wide.rds")
 
 ## output file for analysis
 combined_data <- list(studies = studies,
                       host = host,
                       pathogen = pathogen)
 
-write_rds(combined_data, file="combined_data_highres.rds")
+write_rds(combined_data, file="./data/combined_data_highres.rds")
 
 ### how many communities do we have?
 
