@@ -2,9 +2,7 @@
 title: "Modelling Zoonoses in Rodent Communities"
 author: "David Redding, Greg Milne, Ana Martinez-Checa, Harry Gordon"
 date: "07/06/2024"
-output:
-  html_document:
-    df_print: paged
+output: pdf_document
 bibliography: 01_references.bib
 ---
 
@@ -72,7 +70,7 @@ ggplot(host_path, aes(x = start_date, y = 1)) +
 ```
 Here is the infectivity rates of our sampled rodents:
 
-```{r plot_infection, echo=FALSE}
+```{r plot_infection, echo=FALSE, message=FALSE, warning=FALSE}
 pacman::p_load(here,
                stringr,
                dplyr,
@@ -82,9 +80,6 @@ pacman::p_load(here,
                tidyr)
 host.pathogen.data <- readRDS(here("data", "host_path_wide.rds"))
 
-#look at it
-glimpse(host.pathogen.data)
-str(host.pathogen.data)
 
 # Correct species names (if needed, this step can be skipped)
 mutated.host.pathogen.data <- host.pathogen.data %>%
@@ -104,7 +99,6 @@ plot.positives.negatives <- mutated.host.pathogen.data %>%
 mutate(positive = as.numeric(positive),
        negative = as.numeric(negative))
 
-str(plot.positives.negatives)
 
 # Aggregate the data by associatedTaxa
 plot_aggregated <- plot.positives.negatives %>%
@@ -152,6 +146,7 @@ infectivity.combined.plot <- plot1 + plot2
 infectivity.combined.plot
 
 ```
+
 ### Rodent phylogeny
 
 Here is the mammal tree with our host species higlighted
