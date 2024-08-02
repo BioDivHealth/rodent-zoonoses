@@ -83,26 +83,71 @@ b <- as(extent(16.53, 16.59, 44.03, 44.07), 'SpatialPolygons')
 crs(b) <- crs(croat_1995)
 cropped_ras <- crop(croat_1995, b)
 
+# map values to colours using legend for correct land cover colours
+# Load the CSV file
+legend_file <- "./data/example_raster/LC_legend.csv"
+legend <- read.csv(legend_file)
+
+legend$colour <- sapply(legend$colour, parse_rgb)
+
+# Create a lookup table from the legend file
+lookup_table <- legend %>%
+  dplyr::select(number, colour)
+
+# Convert the raster to a data frame for ggplot2
+r_df <- as.data.frame(cropped_ras, xy = TRUE, na.rm = TRUE)
+
+# Map the raster values to colors
+r_df <- r_df %>%
+  left_join(lookup_table, by = c("X19852000_E15N45_3" = "number"))
+
+# Plot the raster using ggplot2
+ggplot(r_df, aes(x = x, y = y, fill = colour)) +
+  geom_raster() +
+  scale_fill_identity() +  # Use the exact colors provided
+  theme_minimal() +
+  labs(fill = "Colour", x = "Longitude", y = "Latitude") +
+  coord_fixed()
+
+# visualise raster
 plot(cropped_ras)
 plot(buffer, add = TRUE)
 
-# coord_cartesian() within ggplot for zooming in plot area
 
 # Extract the values within the buffer
-land_cover_values <- extract(croat_1995, buffer)
+land_cover_values <- raster::extract(cropped_ras, buffer)
 
 # Flatten the list of values
 land_cover_values <- unlist(land_cover_values)
 
+# Convert numbers to habitat names using legend csv
+# Load the CSV file
+dict_file <- "./data/example_raster/LC_legend.csv"
+dict <- read.csv(dict_file)
+
+# Create a lookup table
+lookup_table2 <- dict %>%
+  dplyr::select(number, habitat)
+
+lookup_vector <- setNames(lookup_table2$habitat, lookup_table2$number)
+
+# Convert the numbers
+converted_values <- lookup_vector[as.character(land_cover_values)]
+
+
 # Calculate the percentage of each land cover type
-land_cover_table <- table(land_cover_values)
+land_cover_table <- table(converted_values)
 land_cover_percentage <- 100 * land_cover_table / sum(land_cover_table)
+land_cover_df <- data.frame(land_cover_percentage)
 
-# Print the results
-print(land_cover_percentage)
+# Plot the results as pie chart
+ggplot(land_cover_df, aes(x = "", y = Freq, fill=converted_values)) +
+  geom_bar(stat = "identity", width = 1) +
+  coord_polar(theta = "y") +
+  labs(title = "Percentage of land cover", fill = "Land cover type")
 
 
-
+df$perc_habitat <- perc_habitat(df$decimalLongitude, df)
 
 
 

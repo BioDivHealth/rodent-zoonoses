@@ -61,6 +61,11 @@ myfuncs <- list(
   
   floor_to_bin <- function(x, bin_size = 5) {
     floor(x / bin_size) * bin_size
+  },
+  
+  parse_rgb <- function(color_string) {
+    rgb_values <- as.numeric(unlist(strsplit(gsub("[()]", "", color_string), ",")))
+    rgb(rgb_values[1], rgb_values[2], rgb_values[3], maxColorValue = 255)
   }
 
 )
