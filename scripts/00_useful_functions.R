@@ -57,6 +57,10 @@ myfuncs <- list(
     upper_left_lat <- ceiling(lat / 5) * 5
     upper_left_lon <- floor(lon / 5) * 5
     return(c(upper_left_lat, upper_left_lon))
+  },
+  
+  floor_to_bin <- function(x, bin_size = 5) {
+    floor(x / bin_size) * bin_size
   }
 
 )
