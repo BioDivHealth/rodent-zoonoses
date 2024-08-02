@@ -21,14 +21,14 @@ Large data files not present in the [data folder](https://github.com/BioDivHealt
 
 ## Work in progress
 ### :wrench: Task list:
-- Add ana data to data folder + update datasets
+- Add ana data to data folder + update datasets :white_check_mark:
 - Write better README file :white_check_mark:
 - Start writing manuscript intro/methods
 - Add citations from data used and useful citations to Zotero
 - Find way to host GLC files online that can interface with R
 - Add interesting plots/infographics to Rmarkdown manuscript
 - Improve existing plots and figures (in folder) to publishable quality
-- Write script for GLC around coordinates
+- Write script for GLC around coordinates - harry working on
 - Check extracted studies for inclusion
 - Continue with extraction
 - Find literature for rodent home ranges
