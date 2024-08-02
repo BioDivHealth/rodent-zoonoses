@@ -105,9 +105,7 @@ ggplot(r_df, aes(x = x, y = y, fill = colour)) +
   labs(fill = "Colour", x = "Longitude", y = "Latitude") +
   coord_fixed()
 
-# visualise raster
-plot(cropped_ras)
-plot(buffer, add = TRUE)
+# add buffer to plot
 
 
 # Extract the values within the buffer
