@@ -92,9 +92,7 @@ host.species.corrected <- host.species %>%
       tree.names == "Clethryonomys_glareolus" ~ "Myodes_glareolus", 
       # Icttidomys mexicanus is sometimes classed as Spermophilus
       tree.names == "Spermophilus_mexicanus" ~ "Ictidomys_mexicanus",
-      # Add genus name for peromyscus californicus
       tree.names == "P._californicus" ~ "Peromyscus_californicus",
-      # Add scientific name for brush mice
       tree.names == "Brush_mice" ~ "Peromyscus_boylii",
       # Keep all other names the same
       TRUE ~ tree.names

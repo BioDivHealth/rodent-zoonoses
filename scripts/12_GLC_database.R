@@ -5,9 +5,7 @@ pacman::p_load(here,
                ggplot2,
                raster,
                tiff,
-               tidyr,
-               sp,
-               rasterVis)  
+               tidyr)  
 
 source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
 
@@ -29,8 +27,6 @@ df <- host_path %>%
 files <- unique(df[,c('Upper_Left_Lat','Upper_Left_Lon')])
 
 # 3. Plot example raster from our GLC data
-
-### make raster stack
 str_name <-'./data/example_raster/19852000_E15N45.tif' 
 raster_stack <- stack(str_name)
 
@@ -145,23 +141,3 @@ ggplot(land_cover_df, aes(x = "", y = Freq, fill=converted_values)) +
   geom_bar(stat = "identity", width = 1) +
   coord_polar(theta = "y") +
   labs(title = "Percentage of land cover", fill = "Land cover type")
-
-
-df$perc_habitat <- perc_habitat(df$decimalLongitude, df)
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
