@@ -7,6 +7,10 @@ output:
   html_document: default
   word_document: default
 bibliography: 01_references.bib
+<<<<<<< HEAD
+=======
+output: pdf_document
+>>>>>>> e6973407a16d2d4f80cb5afab02c95e65a8dbbe3
 ---
 
 ```{r setup, include=FALSE}
@@ -34,15 +38,15 @@ library(maps)
 library(mapdata)
 
 # Load data frame
-combined_data <- readRDS("../data/combined_data_highres.rds")
-attach(combined_data)
+host_path <- readRDS("../data/host_path_wide.rds")
+attach(host_path)
 # Get the world map data
 world <- map_data("world")
 
 # Plot the points onto the world map 
 ggplot() +
   geom_polygon(data = world, aes(x = long, y = lat, group = group), fill = "lightgray", color = "darkgray") +
-  geom_point(data = host, aes(x = decimalLongitude, y = decimalLatitude), color = "red", size = 2) +
+  geom_point(data = host_path, aes(x = decimalLongitude, y = decimalLatitude), color = "red", size = 2) +
   theme_minimal() +
   coord_fixed(1.3) +
   theme(
@@ -59,7 +63,7 @@ Here is a timeline of the samples used in this analysis:
 library(ggplot2)
 
 # plot the study dates on a timeline
-ggplot(host, aes(x = start_date, y = 1)) +
+ggplot(host_path, aes(x = start_date, y = 1)) +
   geom_segment(aes(x = start_date, xend = start_date, y = 0.9, yend = 1.1), color = "red") +
   geom_hline(yintercept = 1, linetype = "dashed") +
   scale_y_continuous(limits = c(0.5, 1.5)) +
@@ -190,11 +194,11 @@ library(raster)
 library(tiff)
 
 str_name <-'../data/example_raster/19852000_E15N45.tif' 
-eg_raster=raster(str_name)
+raster_stack <- stack(str_name)
 
-eg_raster <- setMinMax(eg_raster)
+croat_1990 <- raster_stack[[2]]
 
-plot(eg_raster, main="example of GLC_FCS raster")
+plot(croat_1990, main="Land cover for Croatia in 1990")
 ```
 
 ## Results
