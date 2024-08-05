@@ -5,7 +5,8 @@ pacman::p_load(here,
                ggplot2,
                raster,
                tiff,
-               tidyr)  
+               tidyr,
+               sf)  
 
 source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
 
@@ -97,15 +98,32 @@ r_df <- as.data.frame(cropped_ras, xy = TRUE, na.rm = TRUE)
 r_df <- r_df %>%
   left_join(lookup_table, by = c("X19852000_E15N45_3" = "number"))
 
-# Plot the raster using ggplot2
+# add buffer to plot
+# Define the center point for the buffer circle (longitude, latitude)
+center_point <- st_point(c(16.56, 44.06))
+
+# Convert to an sf object
+center_sf <- st_sfc(center_point, crs="+proj=longlat +datum=WGS84 +no_defs")
+
+# Define the buffer radius 
+buffer_radius <- 1000  # 5 km radius
+
+# Create the buffer for ggplot
+buffer_circle <- st_buffer(center_sf, dist = buffer_radius)
+
+# Convert the buffer circle to a data frame for ggplot2
+buffer_df <- as.data.frame(st_coordinates(st_cast(buffer_circle, "POLYGON")))
+
+# plot on raster with ggplot
+
+
 ggplot(r_df, aes(x = x, y = y, fill = colour)) +
   geom_raster() +
   scale_fill_identity() +  # Use the exact colors provided
+  geom_polygon(data = buffer_df, aes(x = X, y = Y), fill = NA, color = "red", size = 1.5) +
   theme_minimal() +
   labs(fill = "Colour", x = "Longitude", y = "Latitude") +
   coord_fixed()
-
-# add buffer to plot
 
 
 # Extract the values within the buffer
@@ -123,6 +141,9 @@ dict <- read.csv(dict_file)
 lookup_table2 <- dict %>%
   dplyr::select(number, habitat)
 
+lookup_table3 <- legend %>%
+  dplyr::select(habitat, colour)
+
 lookup_vector <- setNames(lookup_table2$habitat, lookup_table2$number)
 
 # Convert the numbers
@@ -134,8 +155,17 @@ land_cover_table <- table(converted_values)
 land_cover_percentage <- 100 * land_cover_table / sum(land_cover_table)
 land_cover_df <- data.frame(land_cover_percentage)
 
+land_cover_df <- land_cover_df %>%
+  left_join(lookup_table3, by = c("converted_values" = "habitat"))
+
+#make dictionary for correct legend names
+legend_dict <- setNames(as.character(lookup_table3$habitat), as.character(lookup_table3$colour))
+
 # Plot the results as pie chart
-ggplot(land_cover_df, aes(x = "", y = Freq, fill=converted_values)) +
+ggplot(land_cover_df, aes(x = "", y = Freq, fill=colour)) +
+  scale_fill_identity(guide="legend", labels= legend_dict) +
+  theme_minimal() +
   geom_bar(stat = "identity", width = 1) +
   coord_polar(theta = "y") +
   labs(title = "Percentage of land cover", fill = "Land cover type")
+
