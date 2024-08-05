@@ -120,7 +120,7 @@ buffer_df <- as.data.frame(st_coordinates(st_cast(buffer_circle, "POLYGON")))
 ggplot(r_df, aes(x = x, y = y, fill = colour)) +
   geom_raster() +
   scale_fill_identity() +  # Use the exact colors provided
-  geom_polygon(data = buffer_df, aes(x = X, y = Y), fill = NA, color = "red", size = 1.5) +
+  geom_polygon(data = buffer_df, aes(x = X, y = Y), fill = NA, color = "red", size = 1) +
   theme_minimal() +
   labs(fill = "Colour", x = "Longitude", y = "Latitude") +
   coord_fixed()
@@ -168,4 +168,3 @@ ggplot(land_cover_df, aes(x = "", y = Freq, fill=colour)) +
   geom_bar(stat = "identity", width = 1) +
   coord_polar(theta = "y") +
   labs(title = "Percentage of land cover", fill = "Land cover type")
-
