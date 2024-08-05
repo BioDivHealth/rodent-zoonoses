@@ -70,7 +70,7 @@ ggplot(host_path, aes(x = start_date, y = 1)) +
 ```
 Here is the infectivity rates of our sampled rodents:
 
-```{r plot_infection, echo=FALSE, message=FALSE, warning=FALSE}
+```{r plot_infection, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10}
 pacman::p_load(here,
                stringr,
                dplyr,
