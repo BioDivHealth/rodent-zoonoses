@@ -103,7 +103,7 @@ host <- host %>%
 host$decimalLatitude <- as.numeric(host$decimalLatitude)
 host$decimalLongitude <- as.numeric(host$decimalLongitude)
 
-## impute negative pathogen
+## impute negative pathogen sheet entries
 
 
 
