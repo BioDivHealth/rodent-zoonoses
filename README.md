@@ -28,12 +28,12 @@ Large data files not present in the [data folder](https://github.com/BioDivHealt
 
 ### :wrench: Task list:
 
--   Add ana data to data folder + update datasets
+-   Add ana data to data folder + update datasets :white_check_mark:
 -   Write better README file :white_check_mark:
 -   Start writing manuscript intro/methods
--   Add citations from data used and useful citations to Zotero
+-   Add citations from data used and useful citations to Zotero (Ana :white_check_mark:)
 -   Find way to host GLC files online that can interface with R
--   Add interesting plots/infographics to Rmarkdown manuscript
+-   Add interesting plots/infographics to Rmarkdown manuscript - Ana working on this
 -   Improve existing plots and figures (in folder) to publishable quality
 -   Write script for GLC around coordinates
 -   Check extracted studies for inclusion
