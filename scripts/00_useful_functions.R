@@ -67,6 +67,22 @@ myfuncs <- list(
   parse_rgb <- function(color_string) {
     rgb_values <- as.numeric(unlist(strsplit(gsub("[()]", "", color_string), ",")))
     rgb(rgb_values[1], rgb_values[2], rgb_values[3], maxColorValue = 255)
+  },
+  
+  
+  group_time_series <- function(df, max_gap = 10) {
+    df <- df %>% arrange(eventDate)  # Ensure data is sorted by date
+    group_id <- 1
+    df$group <- group_id
+    
+    for (i in 2:nrow(df)) {
+      if (as.numeric(df$eventDate[i] - df$eventDate[i-1]) > max_gap) {
+        group_id <- group_id + 1
+      }
+      df$group[i] <- group_id
+    }
+    
+    return(df)
   }
 
 )

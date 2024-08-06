@@ -8,6 +8,7 @@ pkgs <- c(
   "dplyr"
 )
 
+source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
 
 pacman::p_load(pkgs, character.only = T)
 
@@ -30,7 +31,6 @@ studies_a = read.csv("./data/aren_hant_data/studies_a.csv")
 studies_a = studies_a[0:8]
 host_a = read.csv("./data/aren_hant_data/host_a.csv")
 host_a = host_a[0:13]
-# host_a = select(host_a, -trapping.notes)
 pathogen_a = read.csv("./data/aren_hant_data/pathogen_a.csv")
 
 
@@ -47,12 +47,76 @@ studies <- subset(studies, data_resolution == "site-session")
 
 host <- host[host$study_id %in% studies$study_id, ]
 
-## translate date into start/end columns
+# Keep only 1 pathogen row per rodent
+## check for multiple pathogen entries for each rodent_id and take max positives
 
-host <- host %>%
+pathogen <- pathogen %>%
+  group_by(associated_rodent_record_id) %>%
+  slice(which.max(positive)) %>%
+  ungroup()
+
+## group individual-level data to (roughly) monthly data
+
+## subset individual level data
+
+
+host_individual <- subset(host, study_id == "h_129")
+host_individual$eventDate <- as.Date(host_individual$eventDate)
+host_individual <- host_individual %>% 
+  group_by(locality) %>%
+  group_modify(~ group_time_series(.x)) %>%
+  mutate(group = paste(locality, group, sep = "_")) %>%
+  ungroup()
+
+## merge with pathogen data
+
+pathogen <- pathogen %>% 
+  rename(
+    rodent_record_id = associated_rodent_record_id
+  )
+
+host_individual <- merge(host_individual,pathogen,by="rodent_record_id")
+
+## group and summarise to obtain summarised data
+
+host_individual <- host_individual %>%
+  group_by(group, scientificName.x) %>%
+  summarise(rodent_record_id = first(rodent_record_id),
+            study_id.x = first(study_id.x),
+            start_date = min(eventDate),
+            end_date = max(eventDate),
+            locality = first(locality),
+            country = first(country),
+            verbatimLocality = first(verbatimLocality),
+            coordinate_resolution = first(coordinate_resolution),
+            decimalLatitude = first(decimalLatitude),
+            decimalLongitude = first(decimalLongitude),
+            individualCount = sum(as.numeric(individualCount)),
+            trapEffort = first(trapEffort),
+            trapEffortResolution = first(trapEffortResolution),
+            pathogen_record_id = first(pathogen_record_id),
+            study_id.y = first(study_id.y),
+            associatedTaxa = first(associatedTaxa),
+            family = first(family),
+            scientificName.y = first(scientificName.y),
+            assay = first(assay), #### this is not accurate with current code ###
+            tested = sum(as.numeric(tested)),
+            positive = sum(as.numeric(positive)),
+            negative = sum(as.numeric(negative)),
+            number_inconclusive = first(number_inconclusive),
+            note = first(note)
+            )
+
+host_individual <- host_individual[, -1]
+
+## translate summarised host dataset date into start/end columns
+
+host_summarised <- subset(host, study_id != "h_129")
+
+host_summarised <- host_summarised %>%
   separate(eventDate, into = c("start_date", "end_date"), sep = "/")
 
-host_monthly <- host %>%
+host_monthly <- host_summarised %>%
   filter(str_detect(start_date, "^\\d{4}-\\d{2}") | str_detect(start_date, "^\\d{4}-\\d{2}-\\d{2}"))
 
 # Add "-01" to strings in "yyyy-mm" format
@@ -64,6 +128,14 @@ host_monthly$end_date <- ifelse(grepl("^\\d{4}-\\d{2}$", host_monthly$end_date),
                                 paste0(host_monthly$end_date, "-01"), 
                                 host_monthly$end_date)
 
+## Merge pathogen and host summarised data
+
+host_monthly <- merge(host_monthly,pathogen,by="rodent_record_id")
+
+## rbind individual and summarised data
+
+host_monthly <- rbind(host_monthly, host_individual)
+
 ## convert all dates to yyyy-mm-dd and convert to date object
 
 host_monthly$start_date <- as.Date(host_monthly$start_date)
@@ -73,59 +145,39 @@ host_monthly$end_date <- as.Date(host_monthly$end_date)
 host_monthly$period <- host_monthly$end_date - host_monthly$start_date
 host_monthly$period[is.na(host_monthly$period)] <- 0
 
-## filter for less than 1 month trapping time
-host <- host_monthly %>% filter(period <= 31)
+## filter for less than 2 month trapping time
+host <- host_monthly %>% filter(period <= 60)
 
 ## filter for multiple species
 host <- host %>%
-  group_by(study_id) %>%
-  filter(n_distinct(scientificName) > 1) %>%
+  group_by(study_id.x) %>%
+  filter(n_distinct(scientificName.x) > 1) %>%
   ungroup()
-
-## Filter pathogen dataset for presence of rodent_id in host dataset
-
-pathogen <- pathogen[pathogen$associated_rodent_record_id %in% host$rodent_record_id, ]
-
-## check for multiple pathogen entries for each rodent_id and take max positives
-
-pathogen <- pathogen %>%
-  group_by(associated_rodent_record_id) %>%
-  slice(which.max(positive)) %>%
-  ungroup()
-
-## translate species name into genus/species names
-
-host <- host %>%
-  separate(scientificName, into = c("genus", "species", "other"), sep = " ")
 
 ## convert Ana's coordinates to numeric
 
 host$decimalLatitude <- as.numeric(host$decimalLatitude)
 host$decimalLongitude <- as.numeric(host$decimalLongitude)
 
+
+
 ## impute negative pathogen sheet entries
 
 
 
-## Merge pathogen and host 
-pathogen <- pathogen %>% 
-  rename(
-    rodent_record_id = associated_rodent_record_id
-  )
+## if( %in% studies_to_impute$study_id) {
 
-host_path_wide <- merge(host,pathogen,by="rodent_record_id")
 
+
+## translate species name into genus/species names
+
+host_path_wide <- host %>%
+  separate(scientificName.x, into = c("genus", "species", "other"), sep = " ")
 
 # save to rds for phylogeny
 
 write_rds(host_path_wide, file="./data/host_path_wide.rds")
 
-## output file for analysis
-combined_data <- list(studies = studies,
-                      host = host,
-                      pathogen = pathogen)
-
-write_rds(combined_data, file="./data/combined_data_highres.rds")
 
 ### how many communities do we have?
 
