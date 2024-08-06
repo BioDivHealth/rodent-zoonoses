@@ -81,7 +81,7 @@ host_individual <- merge(host_individual,pathogen,by="rodent_record_id")
 
 host_individual <- host_individual %>%
   group_by(group, scientificName.x) %>%
-  summarise(rodent_record_id = first(rodent_record_id),
+  reframe(rodent_record_id = first(rodent_record_id),
             study_id.x = first(study_id.x),
             start_date = min(eventDate),
             end_date = max(eventDate),
