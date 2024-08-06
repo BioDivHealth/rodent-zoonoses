@@ -121,7 +121,7 @@ ggplot(plot.infectivity, aes(x = associatedTaxa, y = Count, fill = Result)) +
 
 ```
 
-```{r plot_infection, echo=FALSE, message=FALSE, warning=FALSE, fig.width=40}
+```{r plot_infection2, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10}
 pacman::p_load(here,
                stringr,
                dplyr,
@@ -153,9 +153,9 @@ plot.positives.negatives <- mutated.host.pathogen.data %>%
 plot_aggregated <- plot.positives.negatives %>%
   group_by(associatedTaxa) %>%
   summarize(
-    positives = sum(positive, na.rm = TRUE),
-    negatives = sum(negative, na.rm = TRUE),
-    abundance = sum(individualCount, na.rm = TRUE),
+    positives = as.numeric(sum(positive, na.rm = TRUE)),
+    negatives = as.numeric(sum(negative, na.rm = TRUE)),
+    abundance = as.numeric(sum(individualCount, na.rm = TRUE)),
   ) %>%
   ungroup()
 
