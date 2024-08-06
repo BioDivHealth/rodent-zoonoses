@@ -70,18 +70,16 @@ ggplot(host_path, aes(x = start_date, y = 1)) +
 ```
 Here is the infectivity rates of our sampled rodents:
 
-```{r plot_infection, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10}
+```{r plot_infection, echo=FALSE, message=FALSE, warning=FALSE, fig.width=40, fig.height=25}
 pacman::p_load(here,
                stringr,
                dplyr,
-               ape,    # for phylogenetic analyes
-               ggtree, # for plotting trees
                ggplot2,
                tidyr)
 host.pathogen.data <- readRDS(here("data", "host_path_wide.rds"))
 
 
-# Correct species names (if needed, this step can be skipped)
+# Correct species names
 mutated.host.pathogen.data <- host.pathogen.data %>%
   mutate(associatedTaxa = case_when(
     associatedTaxa == "Akodon azare" ~ "Akodon azarae",
@@ -94,11 +92,10 @@ mutated.host.pathogen.data <- host.pathogen.data %>%
     TRUE ~ associatedTaxa  # Retain original name if no match
   ))
 
-# Ensure 'positives' and 'negatives' are numeric
+# Ensure 'positive' and 'negative' are numeric
 plot.positives.negatives <- mutated.host.pathogen.data %>%
 mutate(positive = as.numeric(positive),
        negative = as.numeric(negative))
-
 
 # Aggregate the data by associatedTaxa
 plot_aggregated <- plot.positives.negatives %>%
@@ -109,41 +106,82 @@ plot_aggregated <- plot.positives.negatives %>%
   ) %>%
   ungroup()
 
-# Divide data into two halves
-infectivity.1 <- plot_aggregated %>%
-  slice(1:ceiling(n() / 2))
-infectivity.2 <- plot_aggregated %>%
-  slice((ceiling(n() / 2) + 1):n())
-
-# Reshape the data for plotting
-plot.infectivity.1 <- infectivity.1 %>%
-  pivot_longer(cols = c("positives", "negatives"), 
-               names_to = "Result", 
-               values_to = "Count")
-plot.infectivity.2 <- infectivity.2 %>%
+###if 1 big plot not combined
+plot.infectivity <- plot_aggregated %>%
   pivot_longer(cols = c("positives", "negatives"), 
                names_to = "Result", 
                values_to = "Count")
 
-# Plot the first half
-plot1 <- ggplot(plot.infectivity.1, aes(x = associatedTaxa, y = Count, fill = Result)) +
+ggplot(plot.infectivity, aes(x = associatedTaxa, y = Count, fill = Result)) +
   geom_col(position = "stack", width = 0.7) +
   scale_fill_manual(values = c("positives" = "orange", "negatives" = "olivedrab3")) +
-  labs(x = "Associated Taxa (Part 1)", y = "tested", fill = "Test Result") +
-  theme_bw()+
+  labs(x = "Associated Taxa", y = "tested", fill = "Test Result") +
+  theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
-# Plot the second half
-plot2 <- ggplot(plot.infectivity.2, aes(x = associatedTaxa, y = Count, fill = Result)) +
-  geom_col(position = "stack", width = 0.7) +
-  scale_fill_manual(values = c("positives" = "orange", "negatives" = "olivedrab3")) +
-  labs(x = "Associated Taxa (Part 2)", y = "tested", fill = "Test Result") +
-  theme_bw()+
-  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+```
 
-infectivity.combined.plot <- plot1 + plot2
+```{r plot_infection2, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10}
+pacman::p_load(here,
+               stringr,
+               dplyr,
+               ggplot2,
+               tidyr)
+host.pathogen.data <- readRDS(here("data", "host_path_wide.rds"))
 
-infectivity.combined.plot
+
+# Correct species names
+mutated.host.pathogen.data <- host.pathogen.data %>%
+  mutate(associatedTaxa = case_when(
+    associatedTaxa == "Akodon azare" ~ "Akodon azarae",
+    associatedTaxa == "brush mice" ~ "Peromyscus boylii",
+    associatedTaxa == "Clethrionomys glareolus" ~ "Myodes glareolus",
+    associatedTaxa == "Clethryonomys glareolus" ~ "Myodes glareolus",
+    associatedTaxa == "Oligoryzomys favescens" ~ "Oligoryzomys flavescens",
+    associatedTaxa == "P. californicus" ~ "Peromyscus californicus",
+    associatedTaxa == "dusky-footed" ~ "Neotoma fuscipes",
+    TRUE ~ associatedTaxa  # Retain original name if no match
+  ))
+
+# Ensure 'positive' and 'negative' are numeric
+plot.positives.negatives <- mutated.host.pathogen.data %>%
+  mutate(positive = as.numeric(positive),
+         negative = as.numeric(negative),
+         individualCount = as.numeric(individualCount))
+
+# Aggregate the data by associatedTaxa
+plot_aggregated <- plot.positives.negatives %>%
+  group_by(associatedTaxa) %>%
+  summarize(
+    positives = as.numeric(sum(positive, na.rm = TRUE)),
+    negatives = as.numeric(sum(negative, na.rm = TRUE)),
+    abundance = as.numeric(sum(individualCount, na.rm = TRUE)),
+  ) %>%
+  ungroup()
+
+# Calculate the % of positives
+aggregated_data1 <- plot_aggregated %>%
+  mutate(percent_positive = ifelse((positives + negatives) == 0, NA, 
+                                   (positives / (positives + negatives)) * 100))
+
+# Remove rows with NA values for % positive
+aggregated_data2 <- aggregated_data1 %>%
+  filter(!is.na(percent_positive))
+
+# Sort data by abundance from less to more
+aggregated_data3 <- aggregated_data2 %>%
+  arrange(abundance)
+
+# Plot scatter graph
+ggplot(aggregated_data3, aes(x = abundance, y = percent_positive, label = associatedTaxa, color = associatedTaxa)) +
+  geom_point() +
+  geom_text(size = 2, vjust = -1, hjust = 0.5) +  # Adjust text size
+  labs(
+    title = "Abundance vs % of Positives",
+    x = "Abundance",
+    y = "% of Positives"
+  ) +
+  theme_minimal()
 
 ```
 
