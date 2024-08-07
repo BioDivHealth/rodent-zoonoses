@@ -33,7 +33,7 @@ Large data files not present in the [data folder](https://github.com/BioDivHealt
 -   Start writing manuscript intro/methods
 -   Add citations from data used and useful citations to Zotero (Ana :white_check_mark:)
 -   Find way to host GLC files online that can interface with R
--   Add interesting plots/infographics to Rmarkdown manuscript - Ana working on this
+-   Add interesting plots/infographics to Rmarkdown manuscript - Ana working on
 -   Improve existing plots and figures (in folder) to publishable quality
 -   Write script for GLC around coordinates - harry working on
 -   Check extracted studies for inclusion
@@ -42,4 +42,4 @@ Large data files not present in the [data folder](https://github.com/BioDivHealt
 -   Find literature for rodent community turnover
 -   Summarise individual data :white_check_mark:
 -   Impute negative pathogens - harry working on
--   Study community ranges (SDM) - Ana working on this
+-   Study community ranges (SDM) - Ana working on
