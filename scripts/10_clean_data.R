@@ -43,9 +43,10 @@ pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a)
 
 studies <- subset(studies, data_resolution == "site-session")
 
-# keep only host data with matching study ID from this subset
+# keep only host and pathogen data with matching study ID from this subset
 
 host <- host[host$study_id %in% studies$study_id, ]
+pathogen <- pathogen[pathogen$study_id %in% studies$study_id, ]
 
 # Keep only 1 pathogen row per rodent
 ## check for multiple pathogen entries for each rodent_id and take max positives
@@ -54,6 +55,30 @@ pathogen <- pathogen %>%
   group_by(associated_rodent_record_id) %>%
   slice(which.max(positive)) %>%
   ungroup()
+
+## Impute pathogen negatives
+## get rodent record IDs with no corresponding pathogen entry
+host_impute <- host[!(host$rodent_record_id %in% pathogen$associated_rodent_record_id), ]
+
+## Get relevant columns from this dataframe
+new_pathogen <- data.frame(host_impute$rodent_record_id,
+                           host_impute$study_id,
+                           host_impute$scientificName,
+                           host_impute$individualCount)
+
+# rename columns to match pathogen sheet
+new_pathogen <- new_pathogen %>% 
+  rename(
+    associated_rodent_record_id = host_impute.rodent_record_id,
+    study_id = host_impute.study_id,
+    associatedTaxa = host_impute.scientificName,
+    tested = host_impute.individualCount
+  )
+
+new_pathogen <- merge(new_pathogen, pathogen[, c("study_id", "family", "scientificName", "assay")], by = "study_id", all.x = TRUE)
+
+new_pathogen <- unique(new_pathogen) ### THINK ABOUT NEGATIVE ARENAVIRUS/HANTAVIRUS TESTS WHERE BOTH ARE TESTED BUT ONLY 1 REPORTED
+
 
 ## group individual-level data to (roughly) monthly data
 
