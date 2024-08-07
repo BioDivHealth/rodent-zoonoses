@@ -42,3 +42,4 @@ Large data files not present in the [data folder](https://github.com/BioDivHealt
 -   Find literature for rodent community turnover
 -   Summarise individual data :white_check_mark:
 -   Impute negative pathogens - harry working on
+-   Study community ranges (SDM) - Ana working on this
