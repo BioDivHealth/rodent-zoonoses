@@ -46,6 +46,7 @@ studies <- subset(studies, data_resolution == "site-session")
 # keep only host and pathogen data with matching study ID from this subset
 
 host <- host[host$study_id %in% studies$study_id, ]
+host <- subset(host, study_id != "a_278")
 pathogen <- pathogen[pathogen$study_id %in% studies$study_id, ]
 
 # Keep only 1 pathogen row per rodent
@@ -79,6 +80,18 @@ new_pathogen <- merge(new_pathogen, pathogen[, c("study_id", "family", "scientif
 
 new_pathogen <- unique(new_pathogen) ### THINK ABOUT NEGATIVE ARENAVIRUS/HANTAVIRUS TESTS WHERE BOTH ARE TESTED BUT ONLY 1 REPORTED
 
+# add pathogen ID, positives and negatives and other (blank) columns
+df_length <- length(new_pathogen[,1])
+
+new_pathogen$positive <- rep(0, df_length)
+new_pathogen$negative <- new_pathogen$tested
+new_pathogen$number_inconclusive <- NA
+new_pathogen$note <- NA
+new_pathogen$pathogen_record_id <- paste("i", 1:df_length, sep = "_")
+
+# merge pathogen and imputed pathogen dataframes
+
+pathogen <- rbind(pathogen, new_pathogen)
 
 ## group individual-level data to (roughly) monthly data
 
@@ -183,16 +196,6 @@ host <- host %>%
 
 host$decimalLatitude <- as.numeric(host$decimalLatitude)
 host$decimalLongitude <- as.numeric(host$decimalLongitude)
-
-
-
-## impute negative pathogen sheet entries
-
-
-
-## if( %in% studies_to_impute$study_id) {
-
-
 
 ## translate species name into genus/species names
 
