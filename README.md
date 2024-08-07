@@ -35,8 +35,10 @@ Large data files not present in the [data folder](https://github.com/BioDivHealt
 -   Find way to host GLC files online that can interface with R
 -   Add interesting plots/infographics to Rmarkdown manuscript - Ana working on this
 -   Improve existing plots and figures (in folder) to publishable quality
--   Write script for GLC around coordinates
+-   Write script for GLC around coordinates - harry working on
 -   Check extracted studies for inclusion
 -   Continue with extraction
 -   Find literature for rodent home ranges
 -   Find literature for rodent community turnover
+-   Summarise individual data :white_check_mark:
+-   Impute negative pathogens - harry working on
