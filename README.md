@@ -40,6 +40,7 @@ Large data files not present in the [data folder](https://github.com/BioDivHealt
 -   Continue with extraction
 -   Find literature for rodent home ranges
 -   Find literature for rodent community turnover
+-   FInd literature for habitat fragmentation
 -   Summarise individual data :white_check_mark:
 -   Impute negative pathogens :white_check_mark:
 -   Study community ranges (SDM) - Ana working on
