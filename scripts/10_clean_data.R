@@ -172,7 +172,7 @@ host_monthly <- merge(host_monthly,pathogen,by="rodent_record_id")
 
 ## rbind individual and summarised data
 
-host_monthly <- rbind(host_monthly, host_individual)
+host_monthly <- rbind(host_monthly, host_individual) ##### MERGED AT WRONG PLACE, INDIVIDUAL DATA NEEDS START AND END DATE
 
 ## convert all dates to yyyy-mm-dd and convert to date object
 

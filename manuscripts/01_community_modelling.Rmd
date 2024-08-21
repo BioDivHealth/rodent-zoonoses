@@ -14,9 +14,9 @@ knitr::opts_chunk$set(echo = TRUE)
 
 This is the working manuscript for a study on disease modelling in rodent communities by the Infectious Disease Systems Ecology group at the British Natural History Museum.
 
-David Simons' paper: @simons2023.
+David Simons' paper: @simons_rodent_2023.
 
-Paper on causal inference: @dee2023.
+GLC: @zhang_glc_fcs30d_2024
 
 ## Methods
 
@@ -24,34 +24,39 @@ These are the methods.
 
 Here is a world map displaying locations of our sampled rodents:
 
-```{r plot_world_map, echo=FALSE}
+```{r plot_world_map, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE}
 # Load necessary libraries
 library(ggplot2)
-library(maps)
-library(mapdata)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
 
 # Load data frame
 host_path <- readRDS("../data/host_path_wide.rds")
 attach(host_path)
 # Get the world map data
-world <- map_data("world")
 
+world <- ne_countries(scale = "large", returnclass = "sf")
+coords_sf <- st_as_sf(host_path, coords = c("decimalLongitude", "decimalLatitude"), crs = 4326, agr = "constant")
+host_path$year <- as.numeric(format(host_path$start_date, "%Y"))
 # Plot the points onto the world map 
-ggplot() +
-  geom_polygon(data = world, aes(x = long, y = lat, group = group), fill = "lightgray", color = "darkgray") +
-  geom_point(data = host_path, aes(x = decimalLongitude, y = decimalLatitude), color = "red", size = 2) +
-  theme_minimal() +
-  coord_fixed(1.3) +
-  theme(
-    axis.title = element_blank(),
-    axis.text = element_blank(),
-    axis.ticks = element_blank())
 
+ggplot(data = world) +
+  geom_sf(colour="darkgray") +
+  geom_sf(data = coords_sf, aes(geometry = geometry, colour=host_path$year), size = 2, shape=18) +
+  coord_sf(expand = FALSE) +                    # Keep the aspect ratio
+  labs(title = "Locations of Trapped Rodents") + 
+  theme_void() +
+  theme(panel.background = element_rect(), 
+        axis.text = element_blank(),            # Remove axis text (tick labels)
+        axis.ticks = element_blank()) +
+  scale_color_gradient(low = "#FF9D00", high = "#FF0000", name = "Year")
+  
 ```
 
-Here is a timeline of the samples used in this analysis:
 
-```{r plot_timeline, echo=FALSE, fig.height = 2}
+
+```{r plot_timeline, include=FALSE, echo=FALSE, fig.height = 2, message=FALSE, error=FALSE, warning=FALSE}
 # Load necessary libraries
 library(ggplot2)
 
@@ -181,7 +186,8 @@ ggplot(aggregated_data3, aes(x = abundance, y = percent_positive, label = associ
     x = "Abundance",
     y = "% of Positives"
   ) +
-  theme_minimal()
+  theme_minimal()+
+  theme(legend.position = "none")
 
 ```
 
@@ -214,27 +220,14 @@ ggtree(host.clade, size = 0.05) +
 
 ### GLC database
 
-Here is an example of a raster from the GLC database, the X and Y are Longitude and Latitude respectively.
+Here is an example of a raster from the GLC database with the site coordinate plotted and a buffer of radius 1 km.
 
-```{r plot_raster, echo=FALSE, message=FALSE, warning=FALSE}
-# Load necessary libraries
-library(raster)
-library(tiff)
-
-str_name <-'../data/example_raster/19852000_E15N45.tif' 
-raster_stack <- stack(str_name)
-
-croat_1990 <- raster_stack[[2]]
-
-plot(croat_1990, main="Land cover for Croatia in 1990")
+```{r buffer_plot, width="0.3\\linewidth", include=TRUE, echo=FALSE, out.width = "400px", fig.align='center'}
+knitr::include_graphics("../figures/bufferplot.pdf")
 ```
 
-## Results
+### Data papers
 
-These are the results.
-
-## Discussion
-
-This is the discussion.
+We collected data from the following papers for use in this analysis: @burns_novel_2018, @cabrera_deciphering_2023, @dietrich_small-scale_1997, @fernandes_co-circulation_2015, @fulhorst_bear_2002, @jameson_continued_2013, @kosasih_evidence_2011, @ledina_dinara-new_2002, @leduc_epidemiological_1986, @mauldin_assessment_2013, @milazzo_ecology_2013, @nemirov_isolation_1999, @zhang_glc_fcs30d_2024, @seijo_study_2003, @sheikh_ali_first_2014, @suarez_prevalence_2003, @williams_outbreak_1997, @williamson_continuing_2021.
 
 ## References
