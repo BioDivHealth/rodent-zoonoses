@@ -16,16 +16,16 @@ host_path <- readRDS("data/host_path_wide.rds")
 
 # find enclosing coordinate boxes for files
 
-df <- host_path %>%
-  rowwise() %>%
-  mutate(Upper_Left_Corner = list(get_dec_box(decimalLongitude, decimalLatitude))) %>%
-  unnest_wider(Upper_Left_Corner, names_sep = "_") %>%
-  rename(Upper_Left_Lat = Upper_Left_Corner_1, Upper_Left_Lon = Upper_Left_Corner_2) %>%
-  dplyr::select(decimalLatitude, decimalLongitude, Upper_Left_Lat, Upper_Left_Lon)
+#df <- host_path %>%
+ # rowwise() %>%
+#  mutate(Upper_Left_Corner = list(get_dec_box(decimalLongitude, decimalLatitude))) %>%
+#  unnest_wider(Upper_Left_Corner, names_sep = "_") %>%
+#  rename(Upper_Left_Lat = Upper_Left_Corner_1, Upper_Left_Lon = Upper_Left_Corner_2) %>%
+#  dplyr::select(decimalLatitude, decimalLongitude, Upper_Left_Lat, Upper_Left_Lon)
 
 # find unique boxes
 
-files <- unique(df[,c('Upper_Left_Lat','Upper_Left_Lon')])
+#files <- unique(df[,c('Upper_Left_Lat','Upper_Left_Lon')])
 
 # 3. Plot example raster from our GLC data
 str_name <-'./data/example_raster/19852000_E15N45.tif' 
@@ -116,15 +116,16 @@ buffer_df <- as.data.frame(st_coordinates(st_cast(buffer_circle, "POLYGON")))
 
 # plot on raster with ggplot
 
-
 ggplot(r_df, aes(x = x, y = y, fill = colour)) +
   geom_raster() +
   scale_fill_identity() +  # Use the exact colors provided
-  geom_polygon(data = buffer_df, aes(x = X, y = Y), fill = NA, color = "red", size = 1) +
+  geom_polygon(data = buffer_df, aes(x = X, y = Y), fill = "red", alpha=0.35) +
   theme_minimal() +
   labs(fill = "Colour", x = "Longitude", y = "Latitude") +
+  geom_point(x=16.56, y=44.06, color = "red")
   coord_fixed()
 
+ggsave('./figures/bufferplot.pdf',device="pdf", width = 9, height = 9)
 
 # Extract the values within the buffer
 land_cover_values <- raster::extract(cropped_ras, buffer)
