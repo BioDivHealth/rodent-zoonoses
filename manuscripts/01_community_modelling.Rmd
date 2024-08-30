@@ -79,10 +79,11 @@ Here is the infectivity rates of our sampled rodents:
 pacman::p_load(here,
                stringr,
                dplyr,
+               ape,    # for phylogenetic analyes
+               ggtree, # for plotting trees
                ggplot2,
                tidyr)
 host.pathogen.data <- readRDS(here("data", "host_path_wide.rds"))
-
 
 # Correct species names
 mutated.host.pathogen.data <- host.pathogen.data %>%
@@ -99,28 +100,52 @@ mutated.host.pathogen.data <- host.pathogen.data %>%
 
 # Ensure 'positive' and 'negative' are numeric
 plot.positives.negatives <- mutated.host.pathogen.data %>%
-mutate(positive = as.numeric(positive),
-       negative = as.numeric(negative))
+  mutate(positive = as.numeric(positive),
+         negative = as.numeric(negative),
+         individualCount = as.numeric(individualCount))
 
 # Aggregate the data by associatedTaxa
 plot_aggregated <- plot.positives.negatives %>%
   group_by(associatedTaxa) %>%
   summarize(
-    positives = sum(positive),
-    negatives = sum(negative)
+    positives = sum(positive, na.rm = TRUE),
+    negatives = sum(negative, na.rm = TRUE),
+    abundance = sum(individualCount, na.rm = TRUE),
   ) %>%
   ungroup()
 
-###if 1 big plot not combined
-plot.infectivity <- plot_aggregated %>%
+# Calculate the % of positives
+aggregated_data1 <- plot_aggregated %>%
+  mutate(positives = ifelse((positives + negatives) == 0, NA, 
+                                   (positives / (positives + negatives)) * 100))
+
+# Remove rows with NA values for % positive
+aggregated_data2 <- aggregated_data1 %>%
+  filter(!is.na(positives))
+
+# Calculate the % of negatives
+aggregated_data3 <- aggregated_data2 %>%
+  mutate(negatives = ifelse((positives + negatives) == 0, NA, 
+                                   (negatives / (positives + negatives)) * 100))
+
+# Remove rows with NA values for % positive
+aggregated_data4 <- aggregated_data3 %>%
+  filter(!is.na(negatives))
+
+# Sort data by abundance from less to more
+aggregated_data5 <- aggregated_data4 %>%
+  arrange(abundance)
+
+# Aggregate in % of infectivity
+plot.infectivity <- aggregated_data5 %>%
   pivot_longer(cols = c("positives", "negatives"), 
                names_to = "Result", 
-               values_to = "Count")
-
-ggplot(plot.infectivity, aes(x = associatedTaxa, y = Count, fill = Result)) +
+               values_to = "Results")
+# Plot
+ggplot(plot.infectivity, aes(x = associatedTaxa, y = abundance, fill = Result)) +
   geom_col(position = "stack", width = 0.7) +
   scale_fill_manual(values = c("positives" = "orange", "negatives" = "olivedrab3")) +
-  labs(x = "Associated Taxa", y = "tested", fill = "Test Result") +
+  labs(x = "Associated Taxa", y = "abundance", fill = "Test Result in %") +
   theme_bw() +
   theme(axis.text.x = element_text(angle = 45, hjust = 1))
 
