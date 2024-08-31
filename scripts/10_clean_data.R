@@ -5,12 +5,14 @@ pkgs <- c(
   "here",
   "tidyverse",
   "lubridate",
-  "dplyr"
+  "dplyr",
+  "here"
 )
+
+pacman::p_load(pkgs, character.only = T)
 
 source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
 
-pacman::p_load(pkgs, character.only = T)
 
 ## if multiple in put sheets, load and merge sheets
 ##harry
@@ -201,6 +203,23 @@ host$decimalLongitude <- as.numeric(host$decimalLongitude)
 
 host_path_wide <- host %>%
   separate(scientificName.x, into = c("genus", "species", "other"), sep = " ")
+
+# Harmonise virus names in the dataset
+host_path_wide <- host_path_wide %>% 
+  mutate(
+    scientificName.y = case_when(
+      scientificName.y == "Sin Nombre Virus" ~ "SNV",
+      scientificName.y == "Sin Nombre Orthohantavirus" ~ "SNV", 
+      scientificName.y == "Catarina Virus" ~ "CTNV",
+      scientificName.y == "Oliveros Virus" ~ "OLV",
+      scientificName.y == "Latino mammarenavirus" ~ "LATV",
+      scientificName.y == "Orthohantavirus dobravaense" ~ "DOBV",
+      scientificName.y == "Mammarenavirus bearense" ~ "BCNV",
+      # Keep all other names the same
+      TRUE ~ scientificName.y
+    ),
+  )
+
 
 # save to rds for phylogeny
 
