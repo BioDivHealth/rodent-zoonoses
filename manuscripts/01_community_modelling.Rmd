@@ -54,8 +54,6 @@ ggplot(data = world) +
   
 ```
 
-
-
 ```{r plot_timeline, include=FALSE, echo=FALSE, fig.height = 2, message=FALSE, error=FALSE, warning=FALSE}
 # Load necessary libraries
 library(ggplot2)
@@ -73,6 +71,7 @@ ggplot(host_path, aes(x = start_date, y = 1)) +
         panel.grid.minor.y = element_blank())
 
 ```
+
 Here is the infectivity rates of our sampled rodents:
 
 ```{r plot_infection, echo=FALSE, message=FALSE, warning=FALSE, fig.width=40, fig.height=25}
@@ -213,6 +212,71 @@ ggplot(aggregated_data3, aes(x = abundance, y = percent_positive, label = associ
   ) +
   theme_minimal()+
   theme(legend.position = "none")
+
+```
+
+```{r plot_infection, echo=FALSE, message=FALSE, warning=FALSE, fig.width=40, fig.height=25}
+pacman::p_load(here,
+               stringr,
+               dplyr,
+               ggplot2,
+               tidyr)
+host.pathogen.data <- readRDS(here("data", "host_path_wide.rds"))
+
+# Correct pathogen names
+mutated.pathogen.data <- host.pathogen.data %>%
+  mutate(scientificName.y = case_when(
+    scientificName.y == "SNV" ~ "Sin Nombre Virus",
+    scientificName.y == "SEOV" ~ "Sin Nombre Orthohantavirus",
+    scientificName.y == "" ~ "NA",
+    TRUE ~  scientificName.y  # Retain original name if no match
+  ))
+
+# Ensure 'positive' and 'negative' are numeric
+plot.positives.negatives <- mutated.pathogen.data %>%
+  mutate(positive = as.numeric(positive),
+         negative = as.numeric(negative),
+         individualCount = as.numeric(individualCount))
+
+# Aggregate the data by pathogen and tests
+plot_aggregated <- plot.positives.negatives %>%
+  group_by(scientificName.y, assay) %>%
+  summarize(
+    positives = sum(positive, na.rm = TRUE),
+    negatives = sum(negative, na.rm = TRUE),
+    tests = sum(individualCount, na.rm = TRUE),
+  ) %>%
+  ungroup()
+
+# Calculate the % of positives
+aggregated_data1 <- plot_aggregated %>%
+  mutate(percent_positive = ifelse((positives + negatives) == 0, NA, 
+                                   (positives / (positives + negatives)) * 100))
+
+# Remove rows with NA values for % positive
+aggregated_data2 <- aggregated_data1 %>%
+  filter(!is.na(percent_positive))
+
+# Arrange by type of test
+aggregated_data3 <- aggregated_data2 %>%
+  arrange(assay)
+
+# Plot 
+ggplot(aggregated_data3, aes(x = percent_positive, y = scientificName.y, color = assay)) +
+  geom_jitter(size = 4, width = 0.2, height = 0) +  # Adds points with some jitter to avoid overplotting
+  scale_color_brewer(palette = "Set2") +  # Use a color palette from RColorBrewer for better aesthetics
+  labs(title = "Percentage of Positive Tests by Pathogen and Test Type",
+       x = "Percentage of Positive Tests",
+       y = "Pathogen") +
+  theme_minimal(base_size = 14) +  # Minimal theme for a clean look
+  theme(
+    axis.text.x = element_text(size = 12),  # Size x-axis labels
+    axis.text.y = element_text(size = 12),  # Size y-axis labels
+    axis.title.x = element_text(size = 14),  # Size x-axis title
+    axis.title.y = element_text(size = 14),  # Size y-axis title
+    legend.title = element_text(size = 14),  # Size legend title
+    legend.text = element_text(size = 12)    # Size legend text
+  )
 
 ```
 
