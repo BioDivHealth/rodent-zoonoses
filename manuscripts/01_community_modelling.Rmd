@@ -215,7 +215,7 @@ ggplot(aggregated_data3, aes(x = abundance, y = percent_positive, label = associ
 
 ```
 
-```{r plot_infection, echo=FALSE, message=FALSE, warning=FALSE, fig.width=40, fig.height=25}
+```{r plot_pathogen, echo=FALSE, message=FALSE, warning=FALSE, fig.width=40, fig.height=25}
 pacman::p_load(here,
                stringr,
                dplyr,
