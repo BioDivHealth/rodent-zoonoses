@@ -132,12 +132,12 @@ a_130,a_207,Peromyscus ochraventer,2003,San Jose,Mexico,Cloud Forest,,23.0440369
 a_131,a_207,Oryzomys chapmani,2003,San Jose,Mexico,Cloud Forest,,23.04403697,-99.22803414,4,"6,032 trap-nights",,"Summer - May to August. San Jose (1,320 m) and Los Cedros (320 m) are 8km apart. 200 Sherman live traps, set 10 m apart. 248 rodents trapped in both sites. 199 tested",,
 a_132,a_207,Cryptotis obscura,2003,San Jose,Mexico,Cloud Forest,,23.04403697,-99.22803414,1,"6,032 trap-nights",,"Summer - May to August. San Jose (1,320 m) and Los Cedros (320 m) are 8km apart. 200 Sherman live traps, set 10 m apart. 248 rodents trapped in both sites. 199 tested",,
 a_133,a_211,Oxymycterus spp.,2005-03-12/15,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,66,"1,100 trap nights",12.10%,,,20 km2
-a_134,a_211,Oligoryzomys nigripes,2006-03-12/15,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,31,"1,100 trap nights",12.10%,,,20 km2
-a_135,a_211,Scapteromys tumidus,2007-03-12/15,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,14,"1,100 trap nights",12.10%,,,20 km2
-a_136,a_211,Oligoryzomys flavescens,2008-03-12/15,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,14,"1,100 trap nights",12.10%,,,20 km2
-a_137,a_211,Akodon azarae,2009-03-12/15,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,6,"1,100 trap nights",12.10%,,,20 km2
-a_138,a_211,Necromys obscurus,2010-03-12/15,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,1,"1,100 trap nights",12.10%,,,20 km2
-a_139,a_211,Rattus rattus,2011-03-12/15,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,1,"1,100 trap nights",12.10%,,,20 km2
+a_134,a_211,Oligoryzomys nigripes,2005-03-12/15,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,31,"1,100 trap nights",12.10%,,,20 km2
+a_135,a_211,Scapteromys tumidus,2005-03-12/15,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,14,"1,100 trap nights",12.10%,,,20 km2
+a_136,a_211,Oligoryzomys flavescens,2005-03-12/15,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,14,"1,100 trap nights",12.10%,,,20 km2
+a_137,a_211,Akodon azarae,2005-03-12/15,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,6,"1,100 trap nights",12.10%,,,20 km2
+a_138,a_211,Necromys obscurus,2005-03-12/15,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,1,"1,100 trap nights",12.10%,,,20 km2
+a_139,a_211,Rattus rattus,2005-03-12/15,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,1,"1,100 trap nights",12.10%,,,20 km2
 a_140,a_211,Oxymycterus spp.,2005-12-10/11,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,23,"1,100 trap nights",12.10%,,,20 km2
 a_141,a_211,Oligoryzomys nigripes,2005-12-10/11,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,2,"1,100 trap nights",12.10%,,,20 km2
 a_142,a_211,Scapteromys tumidus,2005-12-10/11,Punta Ballena,Uruguay,small peninsula,,-34.88915628,-55.03841186,5,"1,100 trap nights",12.10%,,,20 km2
@@ -425,11 +425,11 @@ a_423,a_278,Apodemus sylvaticus,2008-10,Laa an der Thaya,Austria,,site,48.73587,
 a_424,a_278,Clethrionomys glareolus,2008-10,Laa an der Thaya,Austria,,site,48.73587,16.34259,5,1 night,,,183 m,
 a_425,a_278,Microtus arvalis,2008-10,Laa an der Thaya,Austria,,site,48.73587,16.34259,4,1 night,,,183 m,
 a_426,a_278,Apodemus flavicollis,2008-10,Laa an der Thaya,Austria,,site,48.7345,16.3406,4,1 night,,,178 m,
-a_427,a_278,Apodemus sylvaticus,2008-10,Laa an der Thaya,Austria,,site,48.7345,16.3406,11,1 night,,,178 m,
+a_427,a_278,Clethrionomys glareolus,2008-10,Laa an der Thaya,Austria,,site,48.7345,16.3406,11,1 night,,,178 m,
 a_428,a_278,Apodemus flavicollis,2008-10,Laa an der Thaya,Austria,,site,48.73571,16.34543,4,1 night,,,182 m,
 a_429,a_278,Apodemus sylvaticus,2008-10,Laa an der Thaya,Austria,,site,48.73571,16.34543,5,1 night,,,182 m,
 a_430,a_278,Clethrionomys glareolus,2008-10,Laa an der Thaya,Austria,,site,48.73571,16.34543,11,1 night,,,182 m,
-a_431,a_282,bank vole,2009-08,Mikołajki forest,Poland,,site not found - city,53.8042237,21.57029926,16,,,,,
+a_431,a_282,bank vole,2009-08,Mikołajki forest,Poland,,site not found - forest,53.78760139,21.55803414,16,,,,10 km2,
 a_432,a_282,bank vole,2009-08,Dobskie island,Poland,,,54.10022367,21.63678844,16,,,,,
 a_433,a_282,bank vole,2009-08,Dejguny island,Poland,,,54.03428639,21.6052778,13,,,,,
 a_434,a_296,Sigmodon alstoni,1997-02,Hato Maporal,Venezuela,,,,,14,160 trap-nights,,,0.71 km2,
@@ -578,3 +578,119 @@ a_576,a_344,Apodemus agrarius,,,Korea,,,,,25,,,,,
 a_577,a_344,Eothenomys regulus,,,Korea,,,,,7,,,,,
 a_578,a_344,Micromys minutus,,,Korea,,,,,1,,,,,
 a_579,a_687,R. norvegicus,2001-05,"Villa 20, Buenos Aires",Argentina,,neighbourhood,-34.67440419,-58.46708974,29,,,,,
+a_580,a_350,Bolomys lasiurus,2000-09-11/2000-09-21,Quebra,Brazil,,site,-3.235865468,-44.56504403,7,1400 trap nights,,1040 nights at São Jerônimo and 360 at Quebra,,
+a_581,a_350,Oligoryzomys fornesi,2000-09-11/2000-09-21,Quebra,Brazil,,site,-3.235865468,-44.56504403,2,1400 trap nights,,1040 nights at São Jerônimo and 360 at Quebra,,
+a_582,a_350,Proechimys guyannensis,2000-09-11/2000-09-21,Quebra,Brazil,,site,-3.235865468,-44.56504403,1,1400 trap nights,,1040 nights at São Jerônimo and 360 at Quebra,,
+a_583,a_350,Bolomys lasiurus,2000-09-11/2000-09-21,São Jerônimo,Brazil,,site,-3.284077451,-44.54452743,33,1400 trap nights,,1040 nights at São Jerônimo and 360 at Quebra,,
+a_584,a_350,Holochilus sciureus,2000-09-11/2000-09-21,São Jerônimo,Brazil,,site,-3.284077451,-44.54452743,51,1400 trap nights,,1040 nights at São Jerônimo and 360 at Quebra,,
+a_585,a_350,Oligoryzomys formesi,2000-09-11/2000-09-21,São Jerônimo,Brazil,,site,-3.284077451,-44.54452743,10,1400 trap nights,,1040 nights at São Jerônimo and 360 at Quebra,,
+a_586,a_370,Peromyscus maniculatus,2998-05,Ajusco National Park,Mexico,,site,19.26675783,-98.21665597,8,,,"3,050 m",,
+a_587,a_370,Microtus mexicanus,2998-05,Ajusco National Park,Mexico,,site,19.26675783,-98.21665597,1,,,"3,050 m",,
+a_588,a_370,Reithrodontomys sumichrasti,2998-05,Ajusco National Park,Mexico,,site,19.26675783,-98.21665597,1,,,"3,050 m",,
+a_589,a_370,Biomys musculus,2998-05,Jalisco,Mexico,,site,19.36680839,-104.9333333,2,,,50 m,,
+a_590,a_370,Oryzomys palustris,2998-05,Jalisco,Mexico,,site,19.36680839,-104.9333333,1,,,50 m,,
+a_591,a_370,Osgoodomys banderanus,2998-05,Jalisco,Mexico,,site,19.36680839,-104.9333333,6,,,50 m,,
+a_592,a_370,Liomys pictus,2998-05,Jalisco,Mexico,,site,19.36680839,-104.9333333,14,,,50 m,,
+a_593,a_375,Sigmodon alstoni,1992-02,La Hoyada,Venezuela,,site,8.616783377,-69.0333333,21,,,,,
+a_594,a_375,Zygodontomys brevicauda,1992-02,La Hoyada,Venezuela,,site,8.616783377,-69.0333333,52,,,,,
+a_595,a_375,Heteromys anomalus,1992-02,La Hoyada,Venezuela,,site,8.616783377,-69.0333333,,,,not tested,,
+a_596,a_375,Holochilus brasiliensis,1992-02,La Hoyada,Venezuela,,site,8.616783377,-69.0333333,1,,,,,
+a_597,a_375,Holochilus sciureus,1992-02,La Hoyada,Venezuela,,site,8.616783377,-69.0333333,,,,not tested,,
+a_598,a_375,Oecomys flavicans,1992-02,La Hoyada,Venezuela,,site,8.616783377,-69.0333333,,,,not tested,,
+a_599,a_375,Oecomys speciosus,1992-02,La Hoyada,Venezuela,,site,8.616783377,-69.0333333,2,,,,,
+a_600,a_375,Oligoryzomys fulvescens,1992-02,La Hoyada,Venezuela,,site,8.616783377,-69.0333333,,,,not tested,,
+a_601,a_375,Proechimys guairae,1992-02,La Hoyada,Venezuela,,site,8.616783377,-69.0333333,13,,,,,
+a_602,a_375,Rattus rattus,1992-02,La Hoyada,Venezuela,,site,8.616783377,-69.0333333,20,,,,,
+a_603,a_375,Sigmodon alstoni,1992-02,Pirital,Venezuela,,site,9.05013773,-69.0333333,17,,,,,
+a_604,a_375,Zygodontomys brevicauda,1992-02,Pirital,Venezuela,,site,9.05013773,-69.0333333,46,,,,,
+a_605,a_375,Heteromys anomalus,1992-02,Pirital,Venezuela,,site,9.05013773,-69.0333333,1,,,,,
+a_606,a_375,Holochilus brasiliensis,1992-02,Pirital,Venezuela,,site,9.05013773,-69.0333333,2,,,,,
+a_607,a_375,Holochilus sciureus,1992-02,Pirital,Venezuela,,site,9.05013773,-69.0333333,,,,not tested,,
+a_608,a_375,Oecomys flavicans,1992-02,Pirital,Venezuela,,site,9.05013773,-69.0333333,,,,not tested,,
+a_609,a_375,Oecomys speciosus,1992-02,Pirital,Venezuela,,site,9.05013773,-69.0333333,,,,not tested,,
+a_610,a_375,Oligoryzomys fulvescens,1992-02,Pirital,Venezuela,,site,9.05013773,-69.0333333,,,,not tested,,
+a_611,a_375,Proechimys guairae,1992-02,Pirital,Venezuela,,site,9.05013773,-69.0333333,5,,,,,
+a_612,a_375,Rattus rattus,1992-02,Pirital,Venezuela,,site,9.05013773,-69.0333333,5,,,,,
+a_613,a_375,Sigmodon alstoni,1992-02,Palmarito,Venezuela,,site,8.350159218,-69.11667743,1,,,,,
+a_614,a_375,Zygodontomys brevicauda,1992-02,Palmarito,Venezuela,,site,8.350159218,-69.11667743,5,,,,,
+a_615,a_375,Heteromys anomalus,1992-02,Palmarito,Venezuela,,site,8.350159218,-69.11667743,,,,not tested,,
+a_616,a_375,Holochilus brasiliensis,1992-02,Palmarito,Venezuela,,site,8.350159218,-69.11667743,,,,not tested,,
+a_617,a_375,Holochilus sciureus,1992-02,Palmarito,Venezuela,,site,8.350159218,-69.11667743,,,,not tested,,
+a_618,a_375,Oecomys flavicans,1992-02,Palmarito,Venezuela,,site,8.350159218,-69.11667743,1,,,,,
+a_619,a_375,Oecomys speciosus,1992-02,Palmarito,Venezuela,,site,8.350159218,-69.11667743,,,,not tested,,
+a_620,a_375,Oligoryzomys fulvescens,1992-02,Palmarito,Venezuela,,site,8.350159218,-69.11667743,,,,not tested,,
+a_621,a_375,Proechimys guairae,1992-02,Palmarito,Venezuela,,site,8.350159218,-69.11667743,5,,,,,
+a_622,a_375,Rattus rattus,1992-02,Palmarito,Venezuela,,site,8.350159218,-69.11667743,9,,,,,
+a_623,a_385,Aethomys chrysophilus,2010-07,Lusaka,,,site,-15.435033,28.436092,5,,,Assume August genbank,,
+a_624,a_385,Graphiurus sp.,2010-07,Lusaka,,,site,-15.435033,28.436092,1,,,Assume August genbank,,
+a_625,a_385,Mastomys natalensis,2010-07,Lusaka,,,site,-15.435033,28.436092,24,,,August genbank,,
+a_626,a_385,Mus minutoides,2010-08,Lusaka,,,site,-15.435033,28.436092,2,,,Assume August genbank,,
+a_627,a_385,Praomys sp.,2010-08,Lusaka,,,site,-15.435033,28.436092,1,,,Assume August genbank,,
+a_628,a_385,Rattus rattus,2010-08,Lusaka,,,site,-15.435033,28.436092,1,,,Assume August genbank,,
+a_629,a_385,Aethomys chrysophilus,2011-07,Lusaka,,,site,-15.435033,28.436092,5,,,,,
+a_630,a_385,Gerbilliscus leucogaster,2011-07,Lusaka,,,site,-15.435033,28.436092,5,,,,,
+a_631,a_385,Grammomys sp.,2011-07,Lusaka,,,site,-15.435033,28.436092,1,,,,,
+a_632,a_385,Mastomys natalensis,2011-07,Lusaka,,,site,-15.435033,28.436092,20,,,,,
+a_633,a_385,Mus minutoides,2011-07,Lusaka,,,site,-15.435033,28.436092,1,,,,,
+a_634,a_385,Acomys subspinosus,2010-08,Lusaka,,,site,-14.968367,28.235647,2,,,Assume August genbank,,
+a_635,a_385,Aethomys chrysophilus,2010-08,Lusaka,,,site,-14.968367,28.235647,10,,,Assume August genbank,,
+a_636,a_385,Gerbilliscus leucogaster,2010-08,Lusaka,,,site,-14.968367,28.235647,12,,,Assume August genbank,,
+a_637,a_385,Grammomys sp.,2010-08,Lusaka,,,site,-14.968367,28.235647,1,,,Assume August genbank,,
+a_638,a_385,Mastomys natalensis,2010-08,Lusaka,,,site,-14.968367,28.235647,20,,,Assume August genbank,,
+a_639,a_385,Rattus rattus,2010-08,Lusaka,,,site,-14.968367,28.235647,2,,,Assume August genbank,,
+a_640,a_385,Acomys subspinosus,2011-07,Lusaka,,,site,-14.968367,28.235647,1,,,,,
+a_641,a_385,Aethomys chrysophilus,2011-07,Lusaka,,,site,-14.968367,28.235647,6,,,,,
+a_642,a_385,Crocidura hirta,2011-07,Lusaka,,,site,-14.968367,28.235647,1,,,,,
+a_643,a_385,Crocidura sp.,2011-07,Lusaka,,,site,-14.968367,28.235647,3,,,,,
+a_644,a_385,Gerbilliscus leucogaster,2011-07,Lusaka,,,site,-14.968367,28.235647,5,,,,,
+a_645,a_385,Mastomys natalensis,2011-07,Lusaka,,,site,-14.968367,28.235647,85,,,,,
+a_646,a_385,Otomys sp.,2011-07,Lusaka,,,site,-14.968367,28.235647,1,,,,,
+a_647,a_385,Rattus rattus,2011-07,Lusaka,,,site,-14.968367,28.235647,7,,,,,
+a_648,a_385,Arvicanthis sp.,2011-07,Lusaka,,,site,-15.568578,28.268092,3,,,,,
+a_649,a_385,Crocidura hirta,2011-07,Lusaka,,,site,-15.568578,28.268092,1,,,,,
+a_650,a_385,Gerbilliscus leucogaster,2011-07,Lusaka,,,site,-15.568578,28.268092,2,,,,,
+a_651,a_385,Hylomyscus sp.,2011-07,Lusaka,,,site,-15.568578,28.268092,1,,,,,
+a_652,a_385,Mastomys natalensis,2011-07,Lusaka,,,site,-15.568578,28.268092,5,,,,,
+a_653,a_385,Rattus rattus,2011-07,Lusaka,,,site,-15.568578,28.268092,1,,,,,
+a_654,a_385,Mastomys natalensis,2011-07,Kafue,,,site,-15.824389,28.235508,22,,,,,
+a_655,a_385,Mastomys natalensis,2010-11,Livingstone,,,site,-17.835756,25.733108,42,,,Nov - genbank,,
+a_656,a_385,Rattus rattus,2010-11,Livingstone,,,site,-17.835756,25.733108,35,,,Assume Nov - genbank,,
+a_657,a_385,Saccostomus sp.,2010-11,Livingstone,,,site,-17.835756,25.733108,1,,,Assume Nov - genbank,,
+a_658,a_395,Marmosa robinsoni,1992-02,La Hoyada,Venezuela,,site,8.616783377,-69.0333333,11,,,,,
+a_659,a_395,Dideiphis marsupialis,1992-02,La Hoyada,Venezuela,,site,8.616783377,-69.0333333,,,,,,
+a_660,a_395,Marmosa robinsoni,1992-02,Palmarito,Venezuela,,site,8.350159218,-69.11667743,2,,,,,
+a_661,a_395,Dideiphis marsupialis,1992-02,Palmarito,Venezuela,,site,8.350159218,-69.11667743,1,,,,,
+a_662,a_395,Marmosa robinsoni,1992-02,Pirital,Venezuela,,site,9.05013773,-69.0333333,1,,,,,
+a_663,a_395,Dideiphis marsupialis,1992-02,Pirital,Venezuela,,site,9.05013773,-69.0333333,1,,,,,
+a_664,a_395,Zygodontomys brevicauda,1992-02,La Arenosa,Venezuela,,site,9.039417083,-69.74472595,46,,,,,0.71 km2
+a_665,a_395,Oligoryzomysfulvescens,1992-02,La Arenosa,Venezuela,,site,9.039417083,-69.74472595,11,,,,,0.71 km2
+a_666,a_395,Sigmodon alstoni,1992-02,La Arenosa,Venezuela,,site,9.039417083,-69.74472595,17,,,,,0.71 km2
+a_667,a_395,Holochilus brasiliensis,1992-02,La Arenosa,Venezuela,,site,9.039417083,-69.74472595,2,,,,,0.71 km2
+a_668,a_395,Heteromys anomalus,1992-02,La Arenosa,Venezuela,,site,9.039417083,-69.74472595,1,,,,,0.71 km2
+a_669,a_395,Proechimys guairae,1992-02,La Arenosa,Venezuela,,site,9.039417083,-69.74472595,5,,,,,0.71 km2
+a_670,a_395,Rattus rattus ,1992-02,La Arenosa,Venezuela,,site,9.039417083,-69.74472595,5,,,,,0.71 km2
+a_671,a_395,Marmosa robinsoni,1992-02,La Arenosa,Venezuela,,site,9.039417083,-69.74472595,2,,,,,0.71 km2
+a_672,a_420,Apodemus spp.,2009-06,Akbaş,Turkey,,Village,41.36838639,32.3252406,39,,,,,0.16 km2
+a_673,a_420,Myodes spp.,2009-06,Akbaş,Turkey,,Village,41.36838639,32.3252406,18,,,,,0.16 km2
+a_674,a_420,Rattus rattus,2009-06,Akbaş,Turkey,,Village,41.36838639,32.3252406,,,,,,0.16 km2
+a_675,a_420,"Other - Pitymys spp., Microtus spp., Mus musculus, Crocidura suaveolens.",2009-06,Akbaş,Turkey,,Village,41.36838639,32.3252406,5,,,,,0.16 km2
+a_676,a_420,Apodemus spp.,2009-06,Bogaz,Turkey,,Village,41.45963195,32.40959956,13,,,,,8 km2
+a_677,a_420,Myodes spp.,2009-06,Bogaz,Turkey,,Village,41.45963195,32.40959956,,,,,,8 km2
+a_678,a_420,Rattus rattus,2009-06,Bogaz,Turkey,,Village,41.45963195,32.40959956,8,,,,,8 km2
+a_679,a_420,"Other - Pitymys spp., Microtus spp., Mus musculus, Crocidura suaveolens.",2009-06,Bogaz,Turkey,,Village,41.45963195,32.40959956,2,,,,,8 km2
+a_680,a_420,Apodemus spp.,2009-06,Guzelcehisar,Turkey,,Village,41.64710351,32.20970636,17,,,,,0.67 km2
+a_681,a_420,Myodes spp.,2009-06,Guzelcehisar,Turkey,,Village,41.64710351,32.20970636,,,,,,0.67 km2
+a_682,a_420,Rattus rattus,2009-06,Guzelcehisar,Turkey,,Village,41.64710351,32.20970636,,,,,,0.67 km2
+a_683,a_420,"Other - Pitymys spp., Microtus spp., Mus musculus, Crocidura suaveolens.",2009-06,Guzelcehisar,Turkey,,Village,41.64710351,32.20970636,,,,,,0.67 km2
+a_684,a_420,Apodemus spp.,2009-06,Hanyeri,Turkey,,Village,41.34813581,32.32949312,8,,,,,1 km2
+a_685,a_420,Myodes spp.,2009-06,Hanyeri,Turkey,,Village,41.34813581,32.32949312,5,,,,,1 km2
+a_686,a_420,Rattus rattus,2009-06,Hanyeri,Turkey,,Village,41.34813581,32.32949312,,,,,,1 km2
+a_687,a_420,"Other - Pitymys spp., Microtus spp., Mus musculus, Crocidura suaveolens.",2009-06,Hanyeri,Turkey,,Village,41.34813581,32.32949312,,,,,,1 km2
+a_688,a_420,Apodemus spp.,2009-06,Hasankadi,Turkey,,Village,41.33944023,32.39164552,12,,,,,1.5 km2
+a_689,a_420,Myodes spp.,2009-06,Hasankadi,Turkey,,Village,41.33944023,32.39164552,18,,,,,1.5 km2
+a_690,a_420,Rattus rattus,2009-06,Hasankadi,Turkey,,Village,41.33944023,32.39164552,3,,,,,1.5 km2
+a_691,a_420,"Other - Pitymys spp., Microtus spp., Mus musculus, Crocidura suaveolens.",2009-06,Hasankadi,Turkey,,Village,41.33944023,32.39164552,,,,,,1.5 km2
+a_692,a_420,Apodemus spp.,2009-06,Kumluca,Turkey,,Towm,41.45564402,32.45496781,14,,,,,15 km2
+a_693,a_420,Myodes spp.,2009-06,Kumluca,Turkey,,Towm,41.45564402,32.45496781,,,,,,15 km2
+a_694,a_420,Rattus rattus,2009-06,Kumluca,Turkey,,Towm,41.45564402,32.45496781,,,,,,15 km2
+a_695,a_420,"Other - Pitymys spp., Microtus spp., Mus musculus, Crocidura suaveolens.",2009-06,Kumluca,Turkey,,Towm,41.45564402,32.45496781,,,,,,15 km2

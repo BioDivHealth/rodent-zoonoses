@@ -49,6 +49,8 @@ studies <- subset(studies, data_resolution == "site-session")
 
 host <- host[host$study_id %in% studies$study_id, ]
 host <- subset(host, study_id != "a_278")
+host <- subset(host, study_id != "a_370")
+host <- subset(host, study_id != "a_420")
 pathogen <- pathogen[pathogen$study_id %in% studies$study_id, ]
 
 # Keep only 1 pathogen row per rodent
@@ -98,10 +100,12 @@ pathogen <- rbind(pathogen, new_pathogen)
 ## group individual-level data to (roughly) monthly data
 
 ## subset individual level data
+individual_studies <- subset(studies, data_access == "individual")
 
+host_individual <- host[host$study_id %in% individual_studies$study_id, ]
 
-host_individual <- subset(host, study_id == "h_129")
 host_individual$eventDate <- as.Date(host_individual$eventDate)
+
 host_individual <- host_individual %>% 
   group_by(locality) %>%
   group_modify(~ group_time_series(.x)) %>%
@@ -151,7 +155,7 @@ host_individual <- host_individual[, -1]
 
 ## translate summarised host dataset date into start/end columns
 
-host_summarised <- subset(host, study_id != "h_129")
+host_summarised <- host[!(host$study_id %in% individual_studies$study_id), ]
 
 host_summarised <- host_summarised %>%
   separate(eventDate, into = c("start_date", "end_date"), sep = "/")
@@ -189,34 +193,66 @@ host_monthly$period[is.na(host_monthly$period)] <- 0
 host <- host_monthly %>% filter(period <= 60)
 
 ## filter for multiple species
-host <- host %>%
-  group_by(study_id.x) %>%
-  filter(n_distinct(scientificName.x) > 1) %>%
-  ungroup()
+
+#host <- host %>%
+ # group_by(study_id.x) %>%
+  #filter(n_distinct(scientificName.x) > 1) %>%
+  #ungroup()
 
 ## convert Ana's coordinates to numeric
 
 host$decimalLatitude <- as.numeric(host$decimalLatitude)
 host$decimalLongitude <- as.numeric(host$decimalLongitude)
 
+### correct column names and remove excess columns
+
+host <- subset(host, select = -c(verbatimLocality,
+                                 pathogen_record_id,
+                                 study_id.y,
+                                 associatedTaxa,
+                                 number_inconclusive,
+                                 note,
+                                 trapEffort,
+                                 trapEffortResolution))
+
+host <- host %>% 
+  rename(
+    host_name = scientificName.x,
+    pathogen_name = scientificName.y,
+    study_id = study_id.x
+  )
+
 ## translate species name into genus/species names
 
 host_path_wide <- host %>%
-  separate(scientificName.x, into = c("genus", "species", "other"), sep = " ")
+  separate(host_name, into = c("genus", "species", "other"), sep = " ", remove = FALSE)
 
 # Harmonise virus names in the dataset
 host_path_wide <- host_path_wide %>% 
   mutate(
-    scientificName.y = case_when(
-      scientificName.y == "Sin Nombre Virus" ~ "SNV",
-      scientificName.y == "Sin Nombre Orthohantavirus" ~ "SNV", 
-      scientificName.y == "Catarina Virus" ~ "CTNV",
-      scientificName.y == "Oliveros Virus" ~ "OLV",
-      scientificName.y == "Latino mammarenavirus" ~ "LATV",
-      scientificName.y == "Orthohantavirus dobravaense" ~ "DOBV",
-      scientificName.y == "Mammarenavirus bearense" ~ "BCNV",
+    pathogen_abbrev = case_when(
+      pathogen_name == "Sin Nombre Virus" ~ "SNV",
+      pathogen_name == "Sin Nombre Orthohantavirus" ~ "SNV", 
+      pathogen_name == "Sin Nombre virus" ~ "SNV", 
+      pathogen_name == "Catarina Virus" ~ "CTNV",
+      pathogen_name == "Oliveros Virus" ~ "OLV",
+      pathogen_name == "Latino mammarenavirus" ~ "LATV",
+      pathogen_name == "Orthohantavirus dobravaense" ~ "DOBV",
+      pathogen_name == "Dobrava-Belgrade orthohantavirus" ~ "DOBV",
+      pathogen_name == "Mammarenavirus bearense" ~ "BCNV",
+      pathogen_name == "Puumala orthohantavirus" ~ "PUUV",
+      pathogen_name == "Puumala virus" ~ "PUUV",
+      pathogen_name == "Seoul virus" ~ "SEOV",
+      pathogen_name == "Guanarito virus" ~ "GTOV",
+      pathogen_name == "Lassa mammarenavirus" ~ "LASV",
+      pathogen_name == "Pirital virus" ~ "PIRV",
+      pathogen_name == "Rat hepatitits E virus" ~ "RHEV",
+      pathogen_name == "Hantaan virus" ~ "HTNV",
+      pathogen_name == "Hantaviridae" ~ "HTNV",
+      pathogen_name == "mammarenavirus" ~ "",
+      pathogen_name == "Leptospriosa interrogans" ~ "",
       # Keep all other names the same
-      TRUE ~ scientificName.y
+      TRUE ~ pathogen_name
     ),
   )
 
