@@ -124,7 +124,7 @@ host_individual <- merge(host_individual,pathogen,by="rodent_record_id")
 ## group and summarise to obtain summarised data
 
 host_individual <- host_individual %>%
-  group_by(group, scientificName.x) %>%
+  group_by(group, scientificName.x) %>% ### this is inaccurate (group by group then take min/max date, then species for count)
   reframe(rodent_record_id = first(rodent_record_id),
             study_id.x = first(study_id.x),
             start_date = min(eventDate),
@@ -176,14 +176,12 @@ host_monthly$end_date <- ifelse(grepl("^\\d{4}-\\d{2}$", host_monthly$end_date),
 
 host_monthly <- merge(host_monthly,pathogen,by="rodent_record_id")
 
-## rbind individual and summarised data
-
-host_monthly <- rbind(host_monthly, host_individual) ##### MERGED AT WRONG PLACE, INDIVIDUAL DATA NEEDS START AND END DATE
-
-## convert all dates to yyyy-mm-dd and convert to date object
-
 host_monthly$start_date <- as.Date(host_monthly$start_date)
 host_monthly$end_date <- as.Date(host_monthly$end_date)
+
+## rbind individual and summarised data
+
+host_monthly <- rbind(host_monthly, host_individual) 
 
 ## Calculate duration of trapping
 host_monthly$period <- host_monthly$end_date - host_monthly$start_date
@@ -264,4 +262,4 @@ write_rds(host_path_wide, file="./data/host_path_wide.rds")
 
 ### how many communities do we have?
 
-unique(host[c('start_date','locality')])
+dim(unique(host[c('start_date','locality')]))
