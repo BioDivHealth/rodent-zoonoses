@@ -1,0 +1,106 @@
+---
+title: "Modelling Zoonoses in Rodent Communities"
+author: "Harry Gordon, Ana Martinez-Checa, David Redding, Greg Milne"
+date: "05/09/2024"
+output: pdf_document
+bibliography: 01_references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Introduction
+
+Rodents are reservoirs of zoonotic diseases, posing a significant threat to human health. Understanding rodent ecology and population dynamics is therefore important for mitigating human zoonotic hazards. Trapping studies have improved our understanding of zoonotic epidemiology, however, capturing known reservoirs to the exclusion of other rodent species limits inference on broader eco-epidemiological questions. Detailed information on rodent communities could be used to understand how global changes in habitat suitability and climate influence the dynamic ecosystems from which zoonotic diseases emerge and are maintained. Currently, there is no standard method for reporting rodent trapping data. This project aims to establish a high-resolution rodent community seroprevalence database by collating published data on rodent abundance and pathogen prevalence, and provide a standard for its reporting going forward. These data will facilitate robust inference on the eco-epidemiological predictors of rodent-borne disease, helping to shape our understanding of zoonotic disease risk in a changing world.
+
+Infectious Disease Systems Ecology group, British Natural History Museum.
+
+David Simons' paper: @simons_rodent_2023.
+
+## Methods
+
+These are the methods.
+
+Here is a world map displaying locations of our sampled rodents:
+
+```{r plot_world_map, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE}
+# Load necessary libraries
+library(ggplot2)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+# Load data frame
+host_path <- readRDS("../data/host_path_wide.rds")
+attach(host_path)
+# Get the world map data
+
+world <- ne_countries(scale = "large", returnclass = "sf")
+coords_sf <- st_as_sf(host_path, coords = c("decimalLongitude", "decimalLatitude"), crs = 4326, agr = "constant")
+host_path$year <- as.numeric(format(host_path$start_date, "%Y"))
+# Plot the points onto the world map 
+
+ggplot(data = world) +
+  geom_sf(colour="darkgray") +
+  geom_sf(data = coords_sf, aes(geometry = geometry, colour=host_path$year), size = 2, shape=18) +
+  coord_sf(expand = FALSE) +                    # Keep the aspect ratio
+  labs(title = "Locations of Trapped Rodents") + 
+  theme_void() +
+  theme(panel.background = element_rect(), 
+        axis.text = element_blank(),            # Remove axis text (tick labels)
+        axis.ticks = element_blank()) +
+  scale_color_gradient(low = "#FF9D00", high = "#FF0000", name = "Year")
+  
+```
+
+```{r plot_timeline, include=FALSE, echo=FALSE, fig.height = 2, message=FALSE, error=FALSE, warning=FALSE}
+# Load necessary libraries
+library(ggplot2)
+
+# plot the study dates on a timeline
+ggplot(host_path, aes(x = start_date, y = 1)) +
+  geom_segment(aes(x = start_date, xend = start_date, y = 0.9, yend = 1.1), color = "red") +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  scale_y_continuous(limits = c(0.5, 1.5)) +
+  labs(title = "Timeline of Samples", x = "Date", y = "") +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank())
+
+```
+
+### Rodent phylogeny
+
+Here is the mammal tree with our host species higlighted
+
+```{r plot_phylogeny, echo=FALSE, message=FALSE, warning=FALSE}
+# load necessary libraries
+library(ggtree)
+library(ggplot2)
+library(here)
+
+# load data
+host.clade <- read.tree(here("data", "./phylogenetics/host.mrca.tree"))
+pruned.host.spp <- readRDS(here("data", "./phylogenetics/harmonised.host.sp.names.rds")) %>%
+  as.data.frame()
+
+# find our species of interest
+host.clade$in.data <- ifelse(host.clade$tip.label %in% pruned.host.spp$tree.names, 
+       "purple", NA)
+host.clade$in.data <- as.factor(host.clade$in.data)
+
+# Plot the phylogeny
+ggtree(host.clade, size = 0.05) + 
+  geom_tippoint(color = host.clade$in.data, size = 3) + 
+  geom_treescale(x = 0, y = 2200, col = "midnightblue")
+
+```
+
+### Data papers
+
+We collected data from the following papers for use in this analysis: @burns_novel_2018, @cabrera_deciphering_2023, @dietrich_small-scale_1997, @fernandes_co-circulation_2015, @fulhorst_bear_2002, @jameson_continued_2013, @kosasih_evidence_2011, @ledina_dinara-new_2002, @leduc_epidemiological_1986, @mauldin_assessment_2013, @milazzo_ecology_2013, @nemirov_isolation_1999, @zhang_glc_fcs30d_2024, @seijo_study_2003, @sheikh_ali_first_2014, @suarez_prevalence_2003, @williams_outbreak_1997, @williamson_continuing_2021.
+
+## References
