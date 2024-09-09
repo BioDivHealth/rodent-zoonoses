@@ -1,13 +1,25 @@
 ---
 title: "Modelling Zoonoses in Rodent Communities"
-author: "David Redding, Greg Milne, Ana Martinez-Checa, Harry Gordon"
-date: "07/06/2024"
+author: "Harry Gordon, Ana Martinez-Checa, David Redding, Greg Milne"
+date: "09/09/2024"
 output: pdf_document
+geometry: margin=2cm
+fontsize: 18pt
 bibliography: 01_references.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+    cache       = TRUE,
+    fig.width   = 10,
+    fig.height  = 5,
+    fig.align   = 'center',
+    echo        = TRUE,
+    message     = FALSE,
+    warning     = FALSE,
+    error       = FALSE,
+    strip.white = TRUE,
+    warning     = FALSE)
 ```
 
 ## Introduction
