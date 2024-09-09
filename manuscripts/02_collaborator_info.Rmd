@@ -1,13 +1,24 @@
 ---
-title: "Modelling Zoonoses in Rodent Communities"
+title: "SpREAD: Spatio-temporal Rodent Community Ecology And Disease Database."
 author: "Harry Gordon, Ana Martinez-Checa, David Redding, Greg Milne"
-date: "05/09/2024"
+date: "09/09/2024"
 output: pdf_document
+geometry: margin=2cm
+fontsize: 18pt
 bibliography: 01_references.bib
 ---
 
 ```{r setup, include=FALSE}
-knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(
+    fig.width   = 10,
+    fig.height  = 5,
+    fig.align   = 'center',
+    echo        = TRUE,
+    message     = FALSE,
+    warning     = FALSE,
+    error       = FALSE,
+    strip.white = TRUE,
+    warning     = FALSE)
 ```
 
 ## Introduction
@@ -17,14 +28,7 @@ Rodents are reservoirs of zoonotic diseases, posing a significant threat to huma
 Infectious Disease Systems Ecology group, British Natural History Museum.
 
 David Simons' paper: @simons_rodent_2023.
-
-## Methods
-
-These are the methods.
-
-Here is a world map displaying locations of our sampled rodents:
-
-```{r plot_world_map, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE}
+```{r plot_world_map, echo=FALSE, fig.cap="The geographic locations of trapped rodents included in our study. The colour of points denotes the year sampled."}
 # Load necessary libraries
 library(ggplot2)
 library(sf)
@@ -34,72 +38,49 @@ library(rnaturalearthdata)
 # Load data frame
 host_path <- readRDS("../data/host_path_wide.rds")
 attach(host_path)
-# Get the world map data
 
+# Get the world map data
 world <- ne_countries(scale = "large", returnclass = "sf")
 coords_sf <- st_as_sf(host_path, coords = c("decimalLongitude", "decimalLatitude"), crs = 4326, agr = "constant")
 host_path$year <- as.numeric(format(host_path$start_date, "%Y"))
-# Plot the points onto the world map 
 
+# Plot the points onto the world map 
 ggplot(data = world) +
   geom_sf(colour="darkgray") +
   geom_sf(data = coords_sf, aes(geometry = geometry, colour=host_path$year), size = 2, shape=18) +
   coord_sf(expand = FALSE) +                    # Keep the aspect ratio
-  labs(title = "Locations of Trapped Rodents") + 
   theme_void() +
   theme(panel.background = element_rect(), 
         axis.text = element_blank(),            # Remove axis text (tick labels)
-        axis.ticks = element_blank()) +
+        axis.ticks = element_blank(),
+        plot.margin = margin(0, 0, 0, 0, "cm")) +
   scale_color_gradient(low = "#FF9D00", high = "#FF0000", name = "Year")
   
 ```
 
-```{r plot_timeline, include=FALSE, echo=FALSE, fig.height = 2, message=FALSE, error=FALSE, warning=FALSE}
+```{r plot_n_infections, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of infections for each virus tested", fig.align='default'}
 # Load necessary libraries
 library(ggplot2)
+library(dplyr)
 
-# plot the study dates on a timeline
-ggplot(host_path, aes(x = start_date, y = 1)) +
-  geom_segment(aes(x = start_date, xend = start_date, y = 0.9, yend = 1.1), color = "red") +
-  geom_hline(yintercept = 1, linetype = "dashed") +
-  scale_y_continuous(limits = c(0.5, 1.5)) +
-  labs(title = "Timeline of Samples", x = "Date", y = "") +
-  theme_minimal() +
-  theme(axis.text.y = element_blank(),
-        axis.ticks.y = element_blank(),
-        panel.grid.major.y = element_blank(),
-        panel.grid.minor.y = element_blank())
+# group by virus and sum infections
+infection_plot <- host_path %>% group_by(pathogen_abbrev) %>% summarise(n_infections=sum(positive))
+infection_plot <- infection_plot[-1, ] %>% arrange(desc(n_infections))
 
+
+# Plot the points onto the world map 
+ggplot(infection_plot, aes(x = reorder(pathogen_abbrev, -n_infections), y = n_infections)) +
+  geom_bar(stat = "identity", fill = "steelblue") +  # Use stat = "identity" for pre-calculated y values
+  annotate("point", x = 10.5, y = 70, shape = 21, size = 50, fill = "steelblue", color = "steelblue") +
+  annotate("text", x = 10.5, y = 70, label = "480 total\n infections", size = 5) +
+  labs(x = "Pathogen",
+       y = "Number of Infections") +
+  theme(plot.margin = margin(0, 0, 0, 0, "cm")) +
+  theme_minimal()
+  
 ```
 
-### Rodent phylogeny
-
-Here is the mammal tree with our host species higlighted
-
-```{r plot_phylogeny, echo=FALSE, message=FALSE, warning=FALSE}
-# load necessary libraries
-library(ggtree)
-library(ggplot2)
-library(here)
-
-# load data
-host.clade <- read.tree(here("data", "./phylogenetics/host.mrca.tree"))
-pruned.host.spp <- readRDS(here("data", "./phylogenetics/harmonised.host.sp.names.rds")) %>%
-  as.data.frame()
-
-# find our species of interest
-host.clade$in.data <- ifelse(host.clade$tip.label %in% pruned.host.spp$tree.names, 
-       "purple", NA)
-host.clade$in.data <- as.factor(host.clade$in.data)
-
-# Plot the phylogeny
-ggtree(host.clade, size = 0.05) + 
-  geom_tippoint(color = host.clade$in.data, size = 3) + 
-  geom_treescale(x = 0, y = 2200, col = "midnightblue")
-
-```
-
-### Data papers
+### Data currently in database
 
 We collected data from the following papers for use in this analysis: @burns_novel_2018, @cabrera_deciphering_2023, @dietrich_small-scale_1997, @fernandes_co-circulation_2015, @fulhorst_bear_2002, @jameson_continued_2013, @kosasih_evidence_2011, @ledina_dinara-new_2002, @leduc_epidemiological_1986, @mauldin_assessment_2013, @milazzo_ecology_2013, @nemirov_isolation_1999, @zhang_glc_fcs30d_2024, @seijo_study_2003, @sheikh_ali_first_2014, @suarez_prevalence_2003, @williams_outbreak_1997, @williamson_continuing_2021.
 
