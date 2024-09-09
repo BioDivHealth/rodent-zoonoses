@@ -10,7 +10,6 @@ bibliography: 01_references.bib
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(
-    cache       = TRUE,
     fig.width   = 10,
     fig.height  = 5,
     fig.align   = 'center',
