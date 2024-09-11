@@ -58,6 +58,8 @@ host <- subset(host, study_id != "a_370")
 host <- subset(host, study_id != "a_420")
 pathogen <- pathogen[pathogen$study_id %in% studies$study_id, ]
 
+saveRDS(pathogen, file="./data/pathogen_assay_record.rds")
+
 # Keep only 1 pathogen row per rodent
 ## check for multiple pathogen entries for each rodent_id and take max positives
 
