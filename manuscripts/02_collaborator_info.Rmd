@@ -55,7 +55,7 @@ If your initial publication contains some of the information specified above, yo
 
 ## The SpREAD database as of Sept. 2024
 
-The following figures show the data obtained via extraction from the literature.
+The following figures show the data obtained via extraction from the literature. (refer to figure in text here)
 
 ```{r plot_world_map, echo=FALSE, fig.cap="The geographic locations of trapped rodents included in our study. The colour of points denotes the year sampled."}
 # Load necessary libraries

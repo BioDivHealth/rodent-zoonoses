@@ -40,6 +40,11 @@ studies <-  rbind(studies_h, studies_d, studies_a)
 host <-  rbind(host_h, host_d, host_a)
 pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a)
 
+combined_data <- list(studies = studies,
+                      host = host,
+                      pathogen = pathogen)
+
+write_rds(combined_data, file="./data/combined_data.rds")
 
 ## Filter for site resolution
 
