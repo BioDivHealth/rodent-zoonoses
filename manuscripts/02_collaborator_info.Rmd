@@ -24,7 +24,7 @@ knitr::opts_chunk$set(
     error       = FALSE,
     strip.white = TRUE,
     warning     = FALSE,
-    cache = TRUE)
+    cache = FALSE)
 ```
 ## This information is for researchers interested in co-authorship
 
@@ -93,11 +93,40 @@ ggplot(data = world) +
   
 ```
 
+```{r plot_n_hosts, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of hosts trapped for each genus", fig.align='center'}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(scico)
+
+# group by virus and sum infections
+host_plot <- host_path %>% group_by(genus) %>% summarise(n_hosts=sum(as.numeric(individualCount)))
+host_plot <- host_plot[-1, ] %>% arrange(desc(n_hosts)) %>% slice(1:12)
+
+# Plot the points onto the world map 
+ggplot(host_plot, aes(x = reorder(genus, -n_hosts), y = n_hosts, fill=genus)) +
+  geom_bar(stat = "identity") + 
+  annotate("point", x = 9, y = 1500, shape = 21, size = 50, fill = "chocolate4", color = "chocolate4") +
+  annotate("text", x = 9, y = 1500, label = "10955 rodents\n total", size = 5) +
+  labs(x = "Genus",
+       y = "Number Trapped") +
+  theme_minimal() +
+  theme(plot.margin = margin(0, 0, 0, 0, "cm"),
+        axis.text.x = element_text(angle = 45, hjust = 1, size=11)) +
+  scale_fill_scico_d(palette = "tokyo")
+
+  
+```
+
+
 ```{r plot_n_infections, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of infections for each virus tested", fig.align='center'}
 # Load necessary libraries
 library(ggplot2)
 library(dplyr)
 library(scico)
+
+host_path <- readRDS("../data/host_path_wide.rds")
+attach(host_path)
 
 # group by virus and sum infections
 infection_plot <- host_path %>% group_by(pathogen_abbrev) %>% summarise(n_infections=sum(positive))
@@ -106,12 +135,13 @@ infection_plot <- infection_plot[-1, ] %>% arrange(desc(n_infections))
 # Plot the points onto the world map 
 ggplot(infection_plot, aes(x = reorder(pathogen_abbrev, -n_infections), y = n_infections, fill=pathogen_abbrev)) +
   geom_bar(stat = "identity") + 
-  annotate("point", x = 10.5, y = 70, shape = 21, size = 50, fill = "cadetblue", color = "cadetblue") +
-  annotate("text", x = 10.5, y = 70, label = "10955 rodents\n 480 positive", size = 5) +
+  annotate("point", x = 10.45, y = 70, shape = 21, size = 50, fill = "cadetblue", color = "cadetblue") +
+  annotate("text", x = 10.45, y = 70, label = "480 positive\n rodents", size = 5) +
   labs(x = "Pathogen",
        y = "Number of Infections") +
-  theme(plot.margin = margin(0, 0, 0, 0, "cm")) +
   theme_minimal() +
+  theme(plot.margin = margin(0, 0, 0, 0, "cm"),
+        axis.text.x = element_text(size=11)) +
   scale_fill_scico_d(palette = "roma")
 
   
