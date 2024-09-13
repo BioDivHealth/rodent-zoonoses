@@ -1,16 +1,16 @@
 ---
 title: "SpREAD: Spatio-temporal Rodent Community Ecology And Disease Database."
+subtitle: Harry Gordon^1^, Ana Martinez-Checa^1^, Greg Milne^1^, David Redding^1^, David Simons^2^
 author:
-  - Harry Gordon*
-  - Ana Martinez-Checa*
-  - Greg Milne*
-  - David Redding^[Natural History Museum]
-  - David Simons^[Pennsylvania State University]
+  - ^1^ Natural History Musuem, London
+  - ^2^ Pennsylvania State University
 date: "09/09/2024"
 output: pdf_document
 geometry: margin=2cm
 fontsize: 20pt
 bibliography: 01_references.bib
+header-includes: 
+  - \renewcommand{\and}{\\}
 ---
 
 ```{r setup, include=FALSE}
@@ -23,11 +23,12 @@ knitr::opts_chunk$set(
     warning     = FALSE,
     error       = FALSE,
     strip.white = TRUE,
-    warning     = FALSE)
+    warning     = FALSE,
+    cache = TRUE)
 ```
 ## This information is for researchers interested in co-authorship
 
-SpREAD is a project being carried out by the Infectious Disease Systems Ecology Group of the British Natural History Museum. It is a database inspired by previous efforts to gather data from scientific papers [@simons_rodent_2023] and other open databases [@hudson_database_2017]. SpREAD aims to aggregate as many previous rodent community trapping studies as possible to a common resolution, to achieve the sample size necessary for robust infection dynamics modelling in rodent communities.
+SpREAD is a project being carried out by the Infectious Disease Systems Ecology Group of the Natural History Museum, London. SpREAD aims to aggregate many previous rodent community trapping studies to a common resolution, to achieve the sample size necessary for robust infection dynamics modelling in rodent communities. It is a database inspired by previous efforts to gather data from scientific papers [@simons_rodent_2023] and other open databases such as PREDICTS [@hudson_database_2017].
 
 The secondary aim of SpREAD is to provide a much-needed standard of reporting for trapping studies on rodent communities to adhere to going forwards. Previously, the data reported in these studies has often been highly summarised (e.g yearly) and has left out key information about the location and serology of the trapping. This information, if included, would enable the data to be used in studies beyond the initial publication, making the most out of the resources and effort put in by scientists in the field. The SpREAD database will serve as a community-driven tool to be continually added to, ever improving in its completeness and utility.
 
@@ -37,29 +38,34 @@ The secondary aim of SpREAD is to provide a much-needed standard of reporting fo
 
 The minimum requirements for data to be included in the SpREAD database are as follows:
 
-1. Date of trapping (minimum month resolution)
-1. Duration of trapping (or end date)
-1. Precise coordinate location of trapping site
+1. **Date of trapping** (minimum resolution of a month)
+1. **Duration of trapping** (or start and end date)
+1. **Precise coordinate location** of trapping site
 1. All captured rodents' abundances are reported
-1. All captured are tested for a virus
-1. Type of test used and virus name (at least family level)
+1. All individuals are tested for at least one virus
+1. **Type of test used and virus name** (at least family level e.g. hantavirus)
 
 Desirable:
 
-1. Indication of trapping method (e.g. area/number of traps)
-1. Indication of trapping effort (trap nights)
+1. Indication of trapping method (e.g. grid area/number of traps/type of trap)
+1. Indication of trapping effort (e.g. trap nights)
 
 If you are interested in co-authoring this paper and providing your data, please submit it via [**this link**](https://forms.gle/BhRf5SP36EHwJYPV9) or paste this in your browser: https://forms.gle/BhRf5SP36EHwJYPV9.
 
 If your initial publication contains some of the information specified above, you need only submit the additional information required, along with the doi of the original publication.
 
+If you do not have access to the data but know someone who does, please pass this email/document along.
+
 ## The SpREAD database as of Sept. 2024
+
+Through extraction of data from published articles, we have gathered 
 
 The following figures show the data obtained via extraction from the literature. (refer to figure in text here)
 
 ```{r plot_world_map, echo=FALSE, fig.cap="The geographic locations of trapped rodents included in our study. The colour of points denotes the year sampled."}
 # Load necessary libraries
 library(ggplot2)
+library(viridis)
 library(sf)
 library(rnaturalearth)
 library(rnaturalearthdata)
@@ -75,7 +81,7 @@ host_path$year <- as.numeric(format(host_path$start_date, "%Y"))
 
 # Plot the points onto the world map 
 ggplot(data = world) +
-  geom_sf(colour="darkgray") +
+  geom_sf(colour="darkgrey") +
   geom_sf(data = coords_sf, aes(geometry = geometry, colour=host_path$year), size = 3, shape=19) +
   coord_sf(expand = FALSE) +                    # Keep the aspect ratio
   theme_void() +
@@ -83,7 +89,7 @@ ggplot(data = world) +
         axis.text = element_blank(),            # Remove axis text (tick labels)
         axis.ticks = element_blank(),
         plot.margin = margin(0, 0, 0, 0, "cm")) +
-  scale_color_gradient(low = "#FF9D00", high = "#FF0000", name = "Year")
+  scale_colour_viridis(name="Year", direction=1, option="inferno", limits=c(1980, 2030))
   
 ```
 
