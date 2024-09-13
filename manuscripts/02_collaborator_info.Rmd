@@ -58,7 +58,7 @@ If you do not have access to the data but know someone who does, please pass thi
 
 ## The SpREAD database as of Sept. 2024
 
-Through extraction of data from published articles, we have gathered 
+Through extraction of data from published articles, we have gathered rodent community data from 
 
 The following figures show the data obtained via extraction from the literature. (refer to figure in text here)
 
