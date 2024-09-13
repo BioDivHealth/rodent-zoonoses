@@ -227,13 +227,8 @@ host <- host %>%
     study_id = study_id.x
   )
 
-## translate species name into genus/species names
-
-host_path_wide <- host %>%
-  separate(host_name, into = c("genus", "species", "other"), sep = " ", remove = FALSE)
-
 # Harmonise virus names in the dataset
-host_path_wide <- host_path_wide %>% 
+host_path_wide <- host %>% 
   mutate(
     pathogen_abbrev = case_when(
       pathogen_name == "Sin Nombre Virus" ~ "SNV",
@@ -261,6 +256,31 @@ host_path_wide <- host_path_wide %>%
     ),
   )
 
+## Harmonise host species names in the dataset
+
+host_path_wide <- host_path_wide %>% 
+  mutate(
+    host_name = case_when(
+      host_name == "Akodon azare" ~ "Akodon azarae",
+      host_name == "Clethryonomys glareolus" ~ "Myodes glareolus", 
+      host_name == "Spermophilus mexicanus" ~ "Ictidomys mexicanus",
+      host_name == "P. californicus" ~ "Peromyscus californicus",
+      host_name == "Brush mice" ~ "Peromyscus boylii",
+      host_name == "dusky-footed" ~ "Neotoma fuscipes",
+      host_name == "R. norvegicus" ~ "Rattus norvegicus",
+      host_name == "bank vole" ~ "Myodes glareolus",
+      host_name == "Oligoryzomys formesi" ~ "Oligoryzomys fornesi",
+      host_name == "Crocidura cf. yaldeni" ~ "Crocidura yaldeni",
+      host_name == "Crocidura cf. macmillani" ~ "Crocidura macmillani",
+      # Keep all other names the same
+      TRUE ~ pathogen_name
+    ),
+  )
+
+## translate species name into genus/species names
+
+host_path_wide <- host %>%
+  separate(host_name, into = c("genus", "species", "other"), sep = " ", remove = FALSE)
 
 # save to rds for phylogeny
 
