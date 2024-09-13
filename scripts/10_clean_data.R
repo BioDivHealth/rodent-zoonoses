@@ -44,8 +44,6 @@ combined_data <- list(studies = studies,
                       host = host,
                       pathogen = pathogen)
 
-write_rds(combined_data, file="./data/combined_data.rds")
-
 ## Filter for site resolution
 
 studies <- subset(studies, data_resolution == "site-session")
@@ -273,13 +271,13 @@ host_path_wide <- host_path_wide %>%
       host_name == "Crocidura cf. yaldeni" ~ "Crocidura yaldeni",
       host_name == "Crocidura cf. macmillani" ~ "Crocidura macmillani",
       # Keep all other names the same
-      TRUE ~ pathogen_name
+      TRUE ~ host_name
     ),
   )
 
 ## translate species name into genus/species names
 
-host_path_wide <- host %>%
+host_path_wide <- host_path_wide %>%
   separate(host_name, into = c("genus", "species", "other"), sep = " ", remove = FALSE)
 
 # save to rds for phylogeny
