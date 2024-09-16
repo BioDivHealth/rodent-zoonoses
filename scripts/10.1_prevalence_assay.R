@@ -2,6 +2,8 @@ library(dplyr)
 library(here)
 library(stringr)
 library(ggplot2)
+library(patchwork)
+library(gridExtra)
 
 pathogen <- readRDS("data/pathogen_assay_record.rds")
 
@@ -47,17 +49,6 @@ ggplot(rodent_assay_counts, aes(x = prevalence, y = associated_rodent_record_id,
 
 
 # Fixing graph
-library(dplyr)
-library(here)
-library(stringr)
-library(ggplot2)
-library(patchwork)
-library(gridExtra)
-
-pathogen <- readRDS("data/pathogen_assay_record.rds")
-
-studies <- subset(combined_data, studies == "site-session")
-
 # Create different plots for each pathogen with rodent_id with >1 tests
 all_pathogens_plot <- ggplot(rodent_assay_counts, aes(x = prevalence, y = associated_rodent_record_id, group = simple.assay)) +
   geom_point(aes(color = simple.assay, size = tested), alpha = 0.7) +  # Adjust size of points
