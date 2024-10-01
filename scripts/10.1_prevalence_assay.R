@@ -95,3 +95,50 @@ print(sin_nombre_plot)
 # Combine them vertically
 grid.arrange(all_pathogens_plot, sin_nombre_plot, ncol = 1)
 
+
+
+### Calculate density vs Prevalence
+
+# PCR plot
+pcr_plot <- ggplot(subset(rodent_assay_counts, simple.assay == "PCR"), 
+                   aes(x = prevalence, fill = scientificName)) +
+  geom_density(alpha = 0.5) +  # Density plot
+  labs(
+    title = "Density of Prevalence for PCR Assays",
+    x = "Prevalence",
+    y = "Density",
+    fill = "Pathogen"  # Legend title
+  ) +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 8),
+    axis.title = element_text(size = 9),
+    axis.text = element_text(size = 7),
+    legend.title = element_text(size = 8),
+    legend.text = element_text(size = 7)
+  )
+
+# Serology plot
+serology_plot <- ggplot(subset(rodent_assay_counts, simple.assay == "Serology"), 
+                        aes(x = prevalence, fill = scientificName)) +
+  geom_density(alpha = 0.5) +  # Density plot
+  labs(
+    title = "Density of Prevalence for Serology Assays",
+    x = "Prevalence",
+    y = "Density",
+    fill = "Pathogen"  # Legend title
+  ) +
+  theme_minimal() +
+  theme(
+    text = element_text(size = 8),
+    axis.title = element_text(size = 9),
+    axis.text = element_text(size = 7),
+    legend.title = element_text(size = 8),
+    legend.text = element_text(size = 7)
+  )
+
+# Display the plots together
+library(gridExtra)
+grid.arrange(pcr_plot, serology_plot, ncol = 1)
+
+
