@@ -63,8 +63,9 @@ ggplot(data = world) +
 
 SpREAD is a project being carried out by the Infectious Disease Systems Ecology Group of the Natural History Museum, London. SpREAD aims to aggregate many previous rodent community trapping studies to a common resolution, to achieve the sample size necessary for robust infection dynamics modelling in rodent communities. It is a database inspired by previous efforts to gather data from scientific papers [@simons_rodent_2023] and other open databases such as PREDICTS [@hudson_database_2017].
 
-The secondary aim of SpREAD is to provide a much-needed standard of reporting for trapping studies on rodent communities to adhere to going forwards. Previously, the data reported in these studies has often been highly summarised (e.g yearly) and has left out key information about the location and serology of the trapping. This information, if included, would enable the data to be used in studies beyond the initial publication, making the most out of the resources and effort put in by scientists in the field. The SpREAD database will serve as a community-driven tool to be continually added to, ever improving in its completeness and utility.
+The secondary aim of SpREAD is to provide a much-needed format for the reporting of trapping studies on rodent communities going forwards. It is sometimes not feasible to include fine-scale data in publications, so data reported in these studies have often been highly summarised (e.g yearly) and do not include all information about the location and serology of the trapping. This complete data could be added to the SpREAD database, and reporting the fine-scale data would be as easy as citing the database publication.
 
+The database would serve as a convenient data-hosting service, and clear labelling of data points with the publication of origin and authors would promote collaboration and opportunities for future projects. The full dataset would be available for anyone to use in their research, making the most out of the resources and effort put in by scientists in the field. The SpREAD database will serve as a community-driven tool to be continually added to, ever improving in its completeness and utility.
 
 
 ## Requirements for inclusion
@@ -73,9 +74,9 @@ The minimum requirements for data to be included in the SpREAD database are as f
 
 1. **Date of trapping** (minimum resolution of a month)
 1. **Duration of trapping** (or start and end date)
-1. **Precise coordinate location** of trapping site
-1. All captured rodents' abundances are reported
-1. All individuals are tested for at least one pathogen
+1. **Locality or coordinate location** of trapping site
+1. **All captured rodents' abundances** are reported
+1. **All individuals are tested** for at least one pathogen
 1. **Type of test used and pathogen name** (at least family level e.g. hantavirus)
 
 Desirable:
@@ -84,8 +85,6 @@ Desirable:
 1. Indication of trapping effort (e.g. trap nights)
 
 If you are interested in co-authoring this paper and providing your data, please submit it via [**this link**](https://forms.gle/BhRf5SP36EHwJYPV9) or paste this in your browser: https://forms.gle/BhRf5SP36EHwJYPV9.
-
-If your initial publication contains some of the information specified above, you need only submit the additional information required, along with the doi of the original publication.
 
 If you do not have access to the data but know someone who does, please pass this email/document along.
 
