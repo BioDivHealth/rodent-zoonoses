@@ -5,9 +5,35 @@ library(ggplot2)
 library(patchwork)
 library(gridExtra)
 
-pathogen <- readRDS("data/pathogen_assay_record.rds")
+pathogen1 <- readRDS("data/pathogen_assay_record.rds")
 
-studies <- subset(combined_data, studies == "site-session")
+pathogen <- pathogen1 %>% 
+  mutate(
+    pathogen_abbrev = case_when(
+      scientificName == "Sin Nombre Virus" ~ "SNV",
+      scientificName == "Sin Nombre Orthohantavirus" ~ "SNV", 
+      scientificName == "Sin Nombre virus" ~ "SNV", 
+      scientificName == "Catarina Virus" ~ "CTNV",
+      scientificName == "Oliveros Virus" ~ "OLV",
+      scientificName == "Latino mammarenavirus" ~ "LATV",
+      scientificName == "Orthohantavirus dobravaense" ~ "DOBV",
+      scientificName == "Dobrava-Belgrade orthohantavirus" ~ "DOBV",
+      scientificName == "Mammarenavirus bearense" ~ "BCNV",
+      scientificName == "Puumala orthohantavirus" ~ "PUUV",
+      scientificName == "Puumala virus" ~ "PUUV",
+      scientificName == "Seoul virus" ~ "SEOV",
+      scientificName == "Guanarito virus" ~ "GTOV",
+      scientificName == "Lassa mammarenavirus" ~ "LASV",
+      scientificName == "Pirital virus" ~ "PIRV",
+      scientificName == "Rat hepatitits E virus" ~ "RHEV",
+      scientificName == "Hantaan virus" ~ "HTNV",
+      scientificName == "Hantaviridae" ~ "HTNV",
+      scientificName == "mammarenavirus" ~ "",
+      scientificName == "Leptospriosa interrogans" ~ "",
+      # Keep all other names the same
+      TRUE ~ scientificName
+    ),
+  )
 
 # Gives rodents tested >1 time for same pathogen using different assays
 rodent_test_counts <- pathogen %>%
@@ -19,7 +45,7 @@ rodent_test_counts <- pathogen %>%
   ) %>%
   # Get rid of rows where 0 tested, where tested is NA, where positives are NA
   filter(tested != 0, !is.na(tested), !is.na(positive)) %>%
-  group_by(associated_rodent_record_id, scientificName) %>%
+  group_by(associated_rodent_record_id, pathogen_abbrev) %>%
   filter(n_distinct(assay) > 1) %>%
   ungroup() %>%
   mutate(prevalence = positive / tested) %>%
@@ -101,8 +127,8 @@ grid.arrange(all_pathogens_plot, sin_nombre_plot, ncol = 1)
 
 # PCR plot
 pcr_plot <- ggplot(subset(rodent_assay_counts, simple.assay == "PCR"), 
-                   aes(x = prevalence, fill = scientificName)) +
-  geom_density(alpha = 0.5) +  # Density plot
+                   aes(x = prevalence, fill = pathogen_abbrev)) +
+  geom_density(alpha = 0.5, bw = 0.1) +  # Density plot
   labs(
     title = "Density of Prevalence for PCR Assays",
     x = "Prevalence",
@@ -120,8 +146,8 @@ pcr_plot <- ggplot(subset(rodent_assay_counts, simple.assay == "PCR"),
 
 # Serology plot
 serology_plot <- ggplot(subset(rodent_assay_counts, simple.assay == "Serology"), 
-                        aes(x = prevalence, fill = scientificName)) +
-  geom_density(alpha = 0.5) +  # Density plot
+                        aes(x = prevalence, fill = pathogen_abbrev)) +
+  geom_density(alpha = 0.5, bw = 0.1) +  # Density plot
   labs(
     title = "Density of Prevalence for Serology Assays",
     x = "Prevalence",
