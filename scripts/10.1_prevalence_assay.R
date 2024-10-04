@@ -4,6 +4,7 @@ library(stringr)
 library(ggplot2)
 library(patchwork)
 library(gridExtra)
+library(viridis)
 
 pathogen1 <- readRDS("data/pathogen_assay_record.rds")
 
@@ -58,7 +59,7 @@ rodent_test_counts$assay %>% unique()
 rodent_assay_counts <- rodent_test_counts %>%
   mutate(simple.assay = 
            case_when(
-             str_detect(assay, "ELISA") | str_detect(assay, "erology") | str_detect(assay, "Immuno") ~ "Serology",
+             str_detect(assay, "ELISA") | str_detect(assay, "EL") | str_detect(assay, "erology") | str_detect(assay, "Immuno")| str_detect(assay, "IFA") | str_detect(assay, "IB") ~ "Serology",
              str_detect(assay, "PCR")   ~ "PCR",
            ))
 
@@ -166,5 +167,27 @@ serology_plot <- ggplot(subset(rodent_assay_counts, simple.assay == "Serology"),
 # Display the plots together
 library(gridExtra)
 grid.arrange(pcr_plot, serology_plot, ncol = 1)
+
+#Bar plot without grouping by rodent_ID
+ggplot(rodent_assay_counts, aes(x = pathogen_abbrev, y = prevalence, fill = simple.assay)) +
+  geom_bar(stat = "identity", position = position_dodge()) +
+  scale_fill_manual(values = c("PCR" = "darkblue", "Serology" = "darkgreen")) +
+  labs(title = "Prevalence by Assay Type",
+       x = "Pathogen",
+       y = "Prevalence",
+       fill = "Assay") +
+  theme_bw()
+
+#Density graph without grouping by rodent_ID
+ggplot(rodent_assay_counts, aes(x = prevalence, fill = pathogen_abbrev)) +
+  geom_density(alpha = 0.6, bw = 0.05) +  # Density plot with transparency
+  facet_wrap(~ simple.assay, scales = "free") +  # Separate plots for PCR and Serology
+  labs(title = "Density of Prevalence by Pathogen and Assay Type",
+       x = "Prevalence",
+       y = "Density",
+       fill = "Pathogen") +
+  theme_bw() +
+  scale_fill_viridis_d(option = "plasma")  # Use the 'plasma' option, or try 'viridis', 'magma', etc.
+
 
 
