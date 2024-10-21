@@ -1,0 +1,333 @@
+---
+title: "Modelling Zoonoses in Rodent Communities"
+author: "Harry Gordon, Ana Martinez-Checa, David Redding, Greg Milne"
+date: "09/09/2024"
+output: pdf_document
+geometry: margin=2cm
+fontsize: 18pt
+bibliography: 01_references.bib
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    fig.width   = 10,
+    fig.height  = 5,
+    fig.align   = 'center',
+    echo        = TRUE,
+    message     = FALSE,
+    warning     = FALSE,
+    error       = FALSE,
+    strip.white = TRUE,
+    warning     = FALSE)
+```
+
+## Introduction
+
+This is the working manuscript for a study on disease modelling in rodent communities by the Infectious Disease Systems Ecology group at the British Natural History Museum.
+
+David Simons' paper: @simons_rodent_2023.
+
+GLC: @zhang_glc_fcs30d_2024
+
+## Methods
+
+These are the methods.
+
+Here is a world map displaying locations of our sampled rodents:
+
+```{r plot_world_map, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE}
+# Load necessary libraries
+library(ggplot2)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+# Load data frame
+host_path <- readRDS("../data/host_path_wide.rds")
+attach(host_path)
+# Get the world map data
+
+world <- ne_countries(scale = "large", returnclass = "sf")
+coords_sf <- st_as_sf(host_path, coords = c("decimalLongitude", "decimalLatitude"), crs = 4326, agr = "constant")
+host_path$year <- as.numeric(format(host_path$start_date, "%Y"))
+# Plot the points onto the world map 
+
+ggplot(data = world) +
+  geom_sf(colour="darkgray") +
+  geom_sf(data = coords_sf, aes(geometry = geometry, colour=host_path$year), size = 2, shape=18) +
+  coord_sf(expand = FALSE) +                    # Keep the aspect ratio
+  labs(title = "Locations of Trapped Rodents") + 
+  theme_void() +
+  theme(panel.background = element_rect(), 
+        axis.text = element_blank(),            # Remove axis text (tick labels)
+        axis.ticks = element_blank()) +
+  scale_color_gradient(low = "#FF9D00", high = "#FF0000", name = "Year")
+  
+```
+
+```{r plot_timeline, include=FALSE, echo=FALSE, fig.height = 2, message=FALSE, error=FALSE, warning=FALSE}
+# Load necessary libraries
+library(ggplot2)
+
+# plot the study dates on a timeline
+ggplot(host_path, aes(x = start_date, y = 1)) +
+  geom_segment(aes(x = start_date, xend = start_date, y = 0.9, yend = 1.1), color = "red") +
+  geom_hline(yintercept = 1, linetype = "dashed") +
+  scale_y_continuous(limits = c(0.5, 1.5)) +
+  labs(title = "Timeline of Samples", x = "Date", y = "") +
+  theme_minimal() +
+  theme(axis.text.y = element_blank(),
+        axis.ticks.y = element_blank(),
+        panel.grid.major.y = element_blank(),
+        panel.grid.minor.y = element_blank())
+
+```
+
+Here is the infectivity rates of our sampled rodents:
+
+```{r plot_infection, echo=FALSE, message=FALSE, warning=FALSE, fig.width=40, fig.height=25}
+pacman::p_load(here,
+               stringr,
+               dplyr,
+               ape,    # for phylogenetic analyes
+               ggtree, # for plotting trees
+               ggplot2,
+               tidyr)
+host.pathogen.data <- readRDS(here("data", "host_path_wide.rds"))
+
+# Correct species names
+mutated.host.pathogen.data <- host.pathogen.data %>%
+  mutate(associatedTaxa = case_when(
+    associatedTaxa == "Akodon azare" ~ "Akodon azarae",
+    associatedTaxa == "brush mice" ~ "Peromyscus boylii",
+    associatedTaxa == "Clethrionomys glareolus" ~ "Myodes glareolus",
+    associatedTaxa == "Clethryonomys glareolus" ~ "Myodes glareolus",
+    associatedTaxa == "Oligoryzomys favescens" ~ "Oligoryzomys flavescens",
+    associatedTaxa == "P. californicus" ~ "Peromyscus californicus",
+    associatedTaxa == "dusky-footed" ~ "Neotoma fuscipes",
+    TRUE ~ associatedTaxa  # Retain original name if no match
+  ))
+
+# Ensure 'positive' and 'negative' are numeric
+plot.positives.negatives <- mutated.host.pathogen.data %>%
+  mutate(positive = as.numeric(positive),
+         negative = as.numeric(negative),
+         individualCount = as.numeric(individualCount))
+
+# Aggregate the data by associatedTaxa
+plot_aggregated <- plot.positives.negatives %>%
+  group_by(associatedTaxa) %>%
+  summarize(
+    positives = sum(positive, na.rm = TRUE),
+    negatives = sum(negative, na.rm = TRUE),
+    abundance = sum(individualCount, na.rm = TRUE),
+  ) %>%
+  ungroup()
+
+# Calculate the % of positives
+aggregated_data1 <- plot_aggregated %>%
+  mutate(positives = ifelse((positives + negatives) == 0, NA, 
+                                   (positives / (positives + negatives)) * 100))
+
+# Remove rows with NA values for % positive
+aggregated_data2 <- aggregated_data1 %>%
+  filter(!is.na(positives))
+
+# Calculate the % of negatives
+aggregated_data3 <- aggregated_data2 %>%
+  mutate(negatives = ifelse((positives + negatives) == 0, NA, 
+                                   (negatives / (positives + negatives)) * 100))
+
+# Remove rows with NA values for % positive
+aggregated_data4 <- aggregated_data3 %>%
+  filter(!is.na(negatives))
+
+# Sort data by abundance from less to more
+aggregated_data5 <- aggregated_data4 %>%
+  arrange(abundance)
+
+# Aggregate in % of infectivity
+plot.infectivity <- aggregated_data5 %>%
+  pivot_longer(cols = c("positives", "negatives"), 
+               names_to = "Result", 
+               values_to = "Results")
+# Plot
+ggplot(plot.infectivity, aes(x = associatedTaxa, y = abundance, fill = Result)) +
+  geom_col(position = "stack", width = 0.7) +
+  scale_fill_manual(values = c("positives" = "orange", "negatives" = "olivedrab3")) +
+  labs(x = "Associated Taxa", y = "abundance", fill = "Test Result in %") +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45, hjust = 1))
+
+```
+
+```{r plot_infection2, echo=FALSE, message=FALSE, warning=FALSE, fig.width=10}
+pacman::p_load(here,
+               stringr,
+               dplyr,
+               ggplot2,
+               tidyr)
+host.pathogen.data <- readRDS(here("data", "host_path_wide.rds"))
+
+
+# Correct species names
+mutated.host.pathogen.data <- host.pathogen.data %>%
+  mutate(associatedTaxa = case_when(
+    associatedTaxa == "Akodon azare" ~ "Akodon azarae",
+    associatedTaxa == "brush mice" ~ "Peromyscus boylii",
+    associatedTaxa == "Clethrionomys glareolus" ~ "Myodes glareolus",
+    associatedTaxa == "Clethryonomys glareolus" ~ "Myodes glareolus",
+    associatedTaxa == "Oligoryzomys favescens" ~ "Oligoryzomys flavescens",
+    associatedTaxa == "P. californicus" ~ "Peromyscus californicus",
+    associatedTaxa == "dusky-footed" ~ "Neotoma fuscipes",
+    TRUE ~ associatedTaxa  # Retain original name if no match
+  ))
+
+# Ensure 'positive' and 'negative' are numeric
+plot.positives.negatives <- mutated.host.pathogen.data %>%
+  mutate(positive = as.numeric(positive),
+         negative = as.numeric(negative),
+         individualCount = as.numeric(individualCount))
+
+# Aggregate the data by associatedTaxa
+plot_aggregated <- plot.positives.negatives %>%
+  group_by(associatedTaxa) %>%
+  summarize(
+    positives = as.numeric(sum(positive, na.rm = TRUE)),
+    negatives = as.numeric(sum(negative, na.rm = TRUE)),
+    abundance = as.numeric(sum(individualCount, na.rm = TRUE)),
+  ) %>%
+  ungroup()
+
+# Calculate the % of positives
+aggregated_data1 <- plot_aggregated %>%
+  mutate(percent_positive = ifelse((positives + negatives) == 0, NA, 
+                                   (positives / (positives + negatives)) * 100))
+
+# Remove rows with NA values for % positive
+aggregated_data2 <- aggregated_data1 %>%
+  filter(!is.na(percent_positive))
+
+# Sort data by abundance from less to more
+aggregated_data3 <- aggregated_data2 %>%
+  arrange(abundance)
+
+# Plot scatter graph
+ggplot(aggregated_data3, aes(x = abundance, y = percent_positive, label = associatedTaxa, color = associatedTaxa)) +
+  geom_point() +
+  geom_text(size = 2, vjust = -1, hjust = 0.5) +  # Adjust text size
+  labs(
+    title = "Abundance vs % of Positives",
+    x = "Abundance",
+    y = "% of Positives"
+  ) +
+  theme_minimal()+
+  theme(legend.position = "none")
+
+```
+
+```{r plot_pathogen, echo=FALSE, message=FALSE, warning=FALSE, fig.width=25, fig.height=10}
+pacman::p_load(here,
+               stringr,
+               dplyr,
+               ggplot2,
+               tidyr)
+host.pathogen.data <- readRDS(here("data", "host_path_wide.rds"))
+
+# Correct pathogen names
+mutated.pathogen.data <- host.pathogen.data %>%
+  mutate(scientificName.y = case_when(
+    scientificName.y == "SNV" ~ "Sin Nombre Virus",
+    scientificName.y == "SEOV" ~ "Sin Nombre Orthohantavirus",
+    scientificName.y == "" ~ "NA",
+    TRUE ~  scientificName.y  # Retain original name if no match
+  ))
+
+# Ensure 'positive' and 'negative' are numeric
+plot.positives.negatives <- mutated.pathogen.data %>%
+  mutate(positive = as.numeric(positive),
+         negative = as.numeric(negative),
+         individualCount = as.numeric(individualCount))
+
+# Aggregate the data by pathogen and tests
+plot_aggregated <- plot.positives.negatives %>%
+  group_by(scientificName.y, assay) %>%
+  summarize(
+    positives = sum(positive, na.rm = TRUE),
+    negatives = sum(negative, na.rm = TRUE),
+    tests = sum(individualCount, na.rm = TRUE),
+  ) %>%
+  ungroup()
+
+# Calculate the % of positives
+aggregated_data1 <- plot_aggregated %>%
+  mutate(percent_positive = ifelse((positives + negatives) == 0, NA, 
+                                   (positives / (positives + negatives)) * 100))
+
+# Remove rows with NA values for % positive
+aggregated_data2 <- aggregated_data1 %>%
+  filter(!is.na(percent_positive))
+
+# Arrange by type of test
+aggregated_data3 <- aggregated_data2 %>%
+  arrange(assay)
+
+# Plot 
+ggplot(aggregated_data3, aes(x = percent_positive, y = scientificName.y, color = assay)) +
+  geom_jitter(size = 4, width = 0.2, height = 0) +  # Adds points with some jitter to avoid overplotting
+  scale_color_brewer(palette = "Set2") +  # Use a color palette from RColorBrewer for better aesthetics
+  labs(title = "Percentage of Positive Tests by Pathogen and Test Type",
+       x = "Percentage of Positive Tests",
+       y = "Pathogen") +
+  theme_minimal(base_size = 14) +  # Minimal theme for a clean look
+  theme(
+    axis.text.x = element_text(size = 12),  # Size x-axis labels
+    axis.text.y = element_text(size = 12),  # Size y-axis labels
+    axis.title.x = element_text(size = 14),  # Size x-axis title
+    axis.title.y = element_text(size = 14),  # Size y-axis title
+    legend.title = element_text(size = 14),  # Size legend title
+    legend.text = element_text(size = 12)    # Size legend text
+  )
+
+```
+
+### Rodent phylogeny
+
+Here is the mammal tree with our host species higlighted
+
+```{r plot_phylogeny, echo=FALSE, message=FALSE, warning=FALSE}
+# load necessary libraries
+library(ggtree)
+library(ggplot2)
+library(here)
+
+# load data
+host.clade <- read.tree(here("data", "./phylogenetics/host.mrca.tree"))
+pruned.host.spp <- readRDS(here("data", "./phylogenetics/harmonised.host.sp.names.rds")) %>%
+  as.data.frame()
+
+# find our species of interest
+host.clade$in.data <- ifelse(host.clade$tip.label %in% pruned.host.spp$tree.names, 
+       "purple", NA)
+host.clade$in.data <- as.factor(host.clade$in.data)
+
+# Plot the phylogeny
+ggtree(host.clade, size = 0.05) + 
+  geom_tippoint(color = host.clade$in.data, size = 3) + 
+  geom_treescale(x = 0, y = 2200, col = "midnightblue")
+
+```
+
+### GLC database
+
+Here is an example of a raster from the GLC database with the site coordinate plotted and a buffer of radius 1 km.
+
+```{r buffer_plot, width="0.3\\linewidth", include=TRUE, echo=FALSE, out.width = "400px", fig.align='center'}
+knitr::include_graphics("../figures/bufferplot.pdf")
+```
+
+### Data papers
+
+We collected data from the following papers for use in this analysis: @burns_novel_2018, @cabrera_deciphering_2023, @dietrich_small-scale_1997, @fernandes_co-circulation_2015, @fulhorst_bear_2002, @jameson_continued_2013, @kosasih_evidence_2011, @ledina_dinara-new_2002, @leduc_epidemiological_1986, @mauldin_assessment_2013, @milazzo_ecology_2013, @nemirov_isolation_1999, @zhang_glc_fcs30d_2024, @seijo_study_2003, @sheikh_ali_first_2014, @suarez_prevalence_2003, @williams_outbreak_1997, @williamson_continuing_2021.
+
+## References

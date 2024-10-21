@@ -1,9 +1,10 @@
 ---
 title: "SpREAD: Spatio-temporal Rodent Community Ecology And Disease Database."
-subtitle: Harry Gordon^1^, Ana Martinez-Checa^1^, Greg Milne^1^, David Redding^1^, David Simons^2^
+subtitle: Harry Gordon^1^ * , Ana Martinez-Checa^1^ * , Greg Milne^1^, David Redding^1^, David Simons^2^
 author:
   - ^1^ Natural History Musuem, London
   - ^2^ Pennsylvania State University
+  - (*) Contributed equally
 output: pdf_document
 geometry: margin=2cm
 fontsize: 20pt
@@ -23,9 +24,11 @@ knitr::opts_chunk$set(
     error       = FALSE,
     strip.white = TRUE,
     warning     = FALSE,
-    cache = FALSE,
+    cache = TRUE,
     fig.pos="h")
 ```
+
+**If you are interested in co-authoring this paper and providing your data, please submit it via [*this link*](https://forms.gle/BhRf5SP36EHwJYPV9) or paste this in your browser: https://forms.gle/BhRf5SP36EHwJYPV9.**
 
 ```{r plot_world_map, echo=FALSE, fig.cap="The geographic locations of trapped rodents included in our study. The colour of points denotes the year sampled."}
 # Load necessary libraries
@@ -84,7 +87,7 @@ Desirable:
 1. Indication of trapping method (e.g. grid area/number of traps/type of trap)
 1. Indication of trapping effort (e.g. trap nights)
 
-If you are interested in co-authoring this paper and providing your data, please submit it via [**this link**](https://forms.gle/BhRf5SP36EHwJYPV9) or paste this in your browser: https://forms.gle/BhRf5SP36EHwJYPV9.
+**If you are interested in co-authoring this paper and providing your data, please submit it via [*this link*](https://forms.gle/BhRf5SP36EHwJYPV9) or paste this in your browser: https://forms.gle/BhRf5SP36EHwJYPV9.**
 
 If you do not have access to the data but know someone who does, please pass this email/document along.
 

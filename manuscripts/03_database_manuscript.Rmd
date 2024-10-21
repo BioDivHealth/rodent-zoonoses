@@ -1,0 +1,153 @@
+---
+title: "SpREAD: Spatio-temporal Rodent Community Ecology And Disease Database."
+subtitle: Harry Gordon^1^ * , Ana Martinez-Checa^1^ * , Greg Milne^1^, David Redding^1^, David Simons^2^
+author:
+  - ^1^ Natural History Musuem, London
+  - ^2^ Pennsylvania State University
+  - (*) Contributed equally
+output: pdf_document
+geometry: margin=2cm
+fontsize: 20pt
+bibliography: 01_references.bib
+abstract: |
+  This is our abstract.
+header-includes: 
+  - \renewcommand{\and}{\\}
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(
+    fig.width   = 10,
+    fig.height  = 5,
+    fig.align   = 'center',
+    echo        = FALSE,
+    message     = FALSE,
+    warning     = FALSE,
+    error       = FALSE,
+    strip.white = TRUE,
+    warning     = FALSE,
+    cache = TRUE,
+    fig.pos="h")
+```
+
+
+
+
+# Introduction
+
+# Methods
+
+## Requirements for inclusion
+
+The minimum requirements for data to be included in the SpREAD database are as follows:
+
+1. **Date of trapping** (minimum resolution of a month)
+1. **Duration of trapping** (or start and end date)
+1. **Locality or coordinate location** of trapping site
+1. **All captured rodents' abundances** are reported
+1. **All individuals are tested** for at least one pathogen
+1. **Type of test used and pathogen name** (at least family level e.g. hantavirus)
+
+Desirable:
+
+1. Indication of trapping method (e.g. grid area/number of traps/type of trap)
+1. Indication of trapping effort (e.g. trap nights)
+
+
+# Results
+
+Through extraction of data from 27 published articles (so far), we have gathered data on 189 unique rodent communities across 5 continents (fig. 1). These are comprised of 10,955 rodents, of which 480 were positive for a pathogen of interest. The most common rodents found were of the *sigmodon* (cotton rats) and *peromyscus* (deer mice) genera (fig. 2). The most prevalent viruses were Sin Nombre Virus, Catarina Virus and Puumula Orthohantavirus, all belonging to the family *hantaviridae* (fig. 3).
+
+# References
+
+# Tables and Figures
+
+```{r plot_world_map, echo=FALSE, fig.cap="The geographic locations of trapped rodents included in our study. The colour of points denotes the year sampled."}
+# Load necessary libraries
+library(ggplot2)
+library(viridis)
+library(sf)
+library(rnaturalearth)
+library(rnaturalearthdata)
+
+# Load data frame
+host_path <- readRDS("../data/host_path_wide.rds")
+attach(host_path)
+
+# Get the world map data
+world <- ne_countries(scale = "large", returnclass = "sf")
+coords_sf <- st_as_sf(host_path, coords = c("decimalLongitude", "decimalLatitude"), crs = 4326, agr = "constant")
+host_path$year <- as.numeric(format(host_path$start_date, "%Y"))
+
+# Plot the points onto the world map 
+ggplot(data = world) +
+  geom_sf(colour="darkgrey") +
+  geom_sf(data = coords_sf, aes(geometry = geometry, colour=host_path$year), size = 3, shape=19) +
+  coord_sf(expand = FALSE) +                    # Keep the aspect ratio
+  theme_void() +
+  theme(panel.background = element_rect(), 
+        axis.text = element_blank(),            # Remove axis text (tick labels)
+        axis.ticks = element_blank(),
+        plot.margin = margin(0, 0, 0, 0, "cm")) +
+  scale_colour_viridis(name="Year", direction=1, option="inferno", limits=c(1980, 2030))
+  
+```
+
+
+```{r plot_n_hosts, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of hosts trapped for each genus", fig.align='center'}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(scico)
+
+# group by host and sum count
+host_plot <- host_path %>% group_by(genus) %>% summarise(n_hosts=sum(as.numeric(individualCount)))
+host_plot <- host_plot[-1, ] %>% arrange(desc(n_hosts)) %>% slice(1:12)
+
+# Plot barchart
+ggplot(host_plot, aes(x = reorder(genus, -n_hosts), y = n_hosts, fill=genus)) +
+  geom_bar(stat = "identity") + 
+  annotate("point", x = 9, y = 1500, shape = 21, size = 50, fill = "chocolate4", color = "chocolate4") +
+  annotate("text", x = 9, y = 1500, label = "10955 rodents\n total", size = 5) +
+  labs(x = "Genus",
+       y = "Number Trapped") +
+  theme_minimal() +
+  theme(plot.margin = margin(0, 0, 0, 0, "cm"),
+        axis.text.x = element_text(angle = 45, hjust = 1, size=11),
+        legend.title = element_blank()) +
+  scale_fill_scico_d(palette = "tokyo")
+
+  
+```
+
+
+```{r plot_n_infections, fig.pos="h", echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of infections for each virus tested", fig.align='center'}
+# Load necessary libraries
+library(ggplot2)
+library(dplyr)
+library(scico)
+
+host_path <- readRDS("../data/host_path_wide.rds")
+attach(host_path)
+
+# group by virus and sum infections
+infection_plot <- host_path %>% group_by(pathogen_abbrev) %>% summarise(n_infections=sum(positive))
+infection_plot <- infection_plot[-1, ] %>% arrange(desc(n_infections))
+
+# Plot barchart
+ggplot(infection_plot, aes(x = reorder(pathogen_abbrev, -n_infections), y = n_infections, fill=pathogen_abbrev)) +
+  geom_bar(stat = "identity") + 
+  annotate("point", x = 10.45, y = 70, shape = 21, size = 50, fill = "cadetblue", color = "cadetblue") +
+  annotate("text", x = 10.45, y = 70, label = "480 positive\n rodents", size = 5) +
+  labs(x = "Pathogen",
+       y = "Number of Infections") +
+  theme_minimal() +
+  theme(plot.margin = margin(0, 0, 0, 0, "cm"),
+        axis.text.x = element_text(size=11),
+        legend.title = element_blank()) +
+  scale_fill_scico_d(palette = "roma")
+
+  
+```
+
+
