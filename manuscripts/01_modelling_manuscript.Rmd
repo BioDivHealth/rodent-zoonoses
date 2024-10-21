@@ -1,6 +1,10 @@
 ---
 title: "Modelling Zoonoses in Rodent Communities"
-author: "Harry Gordon, Ana Martinez-Checa, David Redding, Greg Milne"
+subtitle: Harry Gordon^1^ * , Ana Martinez-Checa^1^ * , Greg Milne^1^, David Redding^1^, David Simons^2^
+author:
+  - ^1^ Natural History Musuem, London
+  - ^2^ Pennsylvania State University
+  - (*) Contributed equally
 date: "09/09/2024"
 output: pdf_document
 geometry: margin=2cm
@@ -65,7 +69,7 @@ ggplot(data = world) +
   
 ```
 
-```{r plot_timeline, include=FALSE, echo=FALSE, fig.height = 2, message=FALSE, error=FALSE, warning=FALSE}
+```{r plot_timeline, echo=FALSE, error=FALSE, fig.height=2, message=FALSE, warning=FALSE, include=FALSE}
 # Load necessary libraries
 library(ggplot2)
 
