@@ -113,7 +113,8 @@ ggplot(host_plot, aes(x = reorder(genus, -n_hosts), y = n_hosts, fill=genus)) +
   theme_minimal() +
   theme(plot.margin = margin(0, 0, 0, 0, "cm"),
         axis.text.x = element_text(angle = 45, hjust = 1, size=11),
-        legend.title = element_blank()) +
+        legend.title = element_blank(),
+        legend.position = "none") +
   scale_fill_scico_d(palette = "tokyo")
 
   
@@ -148,7 +149,8 @@ ggplot(infection_plot, aes(x = reorder(pathogen_abbrev, -n_infections), y = n_in
   theme_minimal() +
   theme(plot.margin = margin(0, 0, 0, 0, "cm"),
         axis.text.x = element_text(size=11),
-        legend.title = element_blank()) +
+        legend.title = element_blank(),
+        legend.position = "none") +
   scale_fill_scico_d(palette = "roma")
 
   
