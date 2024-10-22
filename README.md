@@ -1,6 +1,6 @@
 # Ecological predictors of zoonotic infection in wild rodent populations
 
-## Harry Gordon, Ana Martinez-Checa, Gregory Milne, David Redding
+## Harry Gordon*, Ana Martinez-Checa*, Gregory Milne, David Redding, David Simons
 
 ## Project summary
 
