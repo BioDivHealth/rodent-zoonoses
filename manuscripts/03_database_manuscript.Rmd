@@ -10,7 +10,7 @@ geometry: margin=2cm
 fontsize: 20pt
 bibliography: 01_references.bib
 abstract: |
-  This is our abstract.
+  Rodents are reservoirs of zoonotic diseases, posing a significant threat to human health. Understanding rodent ecology and population dynamics is therefore important for mitigating human zoonotic hazards. Trapping studies have improved our understanding of zoonotic epidemiology, however, capturing known reservoirs to the exclusion of other rodent species limits inference on broader eco-epidemiological questions. Detailed information on rodent communities could be used to understand how global changes in habitat suitability and climate influence the dynamic ecosystems from which zoonotic diseases emerge and are maintained. Currently, there is no standard method for reporting rodent trapping data. This project aims to establish a high-resolution rodent community seroprevalence database by collating published data on rodent abundance and pathogen prevalence, and provide a standard for its reporting going forward. These data will facilitate robust inference on the eco-epidemiological predictors of rodent-borne disease, helping to shape our understanding of zoonotic disease risk in a changing world.
 header-includes: 
   - \renewcommand{\and}{\\}
 ---
