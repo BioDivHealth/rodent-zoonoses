@@ -37,9 +37,14 @@ knitr::opts_chunk$set(
 
 # Methods
 
-## Requirements for inclusion
+The data included in this database are the result of three stages of data collection: initial literature search and data extraction from publications, subsequent data requests to corresponding authors, and final distribution of a general data request around rodent ecology spheres. The data request document used is provided in the supplementary materials (S1). 
 
-The minimum requirements for data to be included in the SpREAD database are as follows:
+## Literature Search and Data Extraction
+
+The initial search and screening of studies was carried out as part of a separate project, Ar-Ha, the exact methods of which are available in the protocol paper for this project (citation). In short, searches were ran on PubMed and Web of Science that included search terms rodent\*, shrew, arenavir\* and hantavir\* and combinations of these. The search carried out on 2023-10-16 yeilded 2,755 unique pubications, which were subsequently screened for relevance. This screening resulted in a final list of 917 publications where the methodology included rodent serosurveys, although the results were reported to varying degrees of resolution.
+
+
+The minimum requirements for data to be included in this database are as follows:
 
 1. **Date of trapping** (minimum resolution of a month)
 1. **Duration of trapping** (or start and end date)
@@ -48,11 +53,11 @@ The minimum requirements for data to be included in the SpREAD database are as f
 1. **All individuals are tested** for at least one pathogen
 1. **Type of test used and pathogen name** (at least family level e.g. hantavirus)
 
-Desirable:
+From these publications, we extracted data that met these criteria and collated them into a common format. Publications which were thought to have the desired resolution but did not report the data, or summarised the data, were contacted via the corresponding author's email. The email used is included in the supplementary material (S1). A breakdown of the data extracted, and provided via correspondence is given below. (sankey diagram x2, one for number of studies, one for number of individual rodents). (description of breakdown).
 
-1. Indication of trapping method (e.g. grid area/number of traps/type of trap)
-1. Indication of trapping effort (e.g. trap nights)
+## Filtering and Clearning of Data
 
+Scientific names of host species and pathogens were harmonised.
 
 # Results
 

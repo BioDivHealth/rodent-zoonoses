@@ -77,7 +77,7 @@ The minimum requirements for data to be included in the SpREAD database are as f
 
 1. **Date of trapping** (minimum resolution of a month)
 1. **Duration of trapping** (or start and end date)
-1. **Locality or coordinate location** of trapping site
+1. **Locality or coordinate location** of trapping site (to the highest precision possible)
 1. **All captured rodents' abundances** are reported
 1. **All individuals are tested** for at least one pathogen
 1. **Type of test used and pathogen name** (at least family level e.g. hantavirus)
