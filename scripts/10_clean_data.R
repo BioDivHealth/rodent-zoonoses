@@ -17,7 +17,7 @@ source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
 ## if multiple in put sheets, load and merge sheets
 ##harry
 studies_h = read.csv("./data/aren_hant_data/studies_h.csv")
-studies_h = studies_h[0:8]
+studies_h = studies_h[0:9]
 host_h = read.csv("./data/aren_hant_data/host_h.csv")
 host_h = host_h[0:13]
 pathogen_h = read.csv("./data/aren_hant_data/pathogen_h.csv")
@@ -30,7 +30,7 @@ pathogen_d = pathogen_d[0:12]
 
 ##ana
 studies_a = read.csv("./data/aren_hant_data/studies_a.csv")
-studies_a = studies_a[0:8]
+studies_a = studies_a[0:9]
 host_a = read.csv("./data/aren_hant_data/host_a.csv")
 host_a = host_a[0:13]
 pathogen_a = read.csv("./data/aren_hant_data/pathogen_a.csv")
