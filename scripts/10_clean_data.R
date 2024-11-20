@@ -22,6 +22,7 @@ host_h = read.csv("./data/aren_hant_data/host_h.csv")
 host_h = host_h[0:13]
 pathogen_h = read.csv("./data/aren_hant_data/pathogen_h.csv")
 pathogen_h = pathogen_h[0:12]
+
 ##david
 studies_d = read.csv("./data/aren_hant_data/studies_d.csv")
 host_d = read.csv("./data/aren_hant_data/host_d.csv")
@@ -35,14 +36,17 @@ host_a = read.csv("./data/aren_hant_data/host_a.csv")
 host_a = host_a[0:13]
 pathogen_a = read.csv("./data/aren_hant_data/pathogen_a.csv")
 
+##requested data
+studies_req = read.csv("./data/aren_hant_data/studies_req.csv")
+studies_req = studies_req[0:9]
+host_req = read.csv("./data/aren_hant_data/host_req.csv")
+host_req = host_req[0:13]
+pathogen_req = read.csv("./data/aren_hant_data/pathogen_req.csv")
+pathogen_req = pathogen_req[0:12]
 
-studies <-  rbind(studies_h, studies_d, studies_a)
-host <-  rbind(host_h, host_d, host_a)
-pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a)
-
-combined_data <- list(studies = studies,
-                      host = host,
-                      pathogen = pathogen)
+studies <-  rbind(studies_h, studies_d, studies_a, studies_req)
+host <-  rbind(host_h, host_d, host_a, host_req)
+pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a, pathogen_req)
 
 ## Filter for site resolution
 

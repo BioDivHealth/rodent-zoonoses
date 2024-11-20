@@ -68,7 +68,7 @@ SpREAD is a project being carried out by the Infectious Disease Systems Ecology 
 
 The secondary aim of SpREAD is to provide a much-needed format for the reporting of trapping studies on rodent communities going forwards. It is sometimes not feasible to include fine-scale data in publications, so data reported in these studies have often been highly summarised (e.g yearly) and do not include all information about the location and serology of the trapping. This complete data could be added to the SpREAD database, and reporting the fine-scale data would be as easy as citing the database publication.
 
-The database would serve as a convenient data-hosting service, and clear labelling of data points with the publication of origin and authors would promote collaboration and opportunities for future projects. The full dataset would be available for anyone to use in their research, making the most out of the resources and effort put in by scientists in the field. The SpREAD database will serve as a community-driven tool to be continually added to, ever improving in its completeness and utility.
+The database would serve as a convenient data-hosting service, and clear labelling of data points with the publication of origin and authors would promote collaboration and opportunities for future projects. The full dataset would be available for anyone to use in their research, making the most out of the resources and effort put in by scientists in the field. The SpREAD database will serve as a community-driven tool to be continually added to, ever improving in completeness and utility.
 
 
 ## Requirements for inclusion
@@ -77,10 +77,10 @@ The minimum requirements for data to be included in the SpREAD database are as f
 
 1. **Date of trapping** (minimum resolution of a month)
 1. **Duration of trapping** (or start and end date)
-1. **Locality or coordinate location** of trapping site (to the highest precision possible)
-1. **All captured rodents' abundances** are reported
+1. **Precise coordinates for all trapping locations** (if sites not recorded, indication of trapping area in kmsq)
+1. **All captured species' abundances** are reported (separately for each trapping session and site)
 1. **All individuals are tested** for at least one pathogen
-1. **Type of test used and pathogen name** (at least family level e.g. hantavirus)
+1. **Diagnostic assay and pathogen name** (at least family level e.g. hantavirus)
 
 Desirable:
 
