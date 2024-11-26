@@ -1,5 +1,5 @@
 ---
-title: "SpREAD: Spatio-temporal Rodent Community Ecology And Disease Database."
+title: "SPREAD: Spatio-temporally Precise Rodent Community Ecology And Disease Database."
 subtitle: Harry Gordon^1^ * , Ana Martinez-Checa^1^ * , Greg Milne^1^, David Redding^1^, David Simons^2^
 author:
   - ^1^ Natural History Musuem, London
@@ -73,13 +73,15 @@ The database would serve as a convenient data-hosting service, and clear labelli
 
 ## Requirements for inclusion
 
+![Example of included data, individual level data (one row per rodent) is also accepted. This table is to demonstrate resolution, **data do not have to match this format**.](../figures/data_example.png)
+
 The minimum requirements for data to be included in the SpREAD database are as follows:
 
 1. **Date of trapping** (minimum resolution of a month)
 1. **Duration of trapping** (or start and end date)
 1. **Precise coordinates for all trapping locations** (if sites not recorded, indication of trapping area in kmsq)
 1. **All captured species' abundances** are reported (separately for each trapping session and site)
-1. **All individuals are tested** for at least one pathogen
+1. **All individuals are tested** for pathogen(s) of interest.
 1. **Diagnostic assay and pathogen name** (at least family level e.g. hantavirus)
 
 Desirable:
@@ -93,7 +95,7 @@ If you do not have access to the data but know someone who does, please pass thi
 
 ## The SpREAD database as of Sept. 2024
 
-```{r plot_n_hosts, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of hosts trapped for each genus", fig.align='center'}
+```{r plot_n_hosts, echo=FALSE, fig.pos="h", message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of hosts trapped for each genus", fig.align='center'}
 # Load necessary libraries
 library(ggplot2)
 library(dplyr)
@@ -120,13 +122,11 @@ ggplot(host_plot, aes(x = reorder(genus, -n_hosts), y = n_hosts, fill=genus)) +
   
 ```
 
+
+
 Through extraction of data from 27 published articles (so far), we have gathered data on 189 unique rodent communities across 5 continents (fig. 1). These are comprised of 10,955 rodents, of which 480 were positive for a pathogen of interest. The most common rodents found were of the *sigmodon* (cotton rats) and *peromyscus* (deer mice) genera (fig. 2). The most prevalent viruses were Sin Nombre Virus, Catarina Virus and Puumula Orthohantavirus, all belonging to the family *hantaviridae* (fig. 3).
 
-
-
-
-
-```{r plot_n_infections, fig.pos="h", echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of infections for each virus tested", fig.align='center'}
+```{r plot_n_infections, fig.pos="!", echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of infections for each virus tested", fig.align='center'}
 # Load necessary libraries
 library(ggplot2)
 library(dplyr)
