@@ -48,6 +48,9 @@ studies <-  rbind(studies_h, studies_d, studies_a, studies_req)
 host <-  rbind(host_h, host_d, host_a, host_req)
 pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a, pathogen_req)
 
+### data for gonzalo in david_v3: 84, 87, 89, ds_97 (unburned forest only), ds_104 (filter for "study site" only), 
+
+
 ## Filter for site resolution
 
 studies <- subset(studies, data_resolution == "site-session")

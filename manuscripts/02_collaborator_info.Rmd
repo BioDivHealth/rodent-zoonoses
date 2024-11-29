@@ -64,20 +64,20 @@ ggplot(data = world) +
 
 ## This information is for researchers interested in co-authorship
 
-SpREAD is a project being carried out by the Infectious Disease Systems Ecology Group of the Natural History Museum, London. SpREAD aims to aggregate many previous rodent community trapping studies to a common resolution, to achieve the sample size necessary for robust infection dynamics modelling in rodent communities. It is a database inspired by previous efforts to gather data from scientific papers [@simons_rodent_2023] and other open databases such as PREDICTS [@hudson_database_2017].
+SPREAD is a project being carried out by the Infectious Disease Systems Ecology Group of the Natural History Museum, London. SPREAD aims to aggregate many previous rodent community trapping studies to a common resolution, to achieve the sample size necessary for robust infection dynamics modelling in rodent communities. It is a database inspired by previous efforts to gather data from scientific papers [@simons_rodent_2023] and other open databases such as PREDICTS [@hudson_database_2017].
 
-The secondary aim of SpREAD is to provide a much-needed format for the reporting of trapping studies on rodent communities going forwards. It is sometimes not feasible to include fine-scale data in publications, so data reported in these studies have often been highly summarised (e.g yearly) and do not include all information about the location and serology of the trapping. This complete data could be added to the SpREAD database, and reporting the fine-scale data would be as easy as citing the database publication.
+The secondary aim of SPREAD is to provide a much-needed format for the reporting of trapping studies on rodent communities going forwards. It is sometimes not feasible to include fine-scale data in publications, so data reported in these studies have often been highly summarised (e.g yearly) and do not include all information about the location and serology of the trapping. This complete data could be added to the SPREAD database, and reporting the fine-scale data would be as easy as citing the database publication.
 
-The database would serve as a convenient data-hosting service, and clear labelling of data points with the publication of origin and authors would promote collaboration and opportunities for future projects. The full dataset would be available for anyone to use in their research, making the most out of the resources and effort put in by scientists in the field. The SpREAD database will serve as a community-driven tool to be continually added to, ever improving in completeness and utility.
+The database would serve as a convenient data-hosting service, and clear labelling of data points with the publication of origin and authors would promote collaboration and opportunities for future projects. The full dataset would be available for anyone to use in their research, making the most out of the resources and effort put in by scientists in the field. The SPREAD database will serve as a community-driven tool to be continually added to, ever improving in completeness and utility.
 
 
 ## Requirements for inclusion
 
-![Example of included data, individual level data (one row per rodent) is also accepted. This table is to demonstrate resolution, **data do not have to match this format**.](../figures/data_example.png)
+![Example of included data, individual level data (one row per rodent) is also accepted. This table is to demonstrate resolution, **data do not have to exactly match this format**.](../figures/data_example.png)
 
-The minimum requirements for data to be included in the SpREAD database are as follows:
+The minimum requirements for data to be included in the SPREAD database are as follows:
 
-1. **Date of trapping** (minimum resolution of a month)
+1. **Trapping session dates** (minimum resolution of a month)
 1. **Duration of trapping** (or start and end date)
 1. **Precise coordinates for all trapping locations** (if sites not recorded, indication of trapping area in kmsq)
 1. **All captured species' abundances** are reported (separately for each trapping session and site)
@@ -91,9 +91,9 @@ Desirable:
 
 **If you are interested in co-authoring this paper and providing your data, please submit it via [*this link*](https://forms.gle/BhRf5SP36EHwJYPV9) or paste this in your browser: https://forms.gle/BhRf5SP36EHwJYPV9.**
 
-If you do not have access to the data but know someone who does, please pass this email/document along.
+If you do not have access to the data but know someone who does, please pass this email/document along. For any questions, please email **harry.gordon@nhm.ac.uk**
 
-## The SpREAD database as of Sept. 2024
+## The SPREAD database as of Sept. 2024
 
 ```{r plot_n_hosts, echo=FALSE, fig.pos="h", message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of hosts trapped for each genus", fig.align='center'}
 # Load necessary libraries
