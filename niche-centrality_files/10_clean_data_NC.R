@@ -48,6 +48,8 @@ studies <-  rbind(studies_h, studies_d, studies_a, studies_req)
 host <-  rbind(host_h, host_d, host_a, host_req)
 pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a, pathogen_req)
 
+## Filter for David's data
+
 
 ## Filter for site resolution
 
