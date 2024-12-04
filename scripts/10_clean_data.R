@@ -16,52 +16,49 @@ source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
 
 ## if multiple in put sheets, load and merge sheets
 ##harry
-studies_h = read.csv("./data/aren_hant_data/studies_h.csv")
-studies_h = studies_h[0:9]
-host_h = read.csv("./data/aren_hant_data/host_h.csv")
+studies_h = read.csv("../data/aren_hant_data/studies_h.csv")
+studies_h = studies_h[0:6]
+host_h = read.csv("../data/aren_hant_data/host_h.csv")
 host_h = host_h[0:13]
-pathogen_h = read.csv("./data/aren_hant_data/pathogen_h.csv")
+pathogen_h = read.csv("../data/aren_hant_data/pathogen_h.csv")
 pathogen_h = pathogen_h[0:12]
 
 ##david
-studies_d = read.csv("./data/aren_hant_data/studies_d.csv")
-host_d = read.csv("./data/aren_hant_data/host_d.csv")
-pathogen_d = read.csv("./data/aren_hant_data/pathogen_d.csv")
-pathogen_d = pathogen_d[0:12]
+#studies_d = read.csv("../data/aren_hant_data/studies_d.csv")
+#host_d = read.csv("../data/aren_hant_data/host_d.csv")
+#pathogen_d = read.csv("../data/aren_hant_data/pathogen_d.csv")
+#pathogen_d = pathogen_d[0:12]
 
 ##ana
-studies_a = read.csv("./data/aren_hant_data/studies_a.csv")
-studies_a = studies_a[0:9]
-host_a = read.csv("./data/aren_hant_data/host_a.csv")
+studies_a = read.csv("../data/aren_hant_data/studies_a.csv")
+studies_a = studies_a[0:6]
+host_a = read.csv("../data/aren_hant_data/host_a.csv")
 host_a = host_a[0:13]
-pathogen_a = read.csv("./data/aren_hant_data/pathogen_a.csv")
+pathogen_a = read.csv("../data/aren_hant_data/pathogen_a.csv")
 
 ##requested data
-studies_req = read.csv("./data/aren_hant_data/studies_req.csv")
-studies_req = studies_req[0:9]
-host_req = read.csv("./data/aren_hant_data/host_req.csv")
+studies_req = read.csv("../data/aren_hant_data/studies_req.csv")
+studies_req = studies_req[0:6]
+host_req = read.csv("../data/aren_hant_data/host_req.csv")
 host_req = host_req[0:13]
-pathogen_req = read.csv("./data/aren_hant_data/pathogen_req.csv")
+pathogen_req = read.csv("../data/aren_hant_data/pathogen_req.csv")
 pathogen_req = pathogen_req[0:12]
 
-studies <-  rbind(studies_h, studies_d, studies_a, studies_req)
-host <-  rbind(host_h, host_d, host_a, host_req)
-pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a, pathogen_req)
+studies <-  rbind(studies_h, studies_a, studies_req)
+host <-  rbind(host_h, host_a, host_req)
+pathogen <-  rbind(pathogen_h, pathogen_a, pathogen_req)
 
 
 ## Filter for site resolution
 
 studies <- subset(studies, data_resolution == "site-session")
 
-## Filter for site resolution <1kmsq
-studies <- subset(studies, kmsq_site == "y")
-
 # keep only host and pathogen data with matching study ID from this subset
 
 host <- host[host$study_id %in% studies$study_id, ]
 pathogen <- pathogen[pathogen$study_id %in% studies$study_id, ]
 
-saveRDS(pathogen, file="./data/pathogen_assay_record.rds")
+saveRDS(pathogen, file="../data/pathogen_assay_record.rds")
 
 # Keep only 1 pathogen row per rodent
 ## check for multiple pathogen entries for each rodent_id and take max positives

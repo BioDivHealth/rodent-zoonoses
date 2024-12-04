@@ -1,4 +1,4 @@
-rodent_record_id,study_id,scientificName,startDate,locality,country,verbatimLocality,coordinate_resolution,decimalLatitude,decimalLongitude,individualCount,trapEffort,trapEffortResolution,study_area_kmsq,estimated_yn,sex,adult/juvenil
+rodent_record_id,study_id,scientificName,eventDate,locality,country,verbatimLocality,coordinate_resolution,decimalLatitude,decimalLongitude,individualCount,trapEffort,trapEffortResolution,study_area_kmsq,estimated_yn,sex,adult/juvenil
 req_1,req_1,Rattus novergicus,2014-09-18/2014-10-02,AV-B,Argentina,Alto Verde,site,-31.7018000,-60.6698000,1,,,,,,
 req_2,req_1,Mus musculus,2015-09-25/2015-10-08,AV-B,Argentina,Alto Verde,site,-31.7018000,-60.6698000,1,,,,,,
 req_3,req_1,Mus musculus,2015-09-25/2015-10-08,AV-B,Argentina,Alto Verde,site,-31.7018000,-60.6698000,1,,,,,,
