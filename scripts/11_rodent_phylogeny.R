@@ -29,15 +29,15 @@ source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
 
 # Rodent-pathogen data (for testing phylogenetic workflow)
 # https://github.com/DidDrog11/scoping_review/tree/main/data_clean
-host.pathogen.data <- readRDS(here("data", "host_path_wide.rds")) %>%  # wide format
+host.pathogen.data <- readRDS("../data/host_path_wide.rds") %>%  # wide format
   as.data.frame()
 
 # Load mammal phylogeny: https://data.vertlife.org -> mammaltree -> Completed_5911sp_topoCons_FBDasZhouEtAl.zip
 # I'm using one tree of 1,000 bootstrap replicates; can extend this once workflow established
-mammal.tree <- read.tree(here("data", "./phylogenetics/MamPhy_BDvr_Completed_5911sp_topoCons_FBDasZhouEtAl_v2_tree0000.tre"))
+mammal.tree <- read.tree(here("data", "../data/phylogenetics/MamPhy_BDvr_Completed_5911sp_topoCons_FBDasZhouEtAl_v2_tree0000.tre"))
 
 # Load species taxonomical rankings (https://github.com/n8upham/MamPhy_v1/blob/master/_DATA/taxonomy_mamPhy_5911species_toPublish.csv)
-taxa <- read.csv(here("data", "./phylogenetics/taxonomy_mamPhy_5911species_toPublish.csv")) 
+taxa <- read.csv(here("data", "../data/phylogenetics/taxonomy_mamPhy_5911species_toPublish.csv")) 
 
 # Summarise the tree
 str(mammal.tree)
@@ -50,6 +50,15 @@ host.species <- host.pathogen.data %>%
     # Set species as NA if abbreviated as sp.  
     species = ifelse(species == "sp.", NA, species),
     species = ifelse(species == "spp.", NA, species),
+    species = ifelse(species == "yaldeni", NA, species),
+    species = ifelse(species == "arenarius", NA, species),
+    species = ifelse(species == "centralis", NA, species),
+    species = ifelse(species == "dimidiata", NA, species),
+    species = ifelse(species == "chacoensis", NA, species),
+    species = ifelse(species == "leucogaster", NA, species), #### temporary to make plot work
+    species = ifelse(species == "africanus", NA, species),
+    species = ifelse(species == "brunneus", NA, species),
+    species = ifelse(species == "marsupialis", NA, species),
     # Capitalise first letter of genus
     genus = paste0(toupper(substr(genus, 1, 1)), substr(genus, 2, nchar(genus)))
   ) %>% 
@@ -58,11 +67,11 @@ host.species <- host.pathogen.data %>%
   # Create classification that matches tree tip labels in format Genus_species
   mutate(tree.names = paste(genus, species, sep = "_")) %>% 
   # Return select columns
-  select(associatedTaxa,tree.names, genus, species) %>% 
+  dplyr::select(host_name, tree.names, genus, species) %>% 
   # Keep only unique species names
   distinct() %>% 
   # Order alphabetically
-  arrange(associatedTaxa)
+  arrange(host_name)
 
 # Which of our rodent species are in the tree?
 host.species$in.tree <- ifelse(host.species$tree.names %in% mammal.tree$tip.label,
@@ -71,7 +80,7 @@ host.species$in.tree <- ifelse(host.species$tree.names %in% mammal.tree$tip.labe
 sum(host.species$in.tree == FALSE)  #3 missing from tree
 
 # For those missing from the tree, which same-genus species does the tree contain?
-missing.species <- host.species %>% 
+missing.species <- host.species.corrected %>% 
   filter(in.tree == FALSE)
 
 for(i in 1:length(missing.species)){
@@ -95,6 +104,36 @@ host.species.corrected <- host.species %>%
       # Add genus name for peromyscus californicus
       tree.names == "P._californicus" ~ "Peromyscus_californicus",
       # Add scientific name for brush mice
+      tree.names == "Apodemus_flavicolis" ~ "Apodemus_flavicollis",
+      # 
+      tree.names == "Baiomys_taylorii" ~ "Baiomys_taylori",
+      # 
+      tree.names == "Bolomys_lasiurus" ~ "Necromys_lasiurus",
+      # 
+      tree.names == "Bolomys_lenguarum" ~ "Necromys_lenguarum",
+      # 
+      tree.names == "Chaeotdipus_hispidus" ~ "Chaetodipus_hispidus",
+      # 
+      tree.names == "Chaerephon_leucogaster" ~ "Mops_leucogaster",
+      # 
+      tree.names == "Clethrionomys_glareolus" ~ "Myodes_glareolus",
+      # 
+      tree.names == "Mus_(Nannomys)" ~ "Mus_mahomet",
+      # 
+      tree.names == "Neoromicia_africanus" ~ "Afronycteris_nanus",
+      # 
+      tree.names == "Neoromicia_somalicus" ~ "Neoromicia_somalica",
+      # 
+      tree.names == "Oecomys_catharinae" ~ "Oecomys_catherinae",
+      # 
+      tree.names == "Oligoryzomys_favescens" ~ "Oligoryzomys_flavescens",
+      # 
+      tree.names == "Rattus_tazenumi" ~ "Rattus_tanezumi",
+      # 
+      tree.names == "Reithrodontomys_fulvesens" ~ "Reithrodontomys_fulvescens",
+      # 
+      tree.names == "Scotophilus_colias" ~ "Scotophilus_dinganii",
+      # 
       tree.names == "Brush_mice" ~ "Peromyscus_boylii",
       # Keep all other names the same
       TRUE ~ tree.names
@@ -127,7 +166,7 @@ pruned.mammal.tree <- extract.clade(mammal.tree, node.in.data)
 # Get species name from tree
 mammal.spp <- data.frame(Species_Name = pruned.mammal.tree$tip.label) %>% 
   # Join to taxonomic family & order data
-  left_join(taxa %>% select(Species_Name, fam, ord), by = "Species_Name")
+  left_join(taxa %>% dplyr::select(Species_Name, fam, ord), by = "Species_Name")
   # Get only species in the order Rodentia
 
 # Filter host species in the data to include only those in our dataset's clade
@@ -147,8 +186,8 @@ host.clade <- extract.clade(mammal.tree, host.node)
 str(host.clade)
 
 # Save the rodent phylogeny
-if (!(file.exists(here("data", "./phylogenetics/host.mrca.tree")))) {
-  write.tree(host.clade, here("data", "./phylogenetics/host.mrca.tree"))
+if (!(file.exists(here("data", "../data/phylogenetics/host.mrca.tree")))) {
+  write.tree(host.clade, here("data", "../data/phylogenetics/host.mrca.tree"))
 }
 
 # Remove large objects from the environment
@@ -161,14 +200,16 @@ host.clade$in.data <- ifelse(host.clade$tip.label %in% pruned.host.spp$tree.name
        "purple", NA)
 host.clade$in.data <- as.factor(host.clade$in.data)
 
+library(ggtree)
+
 # Plot the phylogeny
-ggtree(host.clade, size = 0.05) + 
+ggtree(host.clade, size = 0.3, layout="roundrect") + 
   geom_tippoint(color = host.clade$in.data, size = 3) + 
   geom_treescale(x = 0, y = 2200, col = "midnightblue")
 
 # Save the phylogeny
 ggsave(here("figures", "host.phylogeny.pdf"), width = 6, height = 6, units = "in")
-
+ggsave(here("figures", "host_phylogeny.png"), width = 6, height = 6, units = "in", dpi=1200)
 ### get distance matrix
 
 # Get a pairwise (relative) distance matrix

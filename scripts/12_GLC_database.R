@@ -28,7 +28,7 @@ host_path <- readRDS("data/host_path_wide.rds")
 #files <- unique(df[,c('Upper_Left_Lat','Upper_Left_Lon')])
 
 # 3. Plot example raster from our GLC data
-str_name <-'./data/example_raster/19852000_E15N45.tif' 
+str_name <-'../data/example_raster/19852000_E15N45.tif' 
 raster_stack <- stack(str_name)
 
 # select 1990 as example
@@ -82,7 +82,7 @@ cropped_ras <- crop(croat_1995, b)
 
 # map values to colours using legend for correct land cover colours
 # Load the CSV file
-legend_file <- "./data/example_raster/LC_legend.csv"
+legend_file <- "../data/example_raster/LC_legend.csv"
 legend <- read.csv(legend_file)
 
 legend$colour <- sapply(legend$colour, parse_rgb)
@@ -125,7 +125,7 @@ ggplot(r_df, aes(x = x, y = y, fill = colour)) +
   geom_point(x=16.56, y=44.06, color = "red")
   coord_fixed()
 
-ggsave('./figures/bufferplot.pdf',device="pdf", width = 9, height = 9)
+ggsave('../figures/bufferplot.png', width = 9, height = 9, dpi=1200)
 
 # Extract the values within the buffer
 land_cover_values <- raster::extract(cropped_ras, buffer)
@@ -135,7 +135,7 @@ land_cover_values <- unlist(land_cover_values)
 
 # Convert numbers to habitat names using legend csv
 # Load the CSV file
-dict_file <- "./data/example_raster/LC_legend.csv"
+dict_file <- "../data/example_raster/LC_legend.csv"
 dict <- read.csv(dict_file)
 
 # Create a lookup table
@@ -169,3 +169,5 @@ ggplot(land_cover_df, aes(x = "", y = Freq, fill=colour)) +
   geom_bar(stat = "identity", width = 1) +
   coord_polar(theta = "y") +
   labs(title = "Percentage of land cover", fill = "Land cover type")
+
+ggsave('../figures/lc_pie.png', width = 9, height = 9, dpi=1200)

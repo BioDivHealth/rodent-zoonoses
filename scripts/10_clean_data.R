@@ -55,7 +55,13 @@ studies <- subset(studies, data_resolution == "site-session")
 
 # keep only host and pathogen data with matching study ID from this subset
 
+
+
+
+
 host <- host[host$study_id %in% studies$study_id, ]
+host <- subset(host, study_id != "a_235")
+host <- subset(host, study_id != "a_420")
 pathogen <- pathogen[pathogen$study_id %in% studies$study_id, ]
 
 saveRDS(pathogen, file="../data/pathogen_assay_record.rds")
