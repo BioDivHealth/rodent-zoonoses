@@ -1,10 +1,9 @@
 ---
-title: "SPREAD: Spatio-temporally Precise Rodent Community Ecology And Disease Database."
-subtitle: Harry Gordon^1^ * , Ana Martinez-Checa^1^ * , Greg Milne^1^, David Redding^1^, David Simons^2^
+title: "SpREAD: Spatio-temporal Rodent Community Ecology And Disease Database."
+subtitle: Harry Gordon^1^, Ana Martinez-Checa^1^, Greg Milne^1^, David Redding^1^, David Simons^2^
 author:
   - ^1^ Natural History Musuem, London
   - ^2^ Pennsylvania State University
-  - (*) Contributed equally
 output: pdf_document
 geometry: margin=2cm
 fontsize: 20pt
@@ -28,7 +27,9 @@ knitr::opts_chunk$set(
     fig.pos="h")
 ```
 
-**If you are interested in co-authoring this paper and providing your data, please submit it via [*this link*](https://forms.gle/BhRf5SP36EHwJYPV9) or paste this in your browser: https://forms.gle/BhRf5SP36EHwJYPV9.**
+
+**If you are interested in co-authoring this paper, please submit your data via [*this link*](https://forms.gle/BhRf5SP36EHwJYPV9) or paste this in your browser: https://forms.gle/BhRf5SP36EHwJYPV9.**
+
 
 ```{r plot_world_map, echo=FALSE, fig.cap="The geographic locations of trapped rodents included in our study. The colour of points denotes the year sampled."}
 # Load necessary libraries
@@ -64,38 +65,39 @@ ggplot(data = world) +
 
 ## This information is for researchers interested in co-authorship
 
-SPREAD is a project being carried out by the Infectious Disease Systems Ecology Group of the Natural History Museum, London. SPREAD aims to aggregate many previous rodent community trapping studies to a common resolution, to achieve the sample size necessary for robust infection dynamics modelling in rodent communities. It is a database inspired by previous efforts to gather data from scientific papers [@simons_rodent_2023] and other open databases such as PREDICTS [@hudson_database_2017].
+SpREAD is a project being carried out by the Infectious Disease Systems Ecology Group of the Natural History Museum, London. SpREAD aims to aggregate many previous rodent community trapping studies to a common resolution to achieve the sample size necessary for robust infection dynamics modelling in rodent communities. It is a database inspired by previous efforts to gather data from scientific papers [@simons_rodent_2023] and other open databases such as PREDICTS [@hudson_database_2017].
 
-The secondary aim of SPREAD is to provide a much-needed format for the reporting of trapping studies on rodent communities going forwards. It is sometimes not feasible to include fine-scale data in publications, so data reported in these studies have often been highly summarised (e.g yearly) and do not include all information about the location and serology of the trapping. This complete data could be added to the SPREAD database, and reporting the fine-scale data would be as easy as citing the database publication.
+The secondary aim of SpREAD is to provide a much-needed format for the reporting of trapping studies on rodent communities going forwards. It is sometimes not feasible to include fine-scale data in publications, so data reported in these studies have often been highly summarised (e.g yearly) and do not include all information about the location and serology of the trapping. This complete data could be added to the SpREAD database, and reporting the fine-scale data would be as easy as citing the database publication.
 
-The database would serve as a convenient data-hosting service, and clear labelling of data points with the publication of origin and authors would promote collaboration and opportunities for future projects. The full dataset would be available for anyone to use in their research, making the most out of the resources and effort put in by scientists in the field. The SPREAD database will serve as a community-driven tool to be continually added to, ever improving in completeness and utility.
+The database would serve as a convenient data-hosting service, and clear labelling of data points with the publication of origin and authors would promote collaboration and opportunities for future projects. The full dataset would be available for anyone to use in their research, making the most out of the resources and effort put in by scientists in the field. The SpREAD database will serve as a community-driven tool to be continually added to, ever improving in its completeness and utility.
+
+ 
+
 
 
 ## Requirements for inclusion
 
-![Example of included data, individual level data (one row per rodent) is also accepted. This table is to demonstrate resolution, **data do not have to exactly match this format**.](../figures/data_example.png)
+The minimum requirements for data to be included in the SpREAD database are as follows:
 
-The minimum requirements for data to be included in the SPREAD database are as follows:
-
-1. **Trapping session dates** (minimum resolution of a month)
+1. **Date of trapping** (minimum resolution of a month)
 1. **Duration of trapping** (or start and end date)
-1. **Precise coordinates for all trapping locations** (if sites not recorded, indication of trapping area in kmsq)
-1. **All captured species' abundances** are reported (separately for each trapping session and site)
-1. **All individuals are tested** for pathogen(s) of interest.
-1. **Diagnostic assay and pathogen name** (at least family level e.g. hantavirus)
+1. **Locality or coordinate location** of trapping site
+1. **All captured rodents' abundances** are reported
+1. **All individuals are tested** for at least one pathogen
+1. **Type of test used and pathogen name** (at least family level e.g. hantavirus)
 
 Desirable:
 
 1. Indication of trapping method (e.g. grid area/number of traps/type of trap)
 1. Indication of trapping effort (e.g. trap nights)
 
-**If you are interested in co-authoring this paper and providing your data, please submit it via [*this link*](https://forms.gle/BhRf5SP36EHwJYPV9) or paste this in your browser: https://forms.gle/BhRf5SP36EHwJYPV9.**
+**If you are interested in co-authoring this paper, please submit your data via [*this link*](https://forms.gle/BhRf5SP36EHwJYPV9) or paste this in your browser: https://forms.gle/BhRf5SP36EHwJYPV9.**
 
-If you do not have access to the data but know someone who does, please pass this email/document along. For any questions, please email **harry.gordon@nhm.ac.uk**
+If you do not have access to the data but know someone who does, please forward this email/document along.
 
-## The SPREAD database as of Sept. 2024
+## The SpREAD database as of Sept. 2024
 
-```{r plot_n_hosts, echo=FALSE, fig.pos="h", message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of hosts trapped for each genus", fig.align='center'}
+```{r plot_n_hosts, echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of hosts trapped for each genus", fig.align='center'}
 # Load necessary libraries
 library(ggplot2)
 library(dplyr)
@@ -115,18 +117,18 @@ ggplot(host_plot, aes(x = reorder(genus, -n_hosts), y = n_hosts, fill=genus)) +
   theme_minimal() +
   theme(plot.margin = margin(0, 0, 0, 0, "cm"),
         axis.text.x = element_text(angle = 45, hjust = 1, size=11),
-        legend.title = element_blank(),
-        legend.position = "none") +
+        legend.title = element_blank()) +
   scale_fill_scico_d(palette = "tokyo")
-
   
 ```
 
-
-
 Through extraction of data from 27 published articles (so far), we have gathered data on 189 unique rodent communities across 5 continents (fig. 1). These are comprised of 10,955 rodents, of which 480 were positive for a pathogen of interest. The most common rodents found were of the *sigmodon* (cotton rats) and *peromyscus* (deer mice) genera (fig. 2). The most prevalent viruses were Sin Nombre Virus, Catarina Virus and Puumula Orthohantavirus, all belonging to the family *hantaviridae* (fig. 3).
 
-```{r plot_n_infections, fig.pos="!", echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of infections for each virus tested", fig.align='center'}
+
+
+
+
+```{r plot_n_infections, fig.pos="h", echo=FALSE, message=FALSE, error=FALSE, warning=FALSE, fig.cap="The number of infections for each virus tested", fig.align='center'}
 # Load necessary libraries
 library(ggplot2)
 library(dplyr)
@@ -149,8 +151,7 @@ ggplot(infection_plot, aes(x = reorder(pathogen_abbrev, -n_infections), y = n_in
   theme_minimal() +
   theme(plot.margin = margin(0, 0, 0, 0, "cm"),
         axis.text.x = element_text(size=11),
-        legend.title = element_blank(),
-        legend.position = "none") +
+        legend.title = element_blank()) +
   scale_fill_scico_d(palette = "roma")
 
   
