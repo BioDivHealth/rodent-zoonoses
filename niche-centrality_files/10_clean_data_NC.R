@@ -44,9 +44,9 @@ host_req = host_req[0:13]
 pathogen_req = read.csv("./data/aren_hant_data/pathogen_req.csv")
 pathogen_req = pathogen_req[0:12]
 
-studies <-  rbind(studies_h, studies_d, studies_a, studies_req)
-host <-  rbind(host_h, host_d, host_a, host_req)
-pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a, pathogen_req)
+studies <-  rbind(studies_h, studies_d, studies_a)
+host <-  rbind(host_h, host_d, host_a)
+pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a)
 
 ## Filter for David's data
 
