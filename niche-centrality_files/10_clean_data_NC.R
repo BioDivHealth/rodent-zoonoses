@@ -311,7 +311,7 @@ host_path_wide <- host_path_wide %>%
 
 # save to rds for phylogeny
 
-write_rds(host_path_wide, file="./data/data_for_NC.rds")
+write_rds(host_path_wide, file="./data/trapping_data_NC.rds")
 
 
 ### how many communities do we have?
