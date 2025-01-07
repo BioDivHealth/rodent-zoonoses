@@ -3,7 +3,7 @@ library(tidyr)
 library(here)
 library(ggplot2)
 
-host_path_wide = readRDS("../data/host_path_wide_david.rds")
+host_path_wide = readRDS("./data/host_path_wide_david.rds")
 
 # Treat coordinates as character
 host_path_wide$decimalLongitude <- as.character(host_path_wide$decimalLongitude)
