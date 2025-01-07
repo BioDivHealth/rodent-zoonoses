@@ -16,41 +16,35 @@ source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
 
 ## if multiple in put sheets, load and merge sheets
 ##harry
-#studies_h = read.csv("./data/aren_hant_data/studies_h.csv")
-#studies_h = studies_h[0:9]
-#host_h = read.csv("./data/aren_hant_data/host_h.csv")
-#host_h = host_h[0:13]
-#pathogen_h = read.csv("./data/aren_hant_data/pathogen_h.csv")
-#pathogen_h = pathogen_h[0:12]
+studies_h = read.csv("./data/aren_hant_data/studies_h.csv")
+studies_h = studies_h[0:8]
+host_h = read.csv("./data/aren_hant_data/host_h.csv")
+host_h = host_h[0:13]
+pathogen_h = read.csv("./data/aren_hant_data/pathogen_h.csv")
+pathogen_h = pathogen_h[0:12]
 
 ##david
 studies_d = read.csv("./data/aren_hant_data/studies_d.csv")
+studies_d = studies_d[0:8]
 host_d = read.csv("./data/aren_hant_data/host_d.csv")
+host_d = host_d[0:13]
 pathogen_d = read.csv("./data/aren_hant_data/pathogen_d.csv")
 pathogen_d = pathogen_d[0:12]
 
 ##ana
-#studies_a = read.csv("./data/aren_hant_data/studies_a.csv")
-#studies_a = studies_a[0:9]
-#host_a = read.csv("./data/aren_hant_data/host_a.csv")
-#host_a = host_a[0:13]
-#pathogen_a = read.csv("./data/aren_hant_data/pathogen_a.csv")
+studies_a = read.csv("./data/aren_hant_data/studies_a.csv")
+studies_a = studies_a[0:8]
+host_a = read.csv("./data/aren_hant_data/host_a.csv")
+host_a = host_a[0:13]
+pathogen_a = read.csv("./data/aren_hant_data/pathogen_a.csv")
+pathogen_a = pathogen_a[0:12]
 
-##requested data
-#studies_req = read.csv("./data/aren_hant_data/studies_req.csv")
-#studies_req = studies_req[0:9]
-#host_req = read.csv("./data/aren_hant_data/host_req.csv")
-#host_req = host_req[0:13]
-#pathogen_req = read.csv("./data/aren_hant_data/pathogen_req.csv")
-#pathogen_req = pathogen_req[0:12]
 
-#studies <-  rbind(studies_h, studies_d, studies_a, studies_req)
-#host <-  rbind(host_h, host_d, host_a, host_req)
-#pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a, pathogen_req)
+studies <-  rbind(studies_h, studies_d, studies_a)
+host <-  rbind(host_h, host_d, host_a)
+pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a)
 
-studies <-  studies_d
-host <-  host_d
-pathogen <-  pathogen_d
+
 
 ## Filter for David's data
 
@@ -71,7 +65,7 @@ pathogen <- pathogen[pathogen$study_id %in% studies$study_id, ]
 
 
 
-saveRDS(pathogen, file="./data/pathogen_assay_record.rds")
+#saveRDS(pathogen, file="./data/pathogen_assay_record.rds")
 
 # Keep only 1 pathogen row per rodent
 ## check for multiple pathogen entries for each rodent_id and take max positives
@@ -116,6 +110,13 @@ new_pathogen$pathogen_record_id <- paste("i", 1:df_length, sep = "_")
 # merge pathogen and imputed pathogen dataframes
 
 pathogen <- rbind(pathogen, new_pathogen)
+
+
+#########
+
+# do not run
+
+##
 
 ## group individual-level data to (roughly) monthly data
 
@@ -177,6 +178,12 @@ host_individual <- host_individual[, -1]
 
 host_summarised <- host[!(host$study_id %in% individual_studies$study_id), ]
 
+#########
+
+# continue run
+
+#########
+host_summarised <- host
 host_summarised <- host_summarised %>%
   separate(eventDate, into = c("start_date", "end_date"), sep = "/")
 
@@ -193,16 +200,23 @@ host_monthly$end_date <- ifelse(grepl("^\\d{4}-\\d{2}$", host_monthly$end_date),
                                 host_monthly$end_date)
 
 ## Merge pathogen and host summarised data
+pathogen <- pathogen %>% 
+  rename(
+    rodent_record_id = associated_rodent_record_id
+  )
 
 host_monthly <- merge(host_monthly,pathogen,by="rodent_record_id")
 
 host_monthly$start_date <- as.Date(host_monthly$start_date)
 host_monthly$end_date <- as.Date(host_monthly$end_date)
 
+########
+#not needed for NC
 ## rbind individual and summarised data
 
 host_monthly <- rbind(host_monthly, host_individual) 
 
+#####
 ## Calculate duration of trapping
 host_monthly$period <- host_monthly$end_date - host_monthly$start_date
 host_monthly$period[is.na(host_monthly$period)] <- 0
@@ -217,7 +231,7 @@ host <- host_monthly# %>% filter(period <= 60)
   #filter(n_distinct(scientificName.x) > 1) %>%
   #ungroup()
 
-## convert Ana's coordinates to numeric
+## convert coordinates to numeric
 
 host$decimalLatitude <- as.numeric(host$decimalLatitude)
 host$decimalLongitude <- as.numeric(host$decimalLongitude)
@@ -297,7 +311,7 @@ host_path_wide <- host_path_wide %>%
 
 # save to rds for phylogeny
 
-write_rds(host_path_wide, file="./data/host_path_wide_david.rds")
+write_rds(host_path_wide, file="./data/data_for_NC.rds")
 
 
 ### how many communities do we have?
