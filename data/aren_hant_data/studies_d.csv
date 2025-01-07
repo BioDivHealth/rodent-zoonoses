@@ -15,7 +15,7 @@ study_id,full_text_id,datasetName,sampling_effort,data_access,data_resolution,km
 94,ft_97,[Genomic analysis of Wenzhou virus in rodents from Zhejiang province].,not reported,summarised,study,,,,
 95,ft_98,Households as hotspots of Lassa fever? Assessing the spatial distribution of Lassa virus-infected rodents in rural villages of Guinea.,not reported,,,,,,
 ds_96,ft_99,"Serological Evidence of Thailand Orthohantavirus or Antigenically Related Virus Infection Among Rodents in a Chronic Kidney Disease of Unknown Etiology Endemic Area, Girandurukotte, Sri Lanka.",not reported,summarised,study,,morphological identification only of majority of rodents,,
-ds_97,ft_105,Wildfire-induced short-term changes in a small mammal community increase prevalence of a zoonotic pathogen?,25500 trap nights,individual,individual rodent,y,,coordinates,H (unburned forest only)
+ds_97,ft_105,Wildfire-induced short-term changes in a small mammal community increase prevalence of a zoonotic pathogen?,25500 trap nights,individual,individual rodent,,,~4km study area,H (unburned forest only)
 ds_98,ft_106,Puumala hantavirus infections in bank vole populations: host and virus dynamics in Central Europe.,not reported,summarised,study,,,,
 ds_99,ft_107,Detection and Genetic Characterization of Seoul Virus in Liver Tissue Samples From Rattus norvegicus and Rattus tanezumi in Urban Areas of Southern China.,not reported,summarised,site,,,,
 ds_100,ft_108,"Sin Nombre virus prevalence from 2014-2017 in wild deer mice, Peromyscus maniculatus, on five of the California Channel Islands.",10618 trap nights,summarised,site-session,,,,
