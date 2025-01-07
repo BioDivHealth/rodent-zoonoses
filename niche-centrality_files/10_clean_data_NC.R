@@ -16,12 +16,12 @@ source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
 
 ## if multiple in put sheets, load and merge sheets
 ##harry
-studies_h = read.csv("./data/aren_hant_data/studies_h.csv")
-studies_h = studies_h[0:9]
-host_h = read.csv("./data/aren_hant_data/host_h.csv")
-host_h = host_h[0:13]
-pathogen_h = read.csv("./data/aren_hant_data/pathogen_h.csv")
-pathogen_h = pathogen_h[0:12]
+#studies_h = read.csv("./data/aren_hant_data/studies_h.csv")
+#studies_h = studies_h[0:9]
+#host_h = read.csv("./data/aren_hant_data/host_h.csv")
+#host_h = host_h[0:13]
+#pathogen_h = read.csv("./data/aren_hant_data/pathogen_h.csv")
+#pathogen_h = pathogen_h[0:12]
 
 ##david
 studies_d = read.csv("./data/aren_hant_data/studies_d.csv")
@@ -30,30 +30,34 @@ pathogen_d = read.csv("./data/aren_hant_data/pathogen_d.csv")
 pathogen_d = pathogen_d[0:12]
 
 ##ana
-studies_a = read.csv("./data/aren_hant_data/studies_a.csv")
-studies_a = studies_a[0:9]
-host_a = read.csv("./data/aren_hant_data/host_a.csv")
-host_a = host_a[0:13]
-pathogen_a = read.csv("./data/aren_hant_data/pathogen_a.csv")
+#studies_a = read.csv("./data/aren_hant_data/studies_a.csv")
+#studies_a = studies_a[0:9]
+#host_a = read.csv("./data/aren_hant_data/host_a.csv")
+#host_a = host_a[0:13]
+#pathogen_a = read.csv("./data/aren_hant_data/pathogen_a.csv")
 
 ##requested data
-studies_req = read.csv("./data/aren_hant_data/studies_req.csv")
-studies_req = studies_req[0:9]
-host_req = read.csv("./data/aren_hant_data/host_req.csv")
-host_req = host_req[0:13]
-pathogen_req = read.csv("./data/aren_hant_data/pathogen_req.csv")
-pathogen_req = pathogen_req[0:12]
+#studies_req = read.csv("./data/aren_hant_data/studies_req.csv")
+#studies_req = studies_req[0:9]
+#host_req = read.csv("./data/aren_hant_data/host_req.csv")
+#host_req = host_req[0:13]
+#pathogen_req = read.csv("./data/aren_hant_data/pathogen_req.csv")
+#pathogen_req = pathogen_req[0:12]
 
-studies <-  rbind(studies_h, studies_d, studies_a)
-host <-  rbind(host_h, host_d, host_a)
-pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a)
+#studies <-  rbind(studies_h, studies_d, studies_a, studies_req)
+#host <-  rbind(host_h, host_d, host_a, host_req)
+#pathogen <-  rbind(pathogen_h, pathogen_d, pathogen_a, pathogen_req)
+
+studies <-  studies_d
+host <-  host_d
+pathogen <-  pathogen_d
 
 ## Filter for David's data
 
 
 ## Filter for site resolution
 
-studies <- subset(studies, data_resolution == "site-session")
+#studies <- subset(studies, data_resolution == "site-session")
 
 ## Filter for site resolution <1kmsq
 studies <- subset(studies, kmsq_site == "y")
@@ -62,6 +66,10 @@ studies <- subset(studies, kmsq_site == "y")
 
 host <- host[host$study_id %in% studies$study_id, ]
 pathogen <- pathogen[pathogen$study_id %in% studies$study_id, ]
+
+# how many unique sites per species do we have?
+
+
 
 saveRDS(pathogen, file="./data/pathogen_assay_record.rds")
 
@@ -200,7 +208,7 @@ host_monthly$period <- host_monthly$end_date - host_monthly$start_date
 host_monthly$period[is.na(host_monthly$period)] <- 0
 
 ## filter for less than 2 month trapping time
-host <- host_monthly %>% filter(period <= 60)
+host <- host_monthly# %>% filter(period <= 60)
 
 ## filter for multiple species
 
@@ -289,7 +297,7 @@ host_path_wide <- host_path_wide %>%
 
 # save to rds for phylogeny
 
-write_rds(host_path_wide, file="./data/host_path_wide.rds")
+write_rds(host_path_wide, file="./data/host_path_wide_david.rds")
 
 
 ### how many communities do we have?
