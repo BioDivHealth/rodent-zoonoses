@@ -183,32 +183,13 @@ host_summarised <- host[!(host$study_id %in% individual_studies$study_id), ]
 # continue run
 
 #########
-host_summarised <- host
-host_summarised <- host_summarised %>%
-  separate(eventDate, into = c("start_date", "end_date"), sep = "/")
 
-host_monthly <- host_summarised %>%
-  filter(str_detect(start_date, "^\\d{4}-\\d{2}") | str_detect(start_date, "^\\d{4}-\\d{2}-\\d{2}"))
-
-# Add "-01" to strings in "yyyy-mm" format
-host_monthly$start_date <- ifelse(grepl("^\\d{4}-\\d{2}$", host_monthly$start_date), 
-                                  paste0(host_monthly$start_date, "-01"), 
-                                  host_monthly$start_date)
-
-host_monthly$end_date <- ifelse(grepl("^\\d{4}-\\d{2}$", host_monthly$end_date), 
-                                paste0(host_monthly$end_date, "-01"), 
-                                host_monthly$end_date)
-
-## Merge pathogen and host summarised data
 pathogen <- pathogen %>% 
   rename(
     rodent_record_id = associated_rodent_record_id
   )
 
-host_monthly <- merge(host_monthly,pathogen,by="rodent_record_id")
-
-host_monthly$start_date <- as.Date(host_monthly$start_date)
-host_monthly$end_date <- as.Date(host_monthly$end_date)
+host <- merge(host,pathogen,by="rodent_record_id")
 
 ########
 #not needed for NC
@@ -217,20 +198,6 @@ host_monthly$end_date <- as.Date(host_monthly$end_date)
 host_monthly <- rbind(host_monthly, host_individual) 
 
 #####
-## Calculate duration of trapping
-host_monthly$period <- host_monthly$end_date - host_monthly$start_date
-host_monthly$period[is.na(host_monthly$period)] <- 0
-
-## filter for less than 2 month trapping time
-host <- host_monthly# %>% filter(period <= 60)
-
-## filter for multiple species
-
-#host <- host %>%
- # group_by(study_id.x) %>%
-  #filter(n_distinct(scientificName.x) > 1) %>%
-  #ungroup()
-
 ## convert coordinates to numeric
 
 host$decimalLatitude <- as.numeric(host$decimalLatitude)
