@@ -1,6 +1,6 @@
 ---
 title: "SpREAD: Spatio-temporal Rodent Community Ecology And Disease Database."
-subtitle: Harry Gordon^1^, Ana Martinez-Checa^1^, Greg Milne^1^, David Redding^1^, David Simons^2^
+subtitle: Harry Gordon^1^, Ana Martinez-Checa Guiote^1^, Greg Milne^1^, David Redding^1^, David Simons^2^
 author:
   - ^1^ Natural History Musuem, London
   - ^2^ Pennsylvania State University
