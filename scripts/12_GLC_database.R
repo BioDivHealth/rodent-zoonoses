@@ -10,6 +10,10 @@ pacman::p_load(here,
 
 source(here("scripts", "00_useful_functions.R")) #loaded as list `myfuncs`
 
+#### this script is to handle and visualise rasters from the GLC database (in README) using an example in croatia, if the example trapping data is no longer
+#### part of the dataset, adapt to a different location. rasters are too large to host on github so download them from the zenodo for GLC.
+
+
 # 2. load our data to find necessary files to download
 
 host_path <- readRDS("data/host_path_wide.rds")

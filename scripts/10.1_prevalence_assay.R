@@ -6,6 +6,9 @@ library(patchwork)
 library(gridExtra)
 library(viridis)
 
+## this script is for visualising the disease prevalence for each detection method used
+
+
 pathogen1 <- readRDS("data/pathogen_assay_record.rds")
 
 pathogen <- pathogen1 %>% 

@@ -1,3 +1,6 @@
+## This script takes raw data from D Simons' project ArHa and reshapes/filters it to our requirements. Next steps are to
+## implement google sheets api to automatically download files (code available at D.S. github). 
+
 ## Load packages
 if (!require("pacman")) install.packages("pacman")
 
@@ -109,6 +112,7 @@ new_pathogen$pathogen_record_id <- paste("i", 1:df_length, sep = "_")
 pathogen <- rbind(pathogen, new_pathogen)
 
 ## group individual-level data to (roughly) monthly data
+## this is not necessary, can also disaggregate grouped data to individual level - depends on data needs
 
 ## subset individual level data
 individual_studies <- subset(studies, data_access == "individual")
@@ -201,13 +205,6 @@ host_monthly$period[is.na(host_monthly$period)] <- 0
 ## filter for less than 2 month trapping time
 host <- host_monthly %>% filter(period <= 60)
 
-## filter for multiple species
-
-#host <- host %>%
- # group_by(study_id.x) %>%
-  #filter(n_distinct(scientificName.x) > 1) %>%
-  #ungroup()
-
 ## convert Ana's coordinates to numeric
 
 host$decimalLatitude <- as.numeric(host$decimalLatitude)
@@ -231,7 +228,7 @@ host <- host %>%
     study_id = study_id.x
   )
 
-# Harmonise virus names in the dataset
+# Harmonise virus names in the dataset using abbreviations
 host_path_wide <- host %>% 
   mutate(
     pathogen_abbrev = case_when(

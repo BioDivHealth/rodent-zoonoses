@@ -1,3 +1,6 @@
+### This script loads the IUCN land cover classification legend. We hope to use some method e.g. decision tree to 
+### identify equivalent land cover classifications in the GLC database.
+
 # 1. Load packages ----
 pacman::p_load(here,
                stringr,
